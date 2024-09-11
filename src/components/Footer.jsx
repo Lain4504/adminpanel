@@ -6,7 +6,7 @@ const Footer = () => {
    
     <footer className="mt-auto">
       <hr />
-      <p className="py-5 text-sm text-center bg-gray-800 text-white">
+      <p className="py-5 text-sm text-center text-black">
         Copyright 2024 @ Book Store - All Rights Reserved
       </p>
     </footer>

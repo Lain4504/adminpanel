@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Footer from "./Footer";
 import { assets } from '../assets/assets';
+import { Link } from 'react-router-dom';
+import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import CardTravelIcon from '@mui/icons-material/CardTravel';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import LogoutIcon from '@mui/icons-material/Logout';
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null); // Tạo một ref cho sidebar
@@ -73,77 +81,84 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <span className="ms-3">Bảng thống kê</span>
-                </a>
+                <Link to={'/dashboard'}>
+                  <a
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <DashboardCustomizeIcon/>
+                    <span className="ms-3">Bảng thống kê</span>
+                  </a>
+                </Link>
+              </li>
+              <hr />
+              <li>
+                <Link to={'/product'}>
+                  <a
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <ProductionQuantityLimitsIcon/>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Sản phẩm</span>
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link to={'/order'}>
+                  <a
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <CardTravelIcon/>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Đơn hàng</span>
+                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                      3
+                    </span>
+                  </a>
+                </Link>
+              </li>
+
+              <li>
+                <Link to={'/collection'}>
+                  <a
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <CollectionsIcon/>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Bộ sưu tập</span>
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link to={'/post'}>
+                  <a
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <PostAddIcon/>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Bài viết</span>
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link to={'feedback'}>
+                  <a
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <FeedbackIcon/>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Phản hồi</span>
+                  </a>
+                </Link>
               </li>
               <hr />
               <li>
                 <a
-                  href="#"
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >
-                  <span className="flex-1 ms-3 whitespace-nowrap">Sản phẩm</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <span className="flex-1 ms-3 whitespace-nowrap">Đơn hàng</span>
-                  <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                    3
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <span className="flex-1 ms-3 whitespace-nowrap">Collection</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <span className="flex-1 ms-3 whitespace-nowrap">Bài viết</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <span className="flex-1 ms-3 whitespace-nowrap">Phản hồi</span>
-                </a>
-              </li>
-              <hr />
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
+                  <LogoutIcon/>
                   <span className="flex-1 ms-3 whitespace-nowrap">Đăng xuất</span>
                 </a>
               </li>
             </ul>
-
-
           </div>
 
         </aside>
-        {/** */}
-        <div class="p-4 sm:ml-64">
-            <Footer />
-          </div>
-        </div>
+      </div>
 
     </>
   );
