@@ -19,7 +19,9 @@ const App = () => {
     <Sidebar/>
     <Routes>
         <Route path='/' element={<Home/>} />
-        <Route path="/collection" element={<Collection/>} />
+        <Route path="collections">
+              <Route index element={<Collection />}></Route>
+         </Route>
         <Route path="/order" element={<Order/>}/>
         <Route path="/post" element={<Post/>}/>
         <Route path="/product" element={<Product/>}/>
