@@ -4,12 +4,11 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { getAllCollections, deleteCollection } from "../service/CollectionService";
 
-const ITEMS_PER_PAGE = 10; // Số lượng sản phẩm hiển thị trên mỗi trang
-
 const Collection = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Số lượng sản phẩm hiển thị trên mỗi trang
 
   const handleDelete = (id) => {
     const confirmBox = window.confirm(
@@ -20,13 +19,13 @@ const Collection = () => {
     deleteCollection(id)
       .then((res) => {
         toast.success("Collection deleted successfully!", {
-          position: toast.POSITION.TOP_RIGHT,
+          position: "top-right"
         });
         fetchData();
       })
       .catch((error) => {
         toast.error("Failed to delete the collection!", {
-          position: toast.POSITION.TOP_RIGHT,
+          position: "top-right"
         });
       });
   };
@@ -36,7 +35,7 @@ const Collection = () => {
       .then((res) => {
         const allData = res.data;
         setData(allData);
-        setTotalPages(Math.ceil(allData.length / ITEMS_PER_PAGE));
+        setTotalPages(Math.ceil(allData.length / itemsPerPage));
       })
       .catch((error) => {
         toast.error("Failed to fetch collections!", {
@@ -47,19 +46,25 @@ const Collection = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [itemsPerPage]); // Refetch data when itemsPerPage changes
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
+  const handleItemsPerPageChange = (event) => {
+    setItemsPerPage(Number(event.target.value));
+    setCurrentPage(1); // Reset to the first page when items per page changes
+  };
+
   const paginatedData = data.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   return (
     <>
+   
       <h1 className='text-lg'>Quản lý bộ sưu tập</h1>
 
       <hr className="my-4" />
@@ -128,23 +133,60 @@ const Collection = () => {
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <button
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+  <div className="flex flex-col md:flex-row justify-between items-center mt-4">
+  {/* Items per page */}
+  <div className="flex flex-col md:flex-row items-center space-x-4 mb-4 md:mb-0">
+  <div className="flex items-center space-x-2">
+    <span>Show</span>
+    <select
+      value={itemsPerPage}
+      onChange={handleItemsPerPageChange}
+      className="border border-gray-300 rounded px-2 py-1"
+    >
+      <option value={10}>10</option>
+      <option value={20}>20</option>
+      <option value={30}>30</option>
+    </select>
+    <span>items per page</span>
+  </div>
+</div>
+
+
+  {/* Pagination */}
+  <div className="flex flex-row items-center space-x-4">
+    <button
+      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+      onClick={() => handlePageChange(1)}
+      disabled={currentPage === 1}
+    >
+      First
+    </button>
+    <button
+      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+      onClick={() => handlePageChange(currentPage - 1)}
+      disabled={currentPage === 1}
+    >
+      Previous
+    </button>
+    <span>Page {currentPage} of {totalPages}</span>
+    <button
+      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+      onClick={() => handlePageChange(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      Next
+    </button>
+    <button
+      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+      onClick={() => handlePageChange(totalPages)}
+      disabled={currentPage === totalPages}
+    >
+      Last
+    </button>
+  </div>
+</div>
+
+      
     </>
   );
 };
