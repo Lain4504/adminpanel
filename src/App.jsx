@@ -4,12 +4,16 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
+import New from "./components/New";
 import Collection from "./pages/Collection";
 import Order from "./pages/Order";
 import Post from "./pages/Post";
 import Product from "./pages/Product";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
+import CollectionSingle from "./components/CollectionSingle";
+import { collectionInputs } from "./components/formSource";
+import { addCollection } from "./service/CollectionService";
 const App = () => {
   return(
     <> 
@@ -21,10 +25,12 @@ const App = () => {
     <Sidebar/>
     <Routes>
         <Route path='/' element={<Home/>} />
-        <Route path="collections">
+        <Route path="/collections">
               <Route index element={<Collection />}></Route>
+              <Route path="new" element={<New inputs={collectionInputs} title="Add New Collection" location={'/collections'} handleAdd={addCollection} />}></Route>
+              <Route path=":id" element={<CollectionSingle/>}></Route>
          </Route>
-         <Route path="product">
+         <Route path="/product">
               <Route index element={<Product />}></Route>
          </Route>
         <Route path="/order" element={<Order/>}/>
