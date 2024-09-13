@@ -73,10 +73,10 @@ const Sidebar = () => {
             } sm:translate-x-0`} // Khi mở thì dịch chuyển sidebar ra, ngược lại ẩn đi
           aria-label="Sidebar"
         >
-          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-400 dark:bg-gray-800">
             <ul className="space-y-2 font-medium">
               <li>
-                <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" >
+                <a href="#" className="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group" >
                   <img src={assets.logo} alt='' className='w-48' />
                 </a>
               </li>
@@ -116,7 +116,7 @@ const Sidebar = () => {
               </li>
 
               <li>
-                <Link to={'/collection'}>
+                <Link to={'/collections'}>
                   <a
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >

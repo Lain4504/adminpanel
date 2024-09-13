@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { getAllCollections, deleteCollection } from "../service/CollectionService";
+import { collectionColumns } from '../components/DataSet';
 
 const Collection = () => {
   const [data, setData] = useState([]);
@@ -34,6 +35,7 @@ const Collection = () => {
     getAllCollections()
       .then((res) => {
         const allData = res.data;
+        console.log(allData);
         setData(allData);
         setTotalPages(Math.ceil(allData.length / itemsPerPage));
       })
@@ -64,7 +66,7 @@ const Collection = () => {
 
   return (
     <>
-   
+
       <h1 className='text-lg'>Quản lý bộ sưu tập</h1>
 
       <hr className="my-4" />
@@ -96,16 +98,31 @@ const Collection = () => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">ID</th>
-              <th scope="col" className="px-6 py-3">Name</th>
+              {collectionColumns.map((column) => (
+                <th key={column.field} scope="col" className="px-6 py-3">
+                  {column.headerName}
+                </th>
+              ))}
               <th scope="col" className="px-6 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData.map((collection) => (
               <tr key={collection.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{collection.id}</th>
-                <td className="px-6 py-4">{collection.name}</td>
+
+                {/* Duyệt qua các cột trong collectionColumns */}
+                {collectionColumns.map((column) => (
+                  <td key={column.field} className="px-6 py-4">
+                    {/* Kiểm tra nếu column là isDisplay và chuyển boolean thành Yes/No */}
+                    {column.field === 'isDisplay'
+                      ? collection[column.field] ? 'Yes' : 'No'
+                      : collection[column.field]
+                    }
+                  </td>
+                ))}
+
+
+                {/* Cột dành cho các hành động (Update, Delete) */}
                 <td className="px-6 py-4 text-center">
                   <div className="flex justify-center space-x-2">
                     <Link to={`/collections/${collection.id}`}>
@@ -130,63 +147,65 @@ const Collection = () => {
               </tr>
             ))}
           </tbody>
+
+
         </table>
       </div>
 
-  <div className="flex flex-col md:flex-row justify-between items-center mt-4">
-  {/* Items per page */}
-  <div className="flex flex-col md:flex-row items-center space-x-4 mb-4 md:mb-0">
-  <div className="flex items-center space-x-2">
-    <span>Show</span>
-    <select
-      value={itemsPerPage}
-      onChange={handleItemsPerPageChange}
-      className="border border-gray-300 rounded px-2 py-1"
-    >
-      <option value={10}>10</option>
-      <option value={20}>20</option>
-      <option value={30}>30</option>
-    </select>
-    <span>items per page</span>
-  </div>
-</div>
+      <div className="flex flex-col md:flex-row justify-between items-center mt-4">
+        {/* Items per page */}
+        <div className="flex flex-col md:flex-row items-center space-x-4 mb-4 md:mb-0">
+          <div className="flex items-center space-x-2">
+            <span>Show</span>
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="border border-gray-300 rounded px-2 py-1"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+            </select>
+            <span>items per page</span>
+          </div>
+        </div>
 
 
-  {/* Pagination */}
-  <div className="flex flex-row items-center space-x-4">
-    <button
-      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
-      onClick={() => handlePageChange(1)}
-      disabled={currentPage === 1}
-    >
-      First
-    </button>
-    <button
-      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
-      onClick={() => handlePageChange(currentPage - 1)}
-      disabled={currentPage === 1}
-    >
-      Previous
-    </button>
-    <span>Page {currentPage} of {totalPages}</span>
-    <button
-      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
-      onClick={() => handlePageChange(currentPage + 1)}
-      disabled={currentPage === totalPages}
-    >
-      Next
-    </button>
-    <button
-      className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
-      onClick={() => handlePageChange(totalPages)}
-      disabled={currentPage === totalPages}
-    >
-      Last
-    </button>
-  </div>
-</div>
+        {/* Pagination */}
+        <div className="flex flex-row items-center space-x-4">
+          <button
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+          >
+            First
+          </button>
+          <button
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+          <button
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            Last
+          </button>
+        </div>
+      </div>
 
-      
+
     </>
   );
 };
