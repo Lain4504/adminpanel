@@ -11,7 +11,7 @@ import Post from "./pages/Post";
 import Product from "./pages/Product";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
-import CollectionSingle from "./components/CollectionSingle";
+import CollectionSingle from "./pages/CollectionSingle";
 import { collectionInputs } from "./components/formSource";
 import { addCollection } from "./service/CollectionService";
 const App = () => {
