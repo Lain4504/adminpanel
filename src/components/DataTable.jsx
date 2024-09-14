@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Spin } from "antd";
 
 const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true); // Thêm state loading
 
   const handleDelete = (id) => {
     const confirmBox = window.confirm(`Do you really want to delete this ${entityName}?`);
@@ -23,15 +25,20 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   };
 
   const fetchData = () => {
-    dataService()
-      .then((res) => {
-        const allData = res.data;
-        setData(allData);
-        setTotalPages(Math.ceil(allData.length / itemsPerPage));
-      })
-      .catch(() => {
-        toast.error(`Failed to fetch ${entityName}s!`, { position: "top-right" });
-      });
+    setLoading(true); // Bật loading trước khi fetch
+    setTimeout(() => { // Tạo độ trễ giả (1 giây)
+      dataService()
+        .then((res) => {
+          const allData = res.data;
+          setData(allData);
+          setTotalPages(Math.ceil(allData.length / itemsPerPage));
+          setLoading(false); // Tắt loading sau khi fetch xong
+        })
+        .catch(() => {
+          toast.error(`Failed to fetch ${entityName}s!`, { position: "top-right" });
+          setLoading(false); // Tắt loading nếu fetch thất bại
+        });
+    }, 1000); // Đặt thời gian chờ 1 giây
   };
 
   useEffect(() => {
@@ -83,30 +90,45 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row) => (
-              <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                {columns.map((column) => (
-                  <td key={column.field} className="px-6 py-4">
-                    {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+            {loading ? ( // Hiển thị các ô giả với Spin khi đang loading
+              Array.from({ length: 1 }).map((_, index) => (
+                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  {columns.map((column, colIndex) => (
+                    <td key={colIndex} className="px-6 py-4">
+                      <Spin spinning={true} />
+                    </td>
+                  ))}
+                  <td className="px-6 py-4 text-center">
+                    <Spin spinning={true} />
                   </td>
-                ))}
-                <td className="px-6 py-4 text-center">
-                  <div className="flex justify-center space-x-2">
-                    <Link to={`${updatePath}/${row.id}`}>
-                      <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Update
+                </tr>
+              ))
+            ) : (
+              paginatedData.map((row) => (
+                <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  {columns.map((column) => (
+                    <td key={column.field} className="px-6 py-4">
+                      {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+                    </td>
+                  ))}
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex justify-center space-x-2">
+                      <Link to={`${updatePath}/${row.id}`}>
+                        <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          Update
+                        </button>
+                      </Link>
+                      <button
+                        className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        Delete
                       </button>
-                    </Link>
-                    <button
-                      className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                      onClick={() => handleDelete(row.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
