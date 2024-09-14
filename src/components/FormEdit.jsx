@@ -31,10 +31,9 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
         const { id, value, type, checked } = e.target;
         setData(prevData => ({
             ...prevData,
-            [id]: type === 'checkbox' ? checked : value
+            [id]: type === 'checkbox' ? checked : id === 'isDisplay' ? value === 'true' : value
         }));
     };
-
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="mx-auto py-10">

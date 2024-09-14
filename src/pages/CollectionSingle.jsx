@@ -21,7 +21,7 @@ const CollectionSingle = () => {
             updateData={updateCollection}
             fields={fields}
             onSuccess={() => window.location.replace("/collections")}
-            onError={() => console.error('Failed to update collection')}
+            onError={() => console.error('Failed to update collections')}
         />
     );
 };

@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+// components/DataTable.js
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Spin, Popconfirm } from 'antd';
+import SearchBar from './SearchBar';
+import Filter from './Filter';
 
-const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath }) => {
+const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterValue, setFilterValue] = useState('');
 
   const handleDelete = (id) => {
-    const confirmBox = window.confirm(`Do you really want to delete this ${entityName}?`);
-    if (!confirmBox) return;
-
     deleteService(id)
       .then(() => {
         toast.success(`${entityName} deleted successfully!`, { position: "top-right" });
@@ -23,15 +27,20 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   };
 
   const fetchData = () => {
-    dataService()
-      .then((res) => {
-        const allData = res.data;
-        setData(allData);
-        setTotalPages(Math.ceil(allData.length / itemsPerPage));
-      })
-      .catch(() => {
-        toast.error(`Failed to fetch ${entityName}s!`, { position: "top-right" });
-      });
+    setLoading(true);
+    setTimeout(() => {
+      dataService()
+        .then((res) => {
+          const allData = res.data;
+          setData(allData);
+          setTotalPages(Math.ceil(allData.length / itemsPerPage));
+          setLoading(false);
+        })
+        .catch(() => {
+          toast.error(`Failed to fetch ${entityName}s!`, { position: "top-right" });
+          setLoading(false);
+        });
+    }, 1000);
   };
 
   useEffect(() => {
@@ -47,28 +56,49 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
     setCurrentPage(1);
   };
 
-  const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value); // Update search term
+  };
+
+  const filteredData = data
+    .filter((item) => (filterValue === '' || item[filterField] === filterValue))
+    .filter((item) => columns.some((column) =>
+      String(item[column.field]).toLowerCase().includes(searchTerm.toLowerCase())
+    ));
+
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
-      <h1 className='text-lg'>Quản lý {entityName}s</h1>
-      <hr className="my-4" />
+      <h1 className="mb-4"></h1>
+<div>
+  <h1 className='text-lg mb-4'>Quản lý {entityName}s</h1>
+  <hr className="my-4" />
 
-      <div className="flex justify-between items-center mb-4">
-        <Link to={createPath}>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded focus:ring-2">
-            Create
-          </button>
-        </Link>
+  <div className="flex justify-between items-center mb-4">
+    <Link to={createPath}>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded focus:ring-2">
+        Create
+      </button>
+    </Link>
 
-        <div className="flex items-center">
-          <input
-            type="text"
-            placeholder={`Search ${entityName}s...`}
-            className="border border-gray-300 rounded px-4 py-2"
-          />
-        </div>
-      </div>
+    <SearchBar
+      searchTerm={searchTerm}
+      handleSearch={handleSearch}
+      placeholder={`Search ${entityName}s...`}
+    />
+  </div>
+</div>
+
+      {/* Dropdown Filters */}
+      {filterField && (
+        <Filter
+          filterField={filterField}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+          data={data}
+        />
+      )}
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -83,36 +113,56 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row) => (
-              <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                {columns.map((column) => (
-                  <td key={column.field} className="px-6 py-4">
-                    {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+            {loading ? (
+              Array.from({ length: 1 }).map((_, index) => (
+                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  {columns.map((column, colIndex) => (
+                    <td key={colIndex} className="px-6 py-4">
+                      <Spin spinning={true} />
+                    </td>
+                  ))}
+                  <td className="px-6 py-4 text-center">
+                    <Spin spinning={true} />
                   </td>
-                ))}
-                <td className="px-6 py-4 text-center">
-                  <div className="flex justify-center space-x-2">
-                    <Link to={`${updatePath}/${row.id}`}>
-                      <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Update
-                      </button>
-                    </Link>
-                    <button
-                      className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                      onClick={() => handleDelete(row.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                </tr>
+              ))
+            ) : (
+              paginatedData.map((row) => (
+                <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  {columns.map((column) => (
+                    <td key={column.field} className="px-6 py-4">
+                      {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+                    </td>
+                  ))}
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex justify-center space-x-2">
+                      <Link to={`${updatePath}/${row.id}`}>
+                        <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                          Update
+                        </button>
+                      </Link>
+                      <Popconfirm
+                        title={`Are you sure you want to delete this ${entityName}?`}
+                        onConfirm={() => handleDelete(row.id)}
+                        onCancel={() => { }}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <button className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500">
+                          Delete
+                        </button>
+                      </Popconfirm>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-col lg:flex-row justify-between items-center mt-4">
+        <div className="flex items-center space-x-2 mb-4 md:mb-4">
           <span>Show</span>
           <select
             value={itemsPerPage}

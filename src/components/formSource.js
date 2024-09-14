@@ -14,7 +14,10 @@ export const collectionInputs = [
   {
     id: 'isDisplay',
     label: "Display",
-    type: "text",
-    placeholder: "true, false"
+    type: "select", // Chuyển type thành 'select'
+    options: [
+      { value: 'true', label: 'True' },
+      { value: 'false', label: 'False' }
+    ]
   }
 ]
