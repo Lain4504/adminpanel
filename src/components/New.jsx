@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const New = ({ inputs, title, handleAdd, location }) => {
   const [data, setData] = useState({});
+  const navigate = useNavigate();
 
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
-    
+
     // Cập nhật giá trị được chọn từ dropdown
     setData({ ...data, [id]: value });
   };
@@ -14,7 +16,11 @@ const New = ({ inputs, title, handleAdd, location }) => {
   const handleAddItem = (e) => {
     e.preventDefault();
     handleAdd(data);  // Đảm bảo dữ liệu được truyền đúng
-    window.location.replace(location);
+    navigate(location);  // Sử dụng navigate để chuyển hướng
+  };
+
+  const handleCancel = () => {
+    navigate(-1);  // Quay lại trang trước đó
   };
 
   return (
@@ -53,12 +59,21 @@ const New = ({ inputs, title, handleAdd, location }) => {
                 )}
               </div>
             ))}
-            <button
-              type="submit"
-              className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
-            >
-              Save
-            </button>
+            <div className="flex justify-between mt-4">
+              <button
+                type="submit"
+                className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition"
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       </div>

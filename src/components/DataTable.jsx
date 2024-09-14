@@ -70,22 +70,25 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
 
   return (
     <>
-      <h1 className='text-lg'>Quản lý {entityName}s</h1>
-      <hr className="my-4" />
+      <h1 className="mb-4"></h1>
+<div>
+  <h1 className='text-lg mb-4'>Quản lý {entityName}s</h1>
+  <hr className="my-4" />
 
-      <div className="flex justify-between items-center mb-4">
-        <Link to={createPath}>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded focus:ring-2">
-            Create
-          </button>
-        </Link>
+  <div className="flex justify-between items-center mb-4">
+    <Link to={createPath}>
+      <button className="bg-blue-500 text-white px-4 py-2 rounded focus:ring-2">
+        Create
+      </button>
+    </Link>
 
-        <SearchBar 
-          searchTerm={searchTerm} 
-          handleSearch={handleSearch} 
-          placeholder={`Search ${entityName}s...`} 
-        />
-      </div>
+    <SearchBar
+      searchTerm={searchTerm}
+      handleSearch={handleSearch}
+      placeholder={`Search ${entityName}s...`}
+    />
+  </div>
+</div>
 
       {/* Dropdown Filters */}
       {filterField && (
@@ -141,7 +144,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                       <Popconfirm
                         title={`Are you sure you want to delete this ${entityName}?`}
                         onConfirm={() => handleDelete(row.id)}
-                        onCancel={() => {}}
+                        onCancel={() => { }}
                         okText="Yes"
                         cancelText="No"
                       >
