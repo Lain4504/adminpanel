@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Spin } from "antd";
+import { Spin, Popconfirm } from "antd";
 
 const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath }) => {
   const [data, setData] = useState([]);
@@ -11,9 +11,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   const [loading, setLoading] = useState(true); // Thêm state loading
 
   const handleDelete = (id) => {
-    const confirmBox = window.confirm(`Do you really want to delete this ${entityName}?`);
-    if (!confirmBox) return;
-
     deleteService(id)
       .then(() => {
         toast.success(`${entityName} deleted successfully!`, { position: "top-right" });
@@ -118,12 +115,17 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                           Update
                         </button>
                       </Link>
-                      <button
-                        className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                        onClick={() => handleDelete(row.id)}
+                      <Popconfirm
+                        title={`Are you sure you want to delete this ${entityName}?`}
+                        onConfirm={() => handleDelete(row.id)}
+                        onCancel={() => {}}
+                        okText="Yes"
+                        cancelText="No"
                       >
-                        Delete
-                      </button>
+                        <button className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500">
+                          Delete
+                        </button>
+                      </Popconfirm>
                     </div>
                   </td>
                 </tr>
