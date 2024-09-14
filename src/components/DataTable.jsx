@@ -1,14 +1,19 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Spin, Popconfirm } from "antd";
+// components/DataTable.js
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Spin, Popconfirm } from 'antd';
+import SearchBar from './SearchBar';
+import Filter from './Filter';
 
-const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath }) => {
+const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [loading, setLoading] = useState(true); // Thêm state loading
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterValue, setFilterValue] = useState('');
 
   const handleDelete = (id) => {
     deleteService(id)
@@ -22,20 +27,20 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   };
 
   const fetchData = () => {
-    setLoading(true); // Bật loading trước khi fetch
-    setTimeout(() => { // Tạo độ trễ giả (1 giây)
+    setLoading(true);
+    setTimeout(() => {
       dataService()
         .then((res) => {
           const allData = res.data;
           setData(allData);
           setTotalPages(Math.ceil(allData.length / itemsPerPage));
-          setLoading(false); // Tắt loading sau khi fetch xong
+          setLoading(false);
         })
         .catch(() => {
           toast.error(`Failed to fetch ${entityName}s!`, { position: "top-right" });
-          setLoading(false); // Tắt loading nếu fetch thất bại
+          setLoading(false);
         });
-    }, 1000); // Đặt thời gian chờ 1 giây
+    }, 1000);
   };
 
   useEffect(() => {
@@ -51,7 +56,17 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
     setCurrentPage(1);
   };
 
-  const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value); // Update search term
+  };
+
+  const filteredData = data
+    .filter((item) => (filterValue === '' || item[filterField] === filterValue))
+    .filter((item) => columns.some((column) =>
+      String(item[column.field]).toLowerCase().includes(searchTerm.toLowerCase())
+    ));
+
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
@@ -65,14 +80,22 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
           </button>
         </Link>
 
-        <div className="flex items-center">
-          <input
-            type="text"
-            placeholder={`Search ${entityName}s...`}
-            className="border border-gray-300 rounded px-4 py-2"
-          />
-        </div>
+        <SearchBar 
+          searchTerm={searchTerm} 
+          handleSearch={handleSearch} 
+          placeholder={`Search ${entityName}s...`} 
+        />
       </div>
+
+      {/* Dropdown Filters */}
+      {filterField && (
+        <Filter
+          filterField={filterField}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+          data={data}
+        />
+      )}
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -87,7 +110,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
             </tr>
           </thead>
           <tbody>
-            {loading ? ( // Hiển thị các ô giả với Spin khi đang loading
+            {loading ? (
               Array.from({ length: 1 }).map((_, index) => (
                 <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   {columns.map((column, colIndex) => (
@@ -135,8 +158,8 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-col lg:flex-row justify-between items-center mt-4">
+        <div className="flex items-center space-x-2 mb-4 md:mb-4">
           <span>Show</span>
           <select
             value={itemsPerPage}

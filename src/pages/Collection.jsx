@@ -11,6 +11,7 @@ const Collection = () => {
       entityName="Collection"
       createPath="/collections/new"
       updatePath="/collections"
+      filterField="type"
     />
   );
 };
