@@ -4,16 +4,16 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
-import New from "./components/New";
-import Collection from "./pages/Collection";
+import FormNew from "./components/FormNew";
+import CollectionList from "./pages/collection/CollectionList";
 import Order from "./pages/Order";
 import Post from "./pages/Post";
 // import Product from "./pages/Product";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
-import CollectionSingle from "./pages/CollectionSingle";
-import { collectionInputs } from "./components/formSource";
+import CollectionSingle from "./pages/collection/CollectionSingle";
 import { addCollection } from "./service/CollectionService";
+import { collectionInputs } from "./context/formSource";
 const App = () => {
   return(
     <> 
@@ -26,8 +26,8 @@ const App = () => {
     <Routes>
         <Route path='/' element={<Home/>} />
         <Route path="/collections">
-              <Route index element={<Collection />}></Route>
-              <Route path="new" element={<New inputs={collectionInputs} title="Add New Collection" location={'/collections'} handleAdd={addCollection} />}></Route>
+              <Route index element={<CollectionList />}></Route>
+              <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location={'/collections'} handleAdd={addCollection} />}></Route>
               <Route path=":id" element={<CollectionSingle/>}></Route>
          </Route>
          {/* <Route path="/product">
@@ -38,7 +38,10 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard/>}/>
     </Routes>
     <Footer/>
-   </div> </div></div> </div></>
+                      </div>
+                  </div>
+              </div>
+          </div></>
   )
 }
 export default App;

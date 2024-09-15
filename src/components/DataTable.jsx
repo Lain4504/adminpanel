@@ -25,7 +25,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         toast.error(`Failed to delete the ${entityName}!`, { position: "top-right" });
       });
   };
-
   const fetchData = () => {
     setLoading(true);
     setTimeout(() => {
@@ -33,7 +32,17 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         .then((res) => {
           const allData = res.data;
           setData(allData);
-          setTotalPages(Math.ceil(allData.length / itemsPerPage));
+  
+          // Tính toán tổng số trang dựa trên số lượng item và số item trên mỗi trang
+          const totalItems = allData.length;
+          const totalPages = Math.ceil(totalItems / itemsPerPage);
+          setTotalPages(totalPages);
+  
+          // Kiểm tra nếu trang hiện tại vượt quá tổng số trang, và đưa về trang trước đó
+          if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+          }
+  
           setLoading(false);
         })
         .catch(() => {
@@ -42,6 +51,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         });
     }, 1000);
   };
+  
 
   useEffect(() => {
     fetchData();
