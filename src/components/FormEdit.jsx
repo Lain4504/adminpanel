@@ -11,15 +11,21 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     };
 
     const handleSave = () => {
-        updateData(data).then(res => {
-            if (res.status === 200) {
+        updateData(id, data).then(res => {
+            // Chuyển đổi trạng thái kiểm tra để phù hợp với phản hồi 204
+            if (res.status === 204) {
                 onSuccess();
             } else {
                 setError(true);
                 if (onError) onError();
             }
+        }).catch(error => {
+            // Đảm bảo rằng lỗi cũng được xử lý và hiển thị
+            setError(true);
+            if (onError) onError();
         });
     };
+    
 
     useEffect(() => {
         getDataById(id).then((res) => {

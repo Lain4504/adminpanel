@@ -8,27 +8,25 @@ import FormNew from "./components/FormNew";
 import CollectionList from "./pages/collection/CollectionList";
 import Order from "./pages/Order";
 import Post from "./pages/Post";
-// import Product from "./pages/Product";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import CollectionSingle from "./pages/collection/CollectionSingle";
 import { addCollection } from "./service/CollectionService";
 import { collectionInputs } from "./context/formSource";
 import Login from "./pages/Login";
+import Page404 from "./components/page404";
+import ProductList from "./pages/ProductList";
 
 const App = () => {
   const location = useLocation();
-
   return (
     <>
       <ToastContainer />
       {location.pathname === "/login" ? (
-        // Nếu trang là /login, chỉ hiển thị trang đăng nhập mà không có Sidebar hay Footer
         <Routes>
           <Route path="/login" element={<Login />} />
         </Routes>
       ) : (
-        // Nếu không phải trang /login, hiển thị toàn bộ Sidebar, Footer và các trang khác
         <div className="p-4 sm:ml-64">
           <Sidebar />
           <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
@@ -41,12 +39,14 @@ const App = () => {
                     <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location={'/collections'} handleAdd={addCollection} />} />
                     <Route path=":id" element={<CollectionSingle />} />
                   </Route>
-                  {/* <Route path="/product">
-                    <Route index element={<Product />} />
-                  </Route> */}
                   <Route path="/order" element={<Order />} />
                   <Route path="/post" element={<Post />} />
+                  <Route path="products">
+                      <Route index element={<ProductList/>}/>
+                  </Route>
                   <Route path="/dashboard" element={<Dashboard />} />
+                  {/* Catch-all route for 404 page */}
+                  {/* <Route path="*" element={<Page404 />} /> */}
                 </Routes>
                 <Footer />
               </div>

@@ -81,7 +81,7 @@ const Sidebar = () => {
               </li>
               <hr className="border-gray-700" />
               <li>
-                <Link to={'/product'} onClick={handleMenuItemClick}>
+                <Link to={'/products'} onClick={handleMenuItemClick}>
                   <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <ProductionQuantityLimitsIcon />
                     <span className="flex-1 ms-3 whitespace-nowrap">Sản phẩm</span>
