@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { notification } from 'antd';
 
+
 const New = ({ inputs, title, handleAdd, location }) => {
   const [data, setData] = useState({});
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ const New = ({ inputs, title, handleAdd, location }) => {
                   <select
                     id={input.id}
                     value={data[input.id] || 'false'}  // Ensure value is in sync with data
+
                     onChange={handleInput}
                     className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   >

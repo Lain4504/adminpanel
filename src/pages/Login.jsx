@@ -26,6 +26,7 @@ const Login = ({ setCookies }) => {
                 }, 1000);
             })
             .catch(err => {
+
                 notification.error({
                     message: 'Đăng nhập không thành công',
                     description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
@@ -110,6 +111,7 @@ const Login = ({ setCookies }) => {
                 </Form>
             </div>
         </div>
+
     );
 };
 

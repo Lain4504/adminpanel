@@ -13,6 +13,7 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
 
     const handleSave = () => {
         updateData(id, data).then(res => {
+            // Chuyển đổi trạng thái kiểm tra để phù hợp với phản hồi 204
             if (res.status === 204) {
                 onSuccess();
             } else {

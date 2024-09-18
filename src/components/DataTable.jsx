@@ -30,7 +30,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         });
       });
   };
-
   const fetchData = () => {
     setLoading(true);
     setTimeout(() => {
@@ -61,6 +60,8 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         });
     }, 1000);
   };
+  
+  
 
   useEffect(() => {
     fetchData();
