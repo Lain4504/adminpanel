@@ -25,23 +25,35 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         toast.error(`Failed to delete the ${entityName}!`, { position: "top-right" });
       });
   };
-
   const fetchData = () => {
     setLoading(true);
     setTimeout(() => {
       dataService()
         .then((res) => {
-          const allData = res.data;
+          const allData = res.data || []; // Kiểm tra nếu res.data không có dữ liệu thì gán là mảng rỗng
           setData(allData);
-          setTotalPages(Math.ceil(allData.length / itemsPerPage));
+  
+          // Tính toán tổng số trang dựa trên số lượng item và số item trên mỗi trang
+          const totalItems = allData.length;
+          const totalPages = Math.ceil(totalItems / itemsPerPage);
+          setTotalPages(totalPages);
+  
+          // Kiểm tra nếu trang hiện tại vượt quá tổng số trang, và đưa về trang trước đó
+          if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+          }
+  
           setLoading(false);
         })
         .catch(() => {
           toast.error(`Failed to fetch ${entityName}s!`, { position: "top-right" });
+          setData([]); // Đảm bảo khi lỗi xảy ra thì dữ liệu là mảng rỗng
           setLoading(false);
         });
     }, 1000);
   };
+  
+  
 
   useEffect(() => {
     fetchData();
@@ -113,51 +125,61 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              Array.from({ length: 1 }).map((_, index) => (
-                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  {columns.map((column, colIndex) => (
-                    <td key={colIndex} className="px-6 py-4">
-                      <Spin spinning={true} />
-                    </td>
-                  ))}
-                  <td className="px-6 py-4 text-center">
-                    <Spin spinning={true} />
-                  </td>
-                </tr>
-              ))
-            ) : (
-              paginatedData.map((row) => (
-                <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {columns.map((column) => (
-                    <td key={column.field} className="px-6 py-4">
-                      {column.renderCell ? column.renderCell({ row }) : row[column.field]}
-                    </td>
-                  ))}
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center space-x-2">
-                      <Link to={`${updatePath}/${row.id}`}>
-                        <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                          Update
-                        </button>
-                      </Link>
-                      <Popconfirm
-                        title={`Are you sure you want to delete this ${entityName}?`}
-                        onConfirm={() => handleDelete(row.id)}
-                        onCancel={() => { }}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <button className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500">
-                          Delete
-                        </button>
-                      </Popconfirm>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
+  {loading ? (
+    // Hiển thị loading
+    Array.from({ length: 1 }).map((_, index) => (
+      <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        {columns.map((column, colIndex) => (
+          <td key={colIndex} className="px-6 py-4">
+            <Spin spinning={true} />
+          </td>
+        ))}
+        <td className="px-6 py-4 text-center">
+          <Spin spinning={true} />
+        </td>
+      </tr>
+    ))
+  ) : paginatedData.length === 0 ? (
+    // Nếu không có dữ liệu sau khi loading xong
+    <tr>
+      <td colSpan={columns.length + 1} className="text-center py-4">
+        Không có nội dung
+      </td>
+    </tr>
+  ) : (
+    // Hiển thị dữ liệu bình thường
+    paginatedData.map((row) => (
+      <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        {columns.map((column) => (
+          <td key={column.field} className="px-6 py-4">
+            {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+          </td>
+        ))}
+        <td className="px-6 py-4 text-center">
+          <div className="flex justify-center space-x-2">
+            <Link to={`${updatePath}/${row.id}`}>
+              <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Update
+              </button>
+            </Link>
+            <Popconfirm
+              title={`Are you sure you want to delete this ${entityName}?`}
+              onConfirm={() => handleDelete(row.id)}
+              onCancel={() => { }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <button className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded focus:outline-none focus:ring-2 focus:ring-red-500">
+                Delete
+              </button>
+            </Popconfirm>
+          </div>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
+
         </table>
       </div>
 

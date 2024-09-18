@@ -1,6 +1,6 @@
 import React from 'react';
-import { getCollectionsById, updateCollection } from '../service/CollectionService';
-import FormEdit from '../components/FormEdit';
+import { getCollectionsById, updateCollection } from '../../service/CollectionService';
+import FormEdit from '../../components/FormEdit';
 
 const CollectionSingle = () => {
     const fields = {

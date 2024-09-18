@@ -20,7 +20,7 @@ export const collectionColumns = [
       headerName: "Product",
       width: 300,
       renderCell: (params) => (
-        <div className="cellWithImg flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <img
             className="w-12 h-12 object-cover rounded"
             src={params.row?.images?.[0]?.link || ""}
@@ -36,7 +36,7 @@ export const collectionColumns = [
       headerName: "State",
       width: 160,
       renderCell: (params) => (
-        <div className={`cellWithStatus ${params.row?.state?.toLowerCase()}`}>
+        <div className={`${params.row?.state?.toLowerCase()}`}>
           {params.row.state}
         </div>
       ),

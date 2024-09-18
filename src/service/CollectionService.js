@@ -27,16 +27,16 @@ const addCollection = (collection) => {
 
 const getCollectionsById = (id) => axios.get(`${API_URL}/${id}`);
 
-const updateCollection = async (data) => {
+const updateCollection = async (id, data) => {
     try {
-        // Ensure isDisplay is a boolean
         data.isDisplay = Boolean(data.isDisplay);
-        const response = await axios.put(API_URL, data);
-        return response;
+        return await axios.put(`${API_URL}/${id}`, data);
     } catch (err) {
         console.log(err);
         throw err;
     }
 }
+
+
 export { getAllCollections, deleteCollection, addCollection, getCollectionsById, updateCollection };
 

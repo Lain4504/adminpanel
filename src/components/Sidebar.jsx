@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Footer from "./Footer";
-import { assets } from '../assets/assets';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
@@ -14,6 +12,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
+  const navigate = useNavigate(); // Hook để điều hướng
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -70,67 +69,66 @@ const Sidebar = () => {
             <ul className="space-y-2 font-medium">
               <li>
                 <Link to="/" onClick={handleMenuItemClick} className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
-                  {/* Removed logo */}
                 </Link>
               </li>
               <li>
                 <Link to={'/dashboard'} onClick={handleMenuItemClick}>
-                  <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <DashboardCustomizeIcon />
                     <span className="ms-3">Bảng thống kê</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
               <hr className="border-gray-700" />
               <li>
-                <Link to={'/product'} onClick={handleMenuItemClick}>
-                  <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                <Link to={'/products'} onClick={handleMenuItemClick}>
+                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <ProductionQuantityLimitsIcon />
                     <span className="flex-1 ms-3 whitespace-nowrap">Sản phẩm</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
               <li>
                 <Link to={'/order'} onClick={handleMenuItemClick}>
-                  <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <CardTravelIcon />
                     <span className="flex-1 ms-3 whitespace-nowrap">Đơn hàng</span>
                     <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
                       3
                     </span>
-                  </a>
+                  </div>
                 </Link>
               </li>
               <li>
                 <Link to={'/collections'} onClick={handleMenuItemClick}>
-                  <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <CollectionsIcon />
                     <span className="flex-1 ms-3 whitespace-nowrap">Bộ sưu tập</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
               <li>
                 <Link to={'/post'} onClick={handleMenuItemClick}>
-                  <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <PostAddIcon />
                     <span className="flex-1 ms-3 whitespace-nowrap">Bài viết</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
               <li>
                 <Link to={'feedback'} onClick={handleMenuItemClick}>
-                  <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
                     <FeedbackIcon />
                     <span className="flex-1 ms-3 whitespace-nowrap">Phản hồi</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
               <hr className="border-gray-700" />
               <li>
-                <a className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
+                <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group" onClick={() => navigate('/login')}>
                   <LogoutIcon />
                   <span className="flex-1 ms-3 whitespace-nowrap">Đăng xuất</span>
-                </a>
+                </div>
               </li>
             </ul>
           </div>
