@@ -1,9 +1,18 @@
 import axios from 'axios'
 
 const BOOK_BASE_URL = "http://localhost:5146/api/book";
+//5146
 
 const getAllBooks = () => {
-    return axios.get(BOOK_BASE_URL + '/get-all');
+    return axios.get(BOOK_BASE_URL)
+    .then(response => {
+        console.log('Get All Books Response:', response);
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching all books:', error);
+        throw error;
+    });
 }
 
 const getBookById = (bookId) => {
