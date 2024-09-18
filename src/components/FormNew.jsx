@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { notification } from 'antd';
 
 const New = ({ inputs, title, handleAdd, location }) => {
   const [data, setData] = useState({});
@@ -9,18 +10,35 @@ const New = ({ inputs, title, handleAdd, location }) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    // Cập nhật giá trị được chọn từ dropdown
+    // Update value from dropdown or input
     setData({ ...data, [id]: value });
   };
 
-  const handleAddItem = (e) => {
+  const handleAddItem = async (e) => {
     e.preventDefault();
-    handleAdd(data);  // Đảm bảo dữ liệu được truyền đúng
-    navigate(location);  // Sử dụng navigate để chuyển hướng
+    try {
+      // Call handleAdd and assume it returns a promise
+      await handleAdd(data);
+      
+      // Show success notification
+      notification.success({
+        message: 'Success',
+        description: 'Item has been successfully added.',
+      });
+      
+      // Navigate to the specified location
+      navigate(location);
+    } catch (error) {
+      // Show error notification
+      notification.error({
+        message: 'Error',
+        description: 'An error occurred while adding the item.',
+      });
+    }
   };
 
   const handleCancel = () => {
-    navigate(-1);  // Quay lại trang trước đó
+    navigate(-1);  // Go back to the previous page
   };
 
   return (
@@ -38,7 +56,7 @@ const New = ({ inputs, title, handleAdd, location }) => {
                 {input.type === 'select' ? (
                   <select
                     id={input.id}
-                    value={data[input.id] || 'false'}  // Đảm bảo giá trị hiện tại của select khớp với data
+                    value={data[input.id] || 'false'}  // Ensure value is in sync with data
                     onChange={handleInput}
                     className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   >

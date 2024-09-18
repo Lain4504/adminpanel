@@ -1,6 +1,6 @@
-import DataTable from '../components/DataTable';
-import { getAllBooks, deleteBook } from "../service/BookService";
-import { productColumns } from '../context/DataSet';
+import { getAllBooks, deleteBook } from "../../service/BookService";
+import { productColumns } from '../../context/DataSet';
+import DataTable from "../../components/DataTable";
 
 const ProductList = () => {
   return (
