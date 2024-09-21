@@ -1,4 +1,5 @@
 import React from 'react'
+
 const SearchBar = ({ searchTerm, handleSearch, placeholder }) => {
   return (
     <div className="flex items-center">

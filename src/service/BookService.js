@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 const BOOK_BASE_URL = "http://localhost:5146/api/book";
-//5146
 
 const getAllBooks = () => {
     return axios.get(BOOK_BASE_URL)

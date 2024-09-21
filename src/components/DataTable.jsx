@@ -5,7 +5,7 @@ import { notification, Spin, Popconfirm } from 'antd';
 import SearchBar from './SearchBar';
 import Filter from './Filter';
 
-const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField }) => {
+const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField,searchField  }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -81,10 +81,10 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   };
 
   const filteredData = data
-    .filter((item) => (filterValue === '' || item[filterField] === filterValue))
-    .filter((item) => columns.some((column) =>
-      String(item[column.field]).toLowerCase().includes(searchTerm.toLowerCase())
-    ));
+  .filter((item) => (filterValue === '' || item[filterField] === filterValue))
+  .filter((item) =>
+    String(item[searchField]).toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -103,10 +103,10 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
           </Link>
 
           <SearchBar
-            searchTerm={searchTerm}
-            handleSearch={handleSearch}
-            placeholder={`Search ${entityName}s...`}
-          />
+        searchTerm={searchTerm}
+        handleSearch={handleSearch}
+        placeholder={`Search ${entityName}s by ${searchField}...`}
+      />
         </div>
       </div>
 
