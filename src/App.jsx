@@ -29,7 +29,7 @@ const App = () => {
     ) : (
       <div className="p-4 sm:ml-64">
         <Sidebar />
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+        <div className="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700">
           <div className="flex flex-col min-h-screen">
             <div className="flex-grow">
               <Routes>
@@ -76,11 +76,12 @@ const App = () => {
                 {/* Catch-all route for 404 page */}
                 <Route path="*" element={<Page404 />} />
               </Routes>
-              <Footer />
             </div>
           </div>
-        </div>
+        </div> 
+        <Footer />
       </div>
+      
     )}
   </>
   );
