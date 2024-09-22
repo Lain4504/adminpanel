@@ -1,4 +1,3 @@
-// components/DataTable.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { notification, Spin, Popconfirm } from 'antd';
@@ -9,11 +8,11 @@ import { Button, Pagination } from 'antd';
 const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField, searchField }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterValue, setFilterValue] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc'); // Trạng thái sắp xếp
 
   const handleDelete = (id) => {
     deleteService(id)
@@ -37,10 +36,11 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
     dataService()
       .then((res) => {
         const allData = res.data || [];
-        setData(allData);
-
-        const totalItems = allData.length;
-        setTotalPages(Math.ceil(totalItems / itemsPerPage));
+        // Sắp xếp toàn bộ dữ liệu
+        const sortedData = allData.sort((a, b) => {
+          return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
+        });
+        setData(sortedData);
         setLoading(false);
       })
       .catch(() => {
@@ -55,7 +55,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
 
   useEffect(() => {
     fetchData();
-  }, [itemsPerPage]);
+  }, [itemsPerPage, sortOrder]); // Thay đổi sortOrder sẽ gọi lại fetchData
 
   const filteredData = data
     .filter((item) => (filterValue === '' || item[filterField] === filterValue))
@@ -98,11 +98,22 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
             <tr>
               {columns.map((column) => (
                 <th key={column.field} className="px-6 py-3">
-                  {column.headerName}
+                  <div className="flex items-center justify-between">
+                    <span>{column.headerName}</span>
+                    {column.field === 'id' && ( // Thêm nút sắp xếp cho trường id
+                      <Button
+                        type="link"
+                        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                      >
+                        {sortOrder === 'asc' ? '↑' : '↓'}
+                      </Button>
+                    )}
+                  </div>
                 </th>
               ))}
               <th className="px-6 py-3">Actions</th>
             </tr>
+
           </thead>
           <tbody>
             {loading ? (
@@ -127,7 +138,8 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                   ))}
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center space-x-2">
-                      <Link to={`${updatePath}/${row.id}`}>
+                      <Link to={`${updatePath}/${row.id}`}
+                        onClick={() => localStorage.setItem('currentPage', currentPage)}>
                         <Button type="primary">Update</Button>
                       </Link>
                       <Popconfirm
@@ -136,7 +148,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                       >
                         <Button type="danger" className='bg-red-500'>
                           <p className='text-white'>Delete</p>
-                          </Button>
+                        </Button>
                       </Popconfirm>
                     </div>
                   </td>

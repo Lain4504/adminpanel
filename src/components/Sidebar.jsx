@@ -91,6 +91,7 @@ const Sidebar = () => {
                   </Link>
                 </Menu.Item>
               ))}
+              <hr/>
               <Menu.Divider />
               <Menu.Item icon={<LogoutOutlined />} onClick={() => navigate('/login')}>
                 Đăng xuất
