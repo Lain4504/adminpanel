@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+
 const SearchBar = ({ searchTerm, handleSearch, placeholder }) => {
   return (
     <div className="flex items-center">
@@ -7,10 +8,10 @@ const SearchBar = ({ searchTerm, handleSearch, placeholder }) => {
         placeholder={placeholder}
         value={searchTerm}
         onChange={handleSearch}
-        className="border border-gray-300 rounded px-4 py-2"
+        className="border border-gray-300 rounded-lg px-2 py-1 w-64" // Thay đổi ở đây
       />
     </div>
   );
 };
 
-export default SearchBar
+export default SearchBar;

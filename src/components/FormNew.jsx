@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from 'antd';
-
+import { notification, Button } from 'antd';
 
 const New = ({ inputs, title, handleAdd, location }) => {
   const [data, setData] = useState({});
@@ -11,26 +10,19 @@ const New = ({ inputs, title, handleAdd, location }) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    // Update value from dropdown or input
     setData({ ...data, [id]: value });
   };
 
   const handleAddItem = async (e) => {
     e.preventDefault();
     try {
-      // Call handleAdd and assume it returns a promise
       await handleAdd(data);
-      
-      // Show success notification
       notification.success({
         message: 'Success',
         description: 'Item has been successfully added.',
       });
-      
-      // Navigate to the specified location
       navigate(location);
     } catch (error) {
-      // Show error notification
       notification.error({
         message: 'Error',
         description: 'An error occurred while adding the item.',
@@ -39,7 +31,7 @@ const New = ({ inputs, title, handleAdd, location }) => {
   };
 
   const handleCancel = () => {
-    navigate(-1);  // Go back to the previous page
+    navigate(-1);
   };
 
   return (
@@ -57,8 +49,7 @@ const New = ({ inputs, title, handleAdd, location }) => {
                 {input.type === 'select' ? (
                   <select
                     id={input.id}
-                    value={data[input.id] || 'false'}  // Ensure value is in sync with data
-
+                    value={data[input.id] || 'false'}
                     onChange={handleInput}
                     className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   >
@@ -80,19 +71,19 @@ const New = ({ inputs, title, handleAdd, location }) => {
               </div>
             ))}
             <div className="flex justify-between mt-4">
-              <button
-                type="submit"
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="bg-indigo-600 text-white transition"
               >
                 Save
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
                 onClick={handleCancel}
-                className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition"
+                className="bg-gray-500 text-white transition"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         </div>

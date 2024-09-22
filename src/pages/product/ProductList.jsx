@@ -11,6 +11,7 @@ const ProductList = () => {
       entityName="Product"
       createPath="/products/new"
       updatePath="/products"
+      searchField="title"  
     />
   );
 };

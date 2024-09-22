@@ -1,21 +1,24 @@
-// components/Filter.js
 import React from 'react';
+import { Select } from 'antd';
+
+const { Option } = Select;
 
 const Filter = ({ filterField, filterValue, setFilterValue, data }) => {
   const uniqueValues = Array.from(new Set(data.map(item => item[filterField])));
 
   return (
     <div className="flex mb-4">
-      <select
+      <Select
         value={filterValue}
-        onChange={(e) => setFilterValue(e.target.value)}
-        className="border border-gray-300 rounded px-2 py-1"
+        onChange={setFilterValue}
+        className="w-32 border border-gray-300 rounded"
+        placeholder={`Select ${filterField}`}
       >
-        <option value="">All {filterField}</option>
+        <Option value="">All {filterField}</Option>
         {uniqueValues.map((value) => (
-          <option key={value} value={value}>{value}</option>
+          <Option key={value} value={value}>{value}</Option>
         ))}
-      </select>
+      </Select>
     </div>
   );
 };

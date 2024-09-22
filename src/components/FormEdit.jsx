@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { notification } from 'antd';
+import { notification, Button } from 'antd';
 
 const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     const [data, setData] = useState({});
@@ -13,7 +13,6 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
 
     const handleSave = () => {
         updateData(id, data).then(res => {
-            // Chuyển đổi trạng thái kiểm tra để phù hợp với phản hồi 204
             if (res.status === 204) {
                 onSuccess();
             } else {
@@ -34,7 +33,6 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
         });
     };
     
-
     useEffect(() => {
         getDataById(id).then((res) => {
             setData(res.data);
@@ -57,18 +55,20 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-xl font-semibold">Update {fields.title}</h3>
                             <div className="flex space-x-4">
-                                <button
+                                <Button
                                     onClick={handleCancel}
-                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                                    type="danger"
+                                    className="transition bg-gray-400"
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     onClick={handleSave}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                                    type="primary"
+                                    className="transition"
                                 >
                                     Save
-                                </button>
+                                </Button>
                             </div>
                         </div>
 

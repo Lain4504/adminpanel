@@ -1,18 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
-import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import CardTravelIcon from '@mui/icons-material/CardTravel';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import FeedbackIcon from '@mui/icons-material/Feedback';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  DashboardOutlined,
+  ShoppingOutlined,
+  ShoppingCartOutlined,
+  AppstoreOutlined,
+  FileAddOutlined,
+  CommentOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+} from '@ant-design/icons';
+import { Menu } from 'antd';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
-  const navigate = useNavigate(); // Hook để điều hướng
+  const navigate = useNavigate();
+  
+  const menuItems = [
+    { key: '/', label: 'Home', icon: null },
+    { key: '/dashboard', label: 'Bảng thống kê', icon: <DashboardOutlined /> },
+    { key: '/products', label: 'Sản phẩm', icon: <ShoppingOutlined /> },
+    { key: '/order', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
+    { key: '/collections', label: 'Bộ sưu tập', icon: <AppstoreOutlined /> },
+    { key: '/post', label: 'Bài viết', icon: <FileAddOutlined /> },
+    { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
+  ];
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -52,11 +65,7 @@ const Sidebar = () => {
           className="inline-flex items-center p-2 mt-2 ms-3 text-white rounded-lg sm:hidden hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-black"
         >
           <span className="sr-only">Open sidebar</span>
-          <MenuOpenIcon
-            className="w-6 h-6"
-            aria-hidden="true"
-            fill="currentColor"
-          />
+          <MenuOutlined className="w-6 h-6" />
         </button>
 
         <aside
@@ -66,71 +75,28 @@ const Sidebar = () => {
           aria-label="Sidebar"
         >
           <div className="h-full px-3 py-4 overflow-y-auto bg-gray-900 text-white">
-            <ul className="space-y-2 font-medium">
-              <li>
-                <Link to="/" onClick={handleMenuItemClick} className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
-                </Link>
-              </li>
-              <li>
-                <Link to={'/dashboard'} onClick={handleMenuItemClick}>
-                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
-                    <DashboardCustomizeIcon />
-                    <span className="ms-3">Bảng thống kê</span>
-                  </div>
-                </Link>
-              </li>
-              <hr className="border-gray-700" />
-              <li>
-                <Link to={'/products'} onClick={handleMenuItemClick}>
-                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
-                    <ProductionQuantityLimitsIcon />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Sản phẩm</span>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                <Link to={'/order'} onClick={handleMenuItemClick}>
-                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
-                    <CardTravelIcon />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Đơn hàng</span>
-                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
-                      3
-                    </span>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                <Link to={'/collections'} onClick={handleMenuItemClick}>
-                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
-                    <CollectionsIcon />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Bộ sưu tập</span>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                <Link to={'/post'} onClick={handleMenuItemClick}>
-                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
-                    <PostAddIcon />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Bài viết</span>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                <Link to={'feedback'} onClick={handleMenuItemClick}>
-                  <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group">
-                    <FeedbackIcon />
-                    <span className="flex-1 ms-3 whitespace-nowrap">Phản hồi</span>
-                  </div>
-                </Link>
-              </li>
-              <hr className="border-gray-700" />
-              <li>
-                <div className="flex items-center p-2 text-gray-300 rounded-lg hover:bg-gray-700 group" onClick={() => navigate('/login')}>
-                  <LogoutIcon />
-                  <span className="flex-1 ms-3 whitespace-nowrap">Đăng xuất</span>
-                </div>
-              </li>
-            </ul>
+            <Menu
+              theme="dark"
+              mode="inline"
+              defaultSelectedKeys={['/']}
+              style={{ border: 'none' }}
+            >
+              {menuItems.map(({ key, label, icon, badge }) => (
+                <Menu.Item key={key} icon={icon} onClick={handleMenuItemClick}>
+                  <Link to={key}>
+                    {label}
+                    {badge && (
+                      <span className="badge">{badge}</span>
+                    )}
+                  </Link>
+                </Menu.Item>
+              ))}
+              <hr/>
+              <Menu.Divider />
+              <Menu.Item icon={<LogoutOutlined />} onClick={() => navigate('/login')}>
+                Đăng xuất
+              </Menu.Item>
+            </Menu>
           </div>
         </aside>
       </div>
