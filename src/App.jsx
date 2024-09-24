@@ -15,7 +15,9 @@ import Login from "./pages/Login";
 import Page404 from "./components/Page404";
 import ProductList from "./pages/product/ProductList";
 import { useCookies } from 'react-cookie';
-
+import PostList from "./pages/post/PostList";
+import PostNew from "./pages/post/PostNew";
+import PostSingle from "./pages/post/PostSingle"
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies(['authToken']);
   const location = useLocation();
@@ -34,33 +36,37 @@ const App = () => {
             <div className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+               
+               {/* Collection Start */}
                 <Route path="/collections">
                   <Route index element={<CollectionList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-                  <Route path="new" element={<FormNew 
-                    inputs={collectionInputs} 
-                    title="Add New Collection" 
-                    location="/collections" 
-                    handleAdd={addCollection} 
-                    cookies={cookies} 
-                    setCookies={setCookies} 
-                    removeCookies={removeCookies} 
-                  />} />
+                  <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location="/collections" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
                   <Route path=":id" element={<CollectionSingle 
                     cookies={cookies} 
                     setCookies={setCookies} 
                     removeCookies={removeCookies} 
                   />} />
                 </Route>
+                  {/* Collection End */}
+
+                 {/* Post Start */}
+                 <Route path="/posts">
+                  <Route index element={<PostList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                  <Route path="new" element={<PostNew inputs={collectionInputs} title="Add New Post" location="/posts" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                  <Route path=":id" element={<PostSingle
+                    cookies={cookies} 
+                    setCookies={setCookies} 
+                    removeCookies={removeCookies} 
+                  />} />
+                </Route>
+                  {/* Post End */}
+
                 <Route path="/order" element={<Order 
                   cookies={cookies} 
                   setCookies={setCookies} 
                   removeCookies={removeCookies} 
                 />} />
-                <Route path="/post" element={<Post 
-                  cookies={cookies} 
-                  setCookies={setCookies} 
-                  removeCookies={removeCookies} 
-                />} />
+               
                 <Route path="products">
                   <Route index element={<ProductList 
                     cookies={cookies} 

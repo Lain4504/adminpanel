@@ -10,4 +10,7 @@ const login = (account) => {
     return axios.post(ACCOUNT_URL + 'login', account);
 }
 
-export {createAccount, login}
+const getUserInfoByEmail = (email) => {
+    return axios.get(`http://localhost:5146/api/user/by-email/${email}`);
+}
+export {createAccount, login, getUserInfoByEmail}
