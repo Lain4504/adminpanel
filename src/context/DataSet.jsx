@@ -1,6 +1,6 @@
 export const collectionColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 250 },
+  { field: "name", headerName: "Name", width: 450 },
   { field: "type", headerName: "Type", width: 150 },
   { 
     field: "isDisplay", 
@@ -18,7 +18,7 @@ export const collectionColumns = [
     {
       field: "product",
       headerName: "Product",
-      width: 300,
+      width: 450,
       renderCell: (params) => (
         <div className="flex items-center space-x-2">
           <img
@@ -30,11 +30,11 @@ export const collectionColumns = [
         </div>
       ),
     },
-    { field: "stock", headerName: "Stock", width: 230 },
+    { field: "stock", headerName: "Stock", width: 120 },
     {
       field: "state",
       headerName: "State",
-      width: 160,
+      width: 120,
       renderCell: (params) => (
         <div className={`${params.row?.state?.toLowerCase()}`}>
           {params.row.state}
@@ -44,8 +44,33 @@ export const collectionColumns = [
     {
       field: "price",
       headerName: "Price",
-      width: 100,
+      width: 120,
       renderCell: (params) => <div>{params.row.price?.toLocaleString()}</div>,
     },
   ];
   
+export const postColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "title", headerName: "Title", width: 200 },
+  {
+    field: 'category', headerName: 'Category', width: 200,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params?.row?.category?.name}
+        </div>
+      );
+    },
+  },
+  { field: 'createdAt', headerName: 'Created Time', width: 200 },
+  {
+    field: 'author', headerName: 'Author', width: 150,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.user.fullName}
+        </div>
+      );
+    },
+  }
+]

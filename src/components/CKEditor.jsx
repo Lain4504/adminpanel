@@ -17,10 +17,9 @@ const CKEditorComponent = () => {
 
   return (
     <div>
-      <h2>CKEditor 5 Classic Editor in React</h2>
       <CKEditor
         editor={ClassicEditor}
-        data="<p>Welcome to CKEditor 5!</p>"
+        data=""
         onReady={editor => {
           console.log('Editor is ready to use!', editor);
         }}

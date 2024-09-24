@@ -23,7 +23,7 @@ const Sidebar = () => {
     { key: '/products', label: 'Sản phẩm', icon: <ShoppingOutlined /> },
     { key: '/order', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
     { key: '/collections', label: 'Bộ sưu tập', icon: <AppstoreOutlined /> },
-    { key: '/post', label: 'Bài viết', icon: <FileAddOutlined /> },
+    { key: '/posts', label: 'Bài viết', icon: <FileAddOutlined /> },
     { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
   ];
 

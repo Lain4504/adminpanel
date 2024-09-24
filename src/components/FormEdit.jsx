@@ -15,12 +15,15 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     const handleSave = async () => {
         try {
             const res = await updateData(id, data);
-            if (res.status === 204) {
+            if (res.status === 200) { 
                 notification.success({
                     message: 'Update Successful',
-                    description: 'The data has been successfully updated.',
+                    description: res.data.message || 'The data has been successfully updated.', 
                 });
-                onSuccess();
+                // Chỉ điều hướng sau khi hiển thị thông báo
+                setTimeout(() => {
+                    onSuccess();
+                }, 500); // Thêm một chút thời gian trước khi điều hướng
             } else {
                 notification.error({
                     message: 'Update Failed',
@@ -36,6 +39,8 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
             if (onError) onError();
         }
     };
+    
+    
     
     useEffect(() => {
         const fetchData = async () => {
