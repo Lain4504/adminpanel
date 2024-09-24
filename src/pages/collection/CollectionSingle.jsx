@@ -20,7 +20,7 @@ const CollectionSingle = () => {
             getDataById={getCollectionsById}
             updateData={updateCollection}
             fields={fields}
-            onSuccess={() => window.location.replace("/collections")}
+            onSuccess={() => window.location.replace("/product-management/collections")}
             onError={() => console.error('Failed to update collections')}
         />
     );

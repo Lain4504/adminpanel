@@ -10,8 +10,8 @@ const PostList = () => {
       dataService={getAllPosts}
       deleteService={deletePost}
       entityName="Post"
-      createPath="/posts/new"
-      updatePath="/posts"
+      createPath="/post-management/posts/new"
+      updatePath="/post-management/posts"
       />
     );
 };

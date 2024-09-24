@@ -38,9 +38,9 @@ const App = () => {
                 <Route path="/" element={<Home cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
                
                {/* Collection Start */}
-                <Route path="/collections">
+                <Route path="/product-management/collections">
                   <Route index element={<CollectionList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-                  <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location="/collections" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                  <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location="/product-management/collections" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
                   <Route path=":id" element={<CollectionSingle 
                     cookies={cookies} 
                     setCookies={setCookies} 
@@ -50,9 +50,9 @@ const App = () => {
                   {/* Collection End */}
 
                  {/* Post Start */}
-                 <Route path="/posts">
+                 <Route path="/post-management/posts">
                   <Route index element={<PostList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-                  <Route path="new" element={<PostNew inputs={collectionInputs} title="Add New Post" location="/posts" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                  <Route path="new" element={<PostNew inputs={collectionInputs} title="Add New Post" location="/post-management/posts" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
                   <Route path=":id" element={<PostSingle
                     cookies={cookies} 
                     setCookies={setCookies} 
@@ -67,7 +67,7 @@ const App = () => {
                   removeCookies={removeCookies} 
                 />} />
                
-                <Route path="products">
+                <Route path="product-management/products">
                   <Route index element={<ProductList 
                     cookies={cookies} 
                     setCookies={setCookies} 

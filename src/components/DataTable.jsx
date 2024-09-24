@@ -93,79 +93,70 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
       )}
 
 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-fixed">
-    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-      <tr>
-        {columns.map((column) => (
-          <th 
-            key={column.field} 
-            className="px-6 py-3"
-            style={{ width: `${column.width}px`, minWidth: `${column.width}px`, maxWidth: `${column.width}px` }} // Đặt kích thước width cho thẻ <th>
-          >
-            <div className="flex items-center justify-between">
-              <span>{column.headerName}</span>
-              {column.field === 'id' && ( // Thêm nút sắp xếp cho trường id
-                <Button
-                  type="link"
-                  onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                >
-                  {sortOrder === 'asc' ? '↑' : '↓'}
-                </Button>
-              )}
-            </div>
-          </th>
-        ))}
-        <th className="px-6 py-3">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {loading ? (
-        <tr>
-          <td colSpan={columns.length + 1} className="text-center py-4">
-            <Spin spinning={true} />
-          </td>
-        </tr>
-      ) : paginatedData.length === 0 ? (
-        <tr>
-          <td colSpan={columns.length + 1} className="text-center py-4">
-            Không có nội dung
-          </td>
-        </tr>
-      ) : (
-        paginatedData.map((row) => (
-          <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-            {columns.map((column) => (
-              <td 
-                key={column.field} 
-                className="px-6 py-4"
-                style={{ width: `${column.width}px`, minWidth: `${column.width}px`, maxWidth: `${column.width}px` }} // Đặt kích thước width cho thẻ <td>
-              >
-                {column.renderCell ? column.renderCell({ row }) : row[column.field]}
-              </td>
-            ))}
-            <td className="px-6 py-4 text-center">
-              <div className="flex justify-center space-x-2">
-                <Link to={`${updatePath}/${row.id}`}
-                  onClick={() => localStorage.setItem('currentPage', currentPage)}>
-                  <Button type="primary">Update</Button>
-                </Link>
-                <Popconfirm
-                  title={`Are you sure you want to delete this ${entityName}?`}
-                  onConfirm={() => handleDelete(row.id)}
-                >
-                  <Button type="danger" className='bg-red-500'>
-                    <p className='text-white'>Delete</p>
-                  </Button>
-                </Popconfirm>
-              </div>
-            </td>
-          </tr>
-        ))
-      )}
-    </tbody>
-  </table>
-</div>
-
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              {columns.map((column) => (
+                <th key={column.field} className="px-6 py-3">
+                  <div className="flex items-center justify-between">
+                    <span>{column.headerName}</span>
+                    {column.field === 'id' && ( // Thêm nút sắp xếp cho trường id
+                      <Button
+                        type="link"
+                        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                      >
+                        {sortOrder === 'asc' ? '↑' : '↓'}
+                      </Button>
+                    )}
+                  </div>
+                </th>
+              ))}
+              <th className="px-6 py-3">Actions</th>
+            </tr>
+            </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={columns.length + 1} className="text-center py-4">
+                  <Spin spinning={true} />
+                </td>
+              </tr>
+            ) : paginatedData.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length + 1} className="text-center py-4">
+                  Không có nội dung
+                </td>
+              </tr>
+            ) : (
+              paginatedData.map((row) => (
+                <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  {columns.map((column) => (
+                    <td key={column.field} className="px-6 py-4">
+                      {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+                    </td>
+                  ))}
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex justify-center space-x-2">
+                      <Link to={`${updatePath}/${row.id}`}
+                        onClick={() => localStorage.setItem('currentPage', currentPage)}>
+                        <Button type="primary">Update</Button>
+                      </Link>
+                      <Popconfirm
+                        title={`Are you sure you want to delete this ${entityName}?`}
+                        onConfirm={() => handleDelete(row.id)}
+                      >
+                        <Button type="danger" className='bg-red-500'>
+                          <p className='text-white'>Delete</p>
+                        </Button>
+                      </Popconfirm>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex justify-center mt-4">
         <Pagination
