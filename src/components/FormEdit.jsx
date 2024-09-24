@@ -1,49 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { notification, Button } from 'antd';
+import { notification, Button, Form, Input, Select } from 'antd';
+
+const { Option } = Select;
 
 const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     const [data, setData] = useState({});
     const { id } = useParams();
-    const [error, setError] = useState(false);
 
     const handleCancel = () => {
         window.location.replace("/collections"); 
     };
 
-    const handleSave = () => {
-        updateData(id, data).then(res => {
+    const handleSave = async () => {
+        try {
+            const res = await updateData(id, data);
             if (res.status === 204) {
+                notification.success({
+                    message: 'Update Successful',
+                    description: 'The data has been successfully updated.',
+                });
                 onSuccess();
             } else {
-                setError(true);
                 notification.error({
                     message: 'Update Failed',
                     description: 'An error occurred while updating the data.',
                 });
                 if (onError) onError();
             }
-        }).catch(error => {
-            setError(true);
+        } catch (error) {
             notification.error({
                 message: 'Update Failed',
                 description: 'An error occurred while updating the data.',
             });
             if (onError) onError();
-        });
+        }
     };
     
     useEffect(() => {
-        getDataById(id).then((res) => {
+        const fetchData = async () => {
+            const res = await getDataById(id);
             setData(res.data);
-        });
+        };
+        fetchData();
     }, [id, getDataById]);
 
-    const handleChange = (e) => {
-        const { id, value, type, checked } = e.target;
+    const handleChange = (fieldId, value) => {
         setData(prevData => ({
             ...prevData,
-            [id]: type === 'checkbox' ? checked : id === 'isDisplay' ? value === 'true' : value
+            [fieldId]: fieldId === 'isDisplay' ? (value === 'true') : value // Convert to boolean for isDisplay
         }));
     };
     
@@ -74,29 +79,33 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {fields.inputs.map((field) => (
-                                <div key={field.id}>
-                                    <label className="block text-sm font-medium text-gray-700">{field.label}</label>
+                                <Form.Item 
+                                    key={field.id}
+                                    label={field.label}
+                                    rules={[{ required: true, message: `Please input your ${field.label}!` }]}
+                                >
                                     {field.type === 'select' ? (
-                                        <select
+                                        <Select
                                             id={field.id}
-                                            value={data[field.id]}
-                                            onChange={handleChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            value={data[field.id] !== undefined ? String(data[field.id]) : ''}
+                                            onChange={(value) => handleChange(field.id, value)}
+                                            className="w-full"
                                         >
                                             {field.options.map(option => (
-                                                <option key={option.value} value={option.value}>{option.label}</option>
+                                                <Option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </Option>
                                             ))}
-                                        </select>
+                                        </Select>
                                     ) : (
-                                        <input
+                                        <Input
                                             type={field.type}
                                             id={field.id}
                                             value={data[field.id] || ''}
-                                            onChange={handleChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            onChange={(e) => handleChange(field.id, e.target.value)}
                                         />
                                     )}
-                                </div>
+                                </Form.Item>
                             ))}
                         </div>
                     </div>
