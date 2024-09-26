@@ -9,8 +9,8 @@ const ProductList = () => {
       dataService={getAllBooks}
       deleteService={deleteBook}
       entityName="Product"
-      createPath="/products/new"
-      updatePath="/products"
+      createPath="/product-management/products/new"
+      updatePath="/product-management/products"
       searchField="title"  
     />
   );

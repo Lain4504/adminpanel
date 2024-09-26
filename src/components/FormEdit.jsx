@@ -9,7 +9,7 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     const { id } = useParams();
 
     const handleCancel = () => {
-        window.location.replace("/collections"); 
+        window.location.replace("/product-management/collections"); 
     };
 
     const handleSave = async () => {
