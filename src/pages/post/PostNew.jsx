@@ -46,13 +46,13 @@ const PostNew = ({ currentUser }) => {
     };
 
     const handleCancel = () => {
-        window.location.replace("/posts");
+        window.location.replace("/post-management/posts");
     };
 
     const handleSave = () => {
         createPost(data).then(() => {
             message.success('Post created successfully!');
-            window.location.replace("/posts");
+            window.location.replace("/post-management/posts");
         }).catch(() => {
             setError(true);
             message.error('Error creating post.');
