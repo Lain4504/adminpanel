@@ -33,7 +33,7 @@ const Sidebar = () => {
         { key: '/product-management/publishers', label: 'Quản lý nhà xuất bản'},
       ],
     },
-    { key: '/order', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
+    { key: '/order-management/orders', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
     {
       key: 'post-management', 
       label: 'Bài viết',
