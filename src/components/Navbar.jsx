@@ -2,10 +2,16 @@ import React from 'react';
 import { Menu, Dropdown, Avatar } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-const Navbar = ({ onLogout }) => {
+const Navbar = () => {
   const navigate = useNavigate();
-
+  const authContext = useContext(AuthContext);
+  
+  const logout = () => {
+    authContext.dispatch({ type: "LOGOUT" });
+  }
   const handleChangePassword = () => {
     // Điều hướng đến trang thay đổi mật khẩu
     navigate('/change-password');
@@ -14,7 +20,7 @@ const Navbar = ({ onLogout }) => {
   const menu = (
     <Menu>
       <Menu.Item onClick={handleChangePassword}>Thay đổi mật khẩu</Menu.Item>
-      <Menu.Item onClick={onLogout}>Đăng xuất</Menu.Item>
+      <Menu.Item onClick={logout}>Đăng xuất</Menu.Item>
     </Menu>
   );
 
