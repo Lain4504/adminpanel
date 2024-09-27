@@ -103,3 +103,8 @@ export const orderColumns = [
     }
   },
 ]
+export const publisherColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "name", headerName: "Name", width: 150 },
+  { field: "website", headerName: "Website", width: 250 },
+]

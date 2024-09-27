@@ -22,3 +22,17 @@ export const collectionInputs = [
   }
 ]
 
+export const publisherInputs = [
+  {
+    id: 'name',
+    label: "Name",
+    type: "text",
+    placeholder: "Kim Đồng",
+  },
+  {
+    id: 'website',
+    label: "Website",
+    type: "text",
+    placeholder: "https://nxbkimdong.com.vn/",
+  }
+]

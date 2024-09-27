@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import CollectionSingle from "./pages/collection/CollectionSingle";
 import { addCollection } from "./service/CollectionService";
-import { collectionInputs } from "./context/formSource";
+import { collectionInputs, publisherInputs } from "./context/formSource";
 import Login from "./pages/Login";
 import Page404 from "./components/Page404";
 import ProductList from "./pages/product/ProductList";
@@ -23,24 +23,19 @@ import Navbar from "./components/Navbar";
 import OrderList from "./pages/order/OrderList";
 import OrderDetail from "./pages/order/OrderDetail";
 import ChangeState from "./pages/order/ChangeState";
+import { createPost } from "./service/PostService";
+import PublisherSingle from "./pages/publisher/PublisherSingle";
+import PublisherList from "./pages/publisher/PublisherList";
+import { addPublisher } from "./service/PublisherService";
 
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies(['authToken']);
   const location = useLocation();
-  const handleLogout = () => {
-    removeCookies('authToken');
-    // Điều hướng về trang đăng nhập hoặc trang chính
-    navigate('/login');
-  };
+  
   return (
     <>
-      {location.pathname === "/login" ? (
-        <Routes>
-          <Route path="/login" element={<Login setCookies={setCookies} />} />
-        </Routes>
-      ) : (
         <Layout style={{ minHeight: '100vh' }}>
           <Sider
             width={250}
@@ -53,17 +48,17 @@ const App = () => {
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
               {/* Add a header component */}
-              <Navbar onLogout={handleLogout} />
+              <Navbar />
             </Header>
             <Content style={{ margin: '16px' }}>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                 <Routes>
-                  <Route path="/" element={<Home cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-
+                  <Route path="/" element={<Home   />} />
+                <Route path="/login" element={<Login/>}/>
                   {/* Collection Start */}
                   <Route path="/product-management/collections">
-                    <Route index element={<CollectionList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-                    <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location="/product-management/collections" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                    <Route index element={<CollectionList   />} />
+                    <Route path="new" element={<FormNew inputs={collectionInputs} title="Add New Collection" location="/product-management/collections" handleAdd={addCollection}   />} />
                     <Route path=":id" element={<CollectionSingle
                       cookies={cookies}
                       setCookies={setCookies}
@@ -71,11 +66,21 @@ const App = () => {
                     />} />
                   </Route>
                   {/* Collection End */}
-
+                  {/* Publisher Start */}
+                  <Route path="/product-management/publishers">
+                    <Route index element={<PublisherList   />} />
+                    <Route path="new" element={<FormNew inputs={publisherInputs} title="Add New Publisher" location="/product-management/publishers" handleAdd={addPublisher}   />} />
+                    <Route path=":id" element={<PublisherSingle
+                      cookies={cookies}
+                      setCookies={setCookies}
+                      removeCookies={removeCookies}
+                    />} />
+                  </Route>
+                  {/* Publisher End */}
                   {/* Post Start */}
                   <Route path="/post-management/posts">
-                    <Route index element={<PostList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-                    <Route path="new" element={<PostNew inputs={collectionInputs} title="Add New Post" location="/post-management/posts" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                    <Route index element={<PostList   />} />
+                    <Route path="new" element={<PostNew inputs={collectionInputs} title="Add New Post" location="/post-management/posts" handleAdd={createPost}   />} />
                     <Route path=":id" element={<PostSingle
                       cookies={cookies}
                       setCookies={setCookies}
@@ -86,8 +91,8 @@ const App = () => {
 
                   {/* Orders Start */}
                   <Route path="/order-management/orders">
-                    <Route index element={<OrderList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-                    <Route path=":id" element={<OrderDetail cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                    <Route index element={<OrderList   />} />
+                    <Route path=":id" element={<OrderDetail   />} />
                   </Route>
                   <Route path="/order-state/:id" element={<ChangeState />}></Route>
                   {/* Orders End */}
@@ -97,7 +102,7 @@ const App = () => {
                       cookies={cookies}
                       setCookies={setCookies}
                       removeCookies={removeCookies} />} />
-                    <Route path="new" element={<ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection} cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                    <Route path="new" element={<ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection}   />} />
                     <Route path=":id" element={<ProductSingle
                       cookies={cookies}
                       setCookies={setCookies}
@@ -106,7 +111,7 @@ const App = () => {
                   </Route>
                   {/* Product End */}
 
-                  <Route path="/dashboard" element={<Dashboard cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+                  <Route path="/dashboard" element={<Dashboard   />} />
                   <Route path="*" element={<Page404 />} />
                 </Routes>
               </div>
@@ -114,7 +119,6 @@ const App = () => {
             <Footer />
           </Layout>
         </Layout>
-      )}
     </>
   );
 };
