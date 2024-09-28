@@ -117,6 +117,7 @@ const Sidebar = () => {
                   </Menu.Item>
                 )
               )}
+
               <Menu.Divider />
             </Menu>
           </div>

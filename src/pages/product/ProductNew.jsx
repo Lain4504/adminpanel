@@ -1,3 +1,4 @@
+
 import { Button, Col, Form, Input, Row, Select, Upload, Image } from 'antd';
 import React, { useState } from 'react';
 import CKEditorComponent from '../../components/CKEditor';
@@ -186,3 +187,4 @@ const ProductNew = () => {
 };
 
 export default ProductNew;
+
