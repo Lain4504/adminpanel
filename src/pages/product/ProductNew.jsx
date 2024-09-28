@@ -1,4 +1,3 @@
-
 import { Button, Col, Form, Input, Row, Select, Upload, Image } from 'antd';
 import React, { useState } from 'react';
 import CKEditorComponent from '../../components/CKEditor';
@@ -33,7 +32,7 @@ const ProductNew = () => {
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
         <h3 className='text-2xl font-semibold mb-6'>Add New Book</h3>
         <div className='flex justify-between mb-4'>
-          <Button type='default' onClick={() => console.log('Cancel')}>
+          <Button type='default' onClick={() => window.history.back()}>
             Cancel
           </Button>
           <Button type='primary' onClick={handleSave}>
@@ -187,4 +186,3 @@ const ProductNew = () => {
 };
 
 export default ProductNew;
-
