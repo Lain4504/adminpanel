@@ -54,6 +54,7 @@ const App = () => {
           <Content style={{ margin: '16px' }}>
             <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
               <Routes>
+
                 <Route path="/"/>
                 <Route path="/login" element={<Login />} />
                 <Route index element={<RequireAuth><Home /></RequireAuth>} />
@@ -71,6 +72,7 @@ const App = () => {
                   <Route path="new" element={<RequireAuth><FormNew inputs={publisherInputs} title="Add New Publisher" location="/product-management/publishers" handleAdd={addPublisher} /></RequireAuth>} />
                   <Route path=":id" element={<RequireAuth><PublisherSingle
                   /></RequireAuth>} />
+
                 </Route>
                 {/* Publisher End */}
                 {/* Post Start */}
@@ -81,7 +83,6 @@ const App = () => {
                   /></RequireAuth>} />
                 </Route>
                 {/* Post End */}
-
                 {/* Orders Start */}
                 <Route path="/order-management/orders">
                   <Route index element={<RequireAuth><OrderList /></RequireAuth>} />
@@ -96,6 +97,7 @@ const App = () => {
                   <Route path="new" element={<RequireAuth><ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
                   <Route path=":id" element={<RequireAuth><ProductSingle
                   /></RequireAuth>} />
+
                 </Route>
                 {/* Product End */}
 
