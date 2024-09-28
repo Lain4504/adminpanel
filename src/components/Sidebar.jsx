@@ -4,14 +4,10 @@ import {
   DashboardOutlined,
   ShoppingOutlined,
   ShoppingCartOutlined,
-  AppstoreOutlined,
   FileAddOutlined,
   CommentOutlined,
   LogoutOutlined,
   MenuOutlined,
-  BookOutlined,
-  FormOutlined,
-  ReadOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
@@ -37,7 +33,7 @@ const Sidebar = () => {
         { key: '/product-management/publishers', label: 'Quản lý nhà xuất bản'},
       ],
     },
-    { key: '/order', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
+    { key: '/order-management/orders', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
     {
       key: 'post-management', 
       label: 'Bài viết',
@@ -94,7 +90,7 @@ const Sidebar = () => {
         <aside
           ref={sidebarRef}
           id="default-sidebar"
-          className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
+          className={`transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
           aria-label="Sidebar"
         >
           <div className="h-full px-3 py-4 overflow-y-auto bg-gray-900 text-white">
@@ -121,11 +117,8 @@ const Sidebar = () => {
                   </Menu.Item>
                 )
               )}
-              <hr/>
+
               <Menu.Divider />
-              <Menu.Item icon={<LogoutOutlined />} onClick={() => navigate('/login')}>
-                Đăng xuất
-              </Menu.Item>
             </Menu>
           </div>
         </aside>

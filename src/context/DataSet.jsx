@@ -13,6 +13,7 @@ export const collectionColumns = [
     )
   }
 ];
+
   export const productColumns = [
     { field: "id", headerName: "ID", width: 70 },
     {
@@ -73,4 +74,37 @@ export const postColumns = [
       );
     },
   }
+];
+
+
+export const orderColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "fullName", headerName: "Full Name", width: 150 },
+  { field: "phone", headerName: "Phone", width: 150 },
+  { field: "address", headerName: "Address", width: 200 },
+  { field: "paymentState", headerName: "Payment Method", width: 150, },
+  {
+    field: "shippingState", headerName: "Shipping State", width: 130,
+    renderCell: (params) => {
+      return (
+        <div className={`cellWithStatus ${params.row.shippingState.toLowerCase()}`}>
+          {params.row.shippingState}
+        </div>
+      );
+    },
+  },
+  { field: 'state', headerName: 'Order State', width: 150, },
+  {
+    field: "totalPrice", headerName: "Total Price", width: 120,
+    renderCell: (params) => {
+      return (
+        <div>{params.row.totalPrice.toLocaleString()}₫</div>
+      )
+    }
+  },
+]
+export const publisherColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "name", headerName: "Name", width: 150 },
+  { field: "website", headerName: "Website", width: 250 },
 ]

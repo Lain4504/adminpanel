@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { login } from '../service/UserService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
-const Login = ({ setCookies }) => {
+const Login = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const { dispatch } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const onSubmitHandler = async (values) => {
         setLoading(true);
@@ -16,7 +20,9 @@ const Login = ({ setCookies }) => {
         let account = { email, password };
         login(account)
             .then(res => {
-                setCookies('authToken', res.data.token); // Set cookie here
+                const user = jwtDecode(res.data.token); // Decode the JWT token
+                dispatch({ type: "LOGIN", payload: user });
+                navigate("/");
                 notification.success({
                     message: 'Đăng nhập thành công',
                     description: 'Chào mừng bạn trở lại!',
@@ -26,7 +32,6 @@ const Login = ({ setCookies }) => {
                 }, 1000);
             })
             .catch(err => {
-
                 notification.error({
                     message: 'Đăng nhập không thành công',
                     description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
@@ -111,7 +116,6 @@ const Login = ({ setCookies }) => {
                 </Form>
             </div>
         </div>
-
     );
 };
 

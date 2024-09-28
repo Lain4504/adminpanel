@@ -33,7 +33,7 @@ const New = ({ inputs, title, handleAdd, location }) => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="p-8 bg-gray-50 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
         <Form onFinish={handleAddItem} layout="vertical" className="mt-6">
