@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Order = () => {
+const PostSingle = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Order = () => {
   )
 }
 
-export default Order
+export default PostSingle

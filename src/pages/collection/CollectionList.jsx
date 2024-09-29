@@ -10,8 +10,8 @@ const CollectionList = () => {
       dataService={getAllCollections}
       deleteService={deleteCollection}
       entityName="Collection"
-      createPath="/collections/new"
-      updatePath="/collections"
+      createPath="/product-management/collections/new"
+      updatePath="/product-management/collections"
       filterField="type"
       searchField="name"
     />

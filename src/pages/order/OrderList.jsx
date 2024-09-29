@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { getAllOrders } from '../../service/OrderService'
+import { orderColumns } from '../../context/DataSet'
 import { notification, Spin, Popconfirm } from 'antd';
-import SearchBar from './SearchBar';
-import Filter from './Filter';
+import { Link } from 'react-router-dom';
 import { Button, Pagination } from 'antd';
+import Filter from '../../components/Filter';
 
-const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField, searchField }) => {
+const OrderList = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -13,27 +14,13 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   const [searchTerm, setSearchTerm] = useState('');
   const [filterValue, setFilterValue] = useState('');
   const [sortOrder, setSortOrder] = useState('asc'); // Trạng thái sắp xếp
-
-  const handleDelete = (id) => {
-    deleteService(id)
-      .then(() => {
-        notification.success({
-          message: `${entityName} deleted successfully!`,
-          placement: "topRight",
-        });
-        fetchData();
-      })
-      .catch(() => {
-        notification.error({
-          message: `Failed to delete the ${entityName}!`,
-          placement: "topRight",
-        });
-      });
-  };
+  const updatePath="/order-management/orders";
+  const filterField="state";
+  
 
   const fetchData = () => {
     setLoading(true);
-    dataService()
+    getAllOrders()
       .then((res) => {
         const allData = res.data || [];
         // Sắp xếp toàn bộ dữ liệu
@@ -45,7 +32,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
       })
       .catch(() => {
         notification.error({
-          message: `Failed to fetch ${entityName}s!`,
+          message: `Failed to fetch Order!`,
           placement: "topRight",
         });
         setData([]);
@@ -58,29 +45,15 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   }, [itemsPerPage, sortOrder]); // Thay đổi sortOrder sẽ gọi lại fetchData
 
   const filteredData = data
-    .filter((item) => (filterValue === '' || item[filterField] === filterValue))
-    .filter((item) =>
-      String(item[searchField]).toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    .filter((item) => (filterValue === '' || item[filterField] === filterValue));
 
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
       <div>
-        <h1 className='text-lg mb-4'>Quản lý {entityName}s</h1>
+        <h1 className='text-lg mb-4'>Quản lý Order</h1>
         <hr className="my-4" />
-
-        <div className="flex justify-between items-center mb-4">
-          <Link to={createPath}>
-            <Button type="primary">Create</Button>
-          </Link>
-          <SearchBar
-            searchTerm={searchTerm}
-            handleSearch={(e) => setSearchTerm(e.target.value)}
-            placeholder={`Search ${entityName}s by ${searchField}...`}
-          />
-        </div>
       </div>
 
       {filterField && (
@@ -96,7 +69,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              {columns.map((column) => (
+              {orderColumns.map((column) => (
                 <th key={column.field} className="px-6 py-3">
                   <div className="flex items-center justify-between">
                     <span>{column.headerName}</span>
@@ -117,20 +90,20 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={columns.length + 1} className="text-center py-4">
+                <td colSpan={orderColumns.length + 1} className="text-center py-4">
                   <Spin spinning={true} />
                 </td>
               </tr>
             ) : paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="text-center py-4">
+                <td colSpan={orderColumns.length + 1} className="text-center py-4">
                   Không có nội dung
                 </td>
               </tr>
             ) : (
               paginatedData.map((row) => (
                 <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  {columns.map((column) => (
+                  {orderColumns.map((column) => (
                     <td key={column.field} className="px-6 py-4">
                       {column.renderCell ? column.renderCell({ row }) : row[column.field]}
                     </td>
@@ -139,16 +112,11 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                     <div className="flex justify-center space-x-2">
                       <Link to={`${updatePath}/${row.id}`}
                         onClick={() => localStorage.setItem('currentPage', currentPage)}>
-                        <Button type="primary">Update</Button>
+                        <Button type="primary">View Details</Button>
                       </Link>
-                      <Popconfirm
-                        title={`Are you sure you want to delete this ${entityName}?`}
-                        onConfirm={() => handleDelete(row.id)}
-                      >
-                        <Button type="danger" className='bg-red-500'>
-                          <p className='text-white'>Delete</p>
-                        </Button>
-                      </Popconfirm>
+                      <Link to={`/order-state/${row.id}`}>
+                        <Button type="danger" className='bg-green-400'>Change State</Button>
+                      </Link>
                     </div>
                   </td>
                 </tr>
@@ -176,4 +144,4 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   );
 };
 
-export default DataTable;
+export default OrderList

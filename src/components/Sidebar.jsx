@@ -4,14 +4,16 @@ import {
   DashboardOutlined,
   ShoppingOutlined,
   ShoppingCartOutlined,
-  AppstoreOutlined,
   FileAddOutlined,
   CommentOutlined,
   LogoutOutlined,
   MenuOutlined,
   UserOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
+
+const { SubMenu } = Menu;
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,13 +21,30 @@ const Sidebar = () => {
   const navigate = useNavigate();
   
   const menuItems = [
-    { key: '/', label: 'Home', icon: null },
+    { key: '/', label: 'Home', icon: <HomeOutlined/> },
     { key: '/dashboard', label: 'Bảng thống kê', icon: <DashboardOutlined /> },
     { key: '/users', label: 'Người dùng', icon: <UserOutlined/> },
-    { key: '/products', label: 'Sản phẩm', icon: <ShoppingOutlined /> },
-    { key: '/order', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
-    { key: '/collections', label: 'Bộ sưu tập', icon: <AppstoreOutlined /> },
-    { key: '/post', label: 'Bài viết', icon: <FileAddOutlined /> },
+    {
+      key: 'product-management',
+      label: 'Sản phẩm',
+      icon: <ShoppingOutlined />,
+      children: [
+        { key: '/product-management/products', label: 'Quản lý sách'},
+        { key: '/product-management/collections', label: 'Quản lý bộ sưu tập'},
+        { key: '/product-management/authors', label: 'Quản lý tác giả'},
+        { key: '/product-management/publishers', label: 'Quản lý nhà xuất bản'},
+      ],
+    },
+    { key: '/order-management/orders', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
+    {
+      key: 'post-management', 
+      label: 'Bài viết',
+      icon: <FileAddOutlined />,
+      children: [
+        { key: '/post-management/posts', label: 'Quản lý bài viết' },
+        { key: '/post-management/categories', label: 'Quản lí thể loại bài viết' },
+      ],
+    },
     { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
   ];
 
@@ -73,7 +92,7 @@ const Sidebar = () => {
         <aside
           ref={sidebarRef}
           id="default-sidebar"
-          className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
+          className={`transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
           aria-label="Sidebar"
         >
           <div className="h-full px-3 py-4 overflow-y-auto bg-gray-900 text-white">
@@ -83,21 +102,25 @@ const Sidebar = () => {
               defaultSelectedKeys={['/']}
               style={{ border: 'none' }}
             >
-              {menuItems.map(({ key, label, icon, badge }) => (
-                <Menu.Item key={key} icon={icon} onClick={handleMenuItemClick}>
-                  <Link to={key}>
-                    {label}
-                    {badge && (
-                      <span className="badge">{badge}</span>
-                    )}
-                  </Link>
-                </Menu.Item>
-              ))}
-              <hr/>
+              {menuItems.map(({ key, label, icon, children }) => 
+                children ? (
+                  <SubMenu key={key} title={label} icon={icon}>
+                    {children.map(subItem => (
+                      <Menu.Item key={subItem.key} icon={subItem.icon} onClick={handleMenuItemClick}>
+                        <Link to={subItem.key}>{subItem.label}</Link>
+                      </Menu.Item>
+                    ))}
+                  </SubMenu>
+                ) : (
+                  <Menu.Item key={key} icon={icon} onClick={handleMenuItemClick}>
+                    <Link to={key}>
+                      {label}
+                    </Link>
+                  </Menu.Item>
+                )
+              )}
+
               <Menu.Divider />
-              <Menu.Item icon={<LogoutOutlined />} onClick={() => navigate('/login')}>
-                Đăng xuất
-              </Menu.Item>
             </Menu>
           </div>
         </aside>
