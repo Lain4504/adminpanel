@@ -51,7 +51,6 @@ export const collectionColumns = [
   ];
   export const userColumns = [
     { field: "id", headerName: "ID", width: 70 },            
-    { field: "name", headerName: "Name", width: 250 },       
     { field: "email", headerName: "Email", width: 250 },     
     { field: "role", headerName: "Role", width: 150 },       
     { 
@@ -125,3 +124,4 @@ export const publisherColumns = [
   { field: "name", headerName: "Name", width: 150 },
   { field: "website", headerName: "Website", width: 250 },
 
+]

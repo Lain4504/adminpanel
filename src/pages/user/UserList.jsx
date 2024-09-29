@@ -9,8 +9,8 @@ const UserList = () => {
       dataService={getAllUsers}   
       deleteService={deleteUser}  
       entityName="User"
-      createPath="/users/new"    
-      updatePath="/users"         
+      createPath="/user-management/users/new"    
+      updatePath="/user-management/users"         
       filterField="role"          
       searchField="email"         
     />

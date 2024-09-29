@@ -34,88 +34,85 @@ const { Header, Sider, Content } = Layout;
 
 const App = () => {
   const { currentUser } = useContext(AuthContext);
+  const location = useLocation();
+
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to={"/login"} />;
-  }
+  };
+
+  const isLoginPage = location.pathname === "/login";
+
   return (
     <>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Sider
-          width={250}
-          style={{ background: '#001529' }}
-          breakpoint="lg"
-          collapsedWidth="0"
-        >
-          <Sidebar />
-        </Sider>
-        <Layout>
-          <Header style={{ background: '#fff', padding: 0 }}>
-            {/* Add a header component */}
-            <Navbar />
-          </Header>
-          <Content style={{ margin: '16px' }}>
-            <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-              <Routes>
-
-                <Route path="/"/>
-                <Route path="/login" element={<Login />} />
-                <Route index element={<RequireAuth><Home /></RequireAuth>} />
-                {/* Collection Start */}
-                <Route path="/product-management/collections">
-                  <Route index element={<RequireAuth><CollectionList/></RequireAuth>} />
-                  <Route path="new" element={<RequireAuth><FormNew inputs={collectionInputs} title="Add New Collection" location="/product-management/collections" handleAdd={addCollection} /></RequireAuth>} />
-                  <Route path=":id" element={<RequireAuth><CollectionSingle
-                  /></RequireAuth>} />
-                </Route>
-                {/* Collection End */}
-                {/* Publisher Start */}
-                <Route path="/product-management/publishers">
-                  <Route index element={<RequireAuth><PublisherList /></RequireAuth>} />
-                  <Route path="new" element={<RequireAuth><FormNew inputs={publisherInputs} title="Add New Publisher" location="/product-management/publishers" handleAdd={addPublisher} /></RequireAuth>} />
-                  <Route path=":id" element={<RequireAuth><PublisherSingle
-                  /></RequireAuth>} />
-
-                </Route>
-                {/* Publisher End */}
-                {/* Post Start */}
-                <Route path="/post-management/posts">
-                  <Route index element={<RequireAuth><PostList /> </RequireAuth>} />
-                  <Route path="new" element={<RequireAuth> <PostNew inputs={collectionInputs} title="Add New Post" location="/post-management/posts" handleAdd={createPost} /></RequireAuth>} />
-                  <Route path=":id" element={<RequireAuth><PostSingle
-                  /></RequireAuth>} />
-                </Route>
-                {/* Post End */}
-                {/* Orders Start */}
-                <Route path="/order-management/orders">
-                  <Route index element={<RequireAuth><OrderList /></RequireAuth>} />
-                  <Route path=":id" element={<RequireAuth><OrderDetail /></RequireAuth>} />
-                </Route>
-                <Route path="/order-state/:id" element={<RequireAuth><ChangeState /></RequireAuth>}></Route>
-                {/* Orders End */}
-                {/* Product Start */}
-                <Route path="/product-management/products">
-                  <Route index element={<RequireAuth><ProductList
-                     /></RequireAuth>} />
-                  <Route path="new" element={<RequireAuth><ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
-                  <Route path=":id" element={<RequireAuth><ProductSingle
-                  /></RequireAuth>} />
-
-                </Route>
-                {/* Product End */}
-                    <Route path="/users">
-                    <Route index element={<UserList
-                      cookies={cookies}
-                      setCookies={setCookies}
-                      removeCookies={removeCookies}
-                    />} />
-                <Route path="/dashboard" element={<RequireAuth><Dashboard /> </RequireAuth>} />
-                <Route path="*" element={<Page404 />} />
-              </Routes>
-            </div>
-          </Content>
-          <Footer />
+      {isLoginPage ? (
+        // Chỉ hiển thị trang đăng nhập khi ở trang login
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      ) : (
+        <Layout style={{ minHeight: '100vh' }}>
+          <Sider
+            width={250}
+            style={{ background: '#001529' }}
+            breakpoint="lg"
+            collapsedWidth="0"
+          >
+            <Sidebar />
+          </Sider>
+          <Layout>
+            <Header style={{ background: '#fff', padding: 0 }}>
+              <Navbar />
+            </Header>
+            <Content style={{ margin: '16px' }}>
+              <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+                <Routes>
+                  <Route index element={<RequireAuth><Home /></RequireAuth>} />
+                  {/* Collection Start */}
+                  <Route path="/product-management/collections">
+                    <Route index element={<RequireAuth><CollectionList /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><FormNew inputs={collectionInputs} title="Add New Collection" location="/product-management/collections" handleAdd={addCollection} /></RequireAuth>} />
+                    <Route path=":id" element={<RequireAuth><CollectionSingle /></RequireAuth>} />
+                  </Route>
+                  {/* Collection End */}
+                  {/* Publisher Start */}
+                  <Route path="/product-management/publishers">
+                    <Route index element={<RequireAuth><PublisherList /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><FormNew inputs={publisherInputs} title="Add New Publisher" location="/product-management/publishers" handleAdd={addPublisher} /></RequireAuth>} />
+                    <Route path=":id" element={<RequireAuth><PublisherSingle /></RequireAuth>} />
+                  </Route>
+                  {/* Publisher End */}
+                  {/* Post Start */}
+                  <Route path="/post-management/posts">
+                    <Route index element={<RequireAuth><PostList /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><PostNew inputs={collectionInputs} title="Add New Post" location="/post-management/posts" handleAdd={createPost} /></RequireAuth>} />
+                    <Route path=":id" element={<RequireAuth><PostSingle /></RequireAuth>} />
+                  </Route>
+                  {/* Post End */}
+                  {/* Orders Start */}
+                  <Route path="/order-management/orders">
+                    <Route index element={<RequireAuth><OrderList /></RequireAuth>} />
+                    <Route path=":id" element={<RequireAuth><OrderDetail /></RequireAuth>} />
+                  </Route>
+                  <Route path="/order-state/:id" element={<RequireAuth><ChangeState /></RequireAuth>} />
+                  {/* Orders End */}
+                  {/* Product Start */}
+                  <Route path="/product-management/products">
+                    <Route index element={<RequireAuth><ProductList /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
+                    <Route path=":id" element={<RequireAuth><ProductSingle /></RequireAuth>} />
+                  </Route>
+                  {/* Product End */}
+                  <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+                  <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
+                  <Route path="*" element={<Page404 />} />
+                </Routes>
+              </div>
+            </Content>
+            <Footer />
+          </Layout>
         </Layout>
-      </Layout>
+      )}
     </>
   );
 };
