@@ -13,6 +13,7 @@ import { collectionInputs, publisherInputs } from "./context/formSource";
 import Login from "./pages/Login";
 import Page404 from "./components/Page404";
 import ProductList from "./pages/product/ProductList";
+import UserList from "./pages/user/UserList";
 import PostList from "./pages/post/PostList";
 import PostNew from "./pages/post/PostNew";
 import PostSingle from "./pages/post/PostSingle";
@@ -27,6 +28,7 @@ import PublisherSingle from "./pages/publisher/PublisherSingle";
 import PublisherList from "./pages/publisher/PublisherList";
 import { addPublisher } from "./service/PublisherService";
 import { AuthContext } from "./context/AuthContext";
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -100,7 +102,12 @@ const App = () => {
 
                 </Route>
                 {/* Product End */}
-
+                    <Route path="/users">
+                    <Route index element={<UserList
+                      cookies={cookies}
+                      setCookies={setCookies}
+                      removeCookies={removeCookies}
+                    />} />
                 <Route path="/dashboard" element={<RequireAuth><Dashboard /> </RequireAuth>} />
                 <Route path="*" element={<Page404 />} />
               </Routes>
