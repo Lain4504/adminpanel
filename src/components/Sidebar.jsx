@@ -9,6 +9,7 @@ import {
   CommentOutlined,
   LogoutOutlined,
   MenuOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 
@@ -20,6 +21,7 @@ const Sidebar = () => {
   const menuItems = [
     { key: '/', label: 'Home', icon: null },
     { key: '/dashboard', label: 'Bảng thống kê', icon: <DashboardOutlined /> },
+    { key: '/users', label: 'Người dùng', icon: <UserOutlined/> },
     { key: '/products', label: 'Sản phẩm', icon: <ShoppingOutlined /> },
     { key: '/order', label: 'Đơn hàng', icon: <ShoppingCartOutlined /> },
     { key: '/collections', label: 'Bộ sưu tập', icon: <AppstoreOutlined /> },

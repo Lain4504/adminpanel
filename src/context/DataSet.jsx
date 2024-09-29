@@ -48,4 +48,20 @@ export const collectionColumns = [
       renderCell: (params) => <div>{params.row.price?.toLocaleString()}</div>,
     },
   ];
+  export const userColumns = [
+    { field: "id", headerName: "ID", width: 70 },            
+    { field: "name", headerName: "Name", width: 250 },       
+    { field: "email", headerName: "Email", width: 250 },     
+    { field: "role", headerName: "Role", width: 150 },       
+    { 
+      field: "isActive",                                     
+      headerName: "Active", 
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          {params.row.state ? "Yes" : "No"}               
+        </div>
+      )
+    }
+  ];
   
