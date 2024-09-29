@@ -1,7 +1,7 @@
-import { Button, Col, Form, Input, Row, Select, Upload, Image } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Image, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import CKEditorComponent from '../../components/CKEditor';
-import { UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { getAllPublishers } from '../../service/PublisherService';
 import { getAllAuthors } from '../../service/AuthorService';
@@ -10,7 +10,6 @@ import { addBook } from '../../service/BookService';
 const { Option } = Select;
 
 const ProductNew = () => {
-  const [fileList, setFileList] = useState([]);
   const [publishers, setPublishers] = useState([]);
   const [collections, setCollections] = useState([]);
   const [authors, setAuthors] = useState([]);
@@ -23,20 +22,21 @@ const ProductNew = () => {
     collections: [],
     stock: 0,
     isbn: '',
-    images: [{ link: '', description: 'Illustration' }],
+    images: [],
     page: 0,
     weight: 0,
     size: '',
     cover: '',
     price: 0,
     discount: 0,
-    sold: 0
+    sold: 0,
   });
 
+  const [imageLink, setImageLink] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch data 
     const fetchData = async () => {
       try {
         const [publishersRes, collectionsRes, authorsRes] = await Promise.all([
@@ -55,46 +55,59 @@ const ProductNew = () => {
     fetchData();
   }, []);
 
-  const handleChange = (info) => {
-    let newFileList = [...info.fileList].filter(file => file.type.startsWith('image/'));
-    setFileList(newFileList);
-
-    // Update the data state with image links
-    const images = newFileList.map(file => ({ link: URL.createObjectURL(file.originFileObj), description: 'Illustration' }));
-    setData(prevData => ({ ...prevData, images }));
-  };
-
-  const handleRemove = (file) => {
-    const newFileList = fileList.filter(item => item.uid !== file.uid);
-    setFileList(newFileList);
-
-    // Update the data state to remove the image link
-    const images = newFileList.map(file => ({ link: URL.createObjectURL(file.originFileObj), description: 'Illustration' }));
-    setData(prevData => ({ ...prevData, images }));
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
-  const handleDescriptionChange = (e, editor) => {
-    const editorData = editor.getData();
-    setData({ ...data, description: editorData });
+  const handleDescriptionChange = (data) => {
+    setData({ ...data, description: data });
   };
 
   const handlePublisherChange = (value) => {
-    setData({ ...data, publisherId: value }); // Lưu publisherId thay vì đối tượng publisher
+    setData({ ...data, publisherId: value });
   };
+
   const handleMultipleObjectChange = (name, objects) => (value) => {
     setData({ ...data, [name]: value.map(name => objects.find(object => object.name === name)) });
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalOk = () => {
+    if (imageLink) {
+      setData(prevData => ({
+        ...prevData,
+        images: [...(prevData.images || []), { link: imageLink, description: 'Illustration' }]
+      }));
+      setImageLink('');
+      setIsModalVisible(false);
+    }
+  };
+  
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleImageLinkChange = (e) => {
+    setImageLink(e.target.value);
+  };
+
+  const handleDeleteImage = (index) => {
+    setData(prevData => ({
+      ...prevData,
+      images: prevData.images.filter((_, i) => i !== index)
+    }));
   };
 
   const handleSave = async () => {
     try {
       // Perform validations
       if (!data.title.trim()
-        || !data.publisherId 
+        || !data.publisherId
         || !data.authors.length || !data.collections.length ||
         !data.isbn.trim()
         || !data.images[0].link.trim()
@@ -120,6 +133,7 @@ const ProductNew = () => {
         weight: parseInt(prevData.weight),
         discount: parseFloat(prevData.discount)
       }));
+
       console.log('Data is', data);
       // Call the API to add the book
       await addBook(data);
@@ -129,6 +143,7 @@ const ProductNew = () => {
       console.error(err);
     }
   };
+
   return (
     <div className="p-6 bg-gray-100">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
@@ -146,7 +161,7 @@ const ProductNew = () => {
           <Form.Item label="Title" required>
             <Input id="title" name="title" onChange={handleInputChange} />
           </Form.Item>
-          <Form.Item label="Description" >
+          <Form.Item label="Description">
             <CKEditorComponent onChange={handleDescriptionChange} />
           </Form.Item>
 
@@ -194,14 +209,13 @@ const ProductNew = () => {
                 <Select
                   placeholder="Select a publisher"
                   allowClear
-                  onChange={handlePublisherChange} // Sử dụng hàm mới
+                  onChange={handlePublisherChange}
                 >
                   {publishers.map(publisher => (
                     <Option key={publisher.id} value={publisher.id}>{publisher.name}</Option>
                   ))}
                 </Select>
               </Form.Item>
-
             </Col>
             <Col xs={24} sm={24} md={12}>
               <Form.Item label="Cover Type" required>
@@ -248,34 +262,50 @@ const ProductNew = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12}>
-              <Form.Item label="Discount" required>
+              <Form.Item label="Discount">
                 <Input name="discount" onChange={handleInputChange} placeholder="Enter discount" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row gutter={16}>
-            <Col xs={24} sm={24} md={12}>
-              <Form.Item label="Upload Images" >
-                <Upload
-                  multiple
-                  fileList={fileList}
-                  onChange={handleChange}
-                  onRemove={handleRemove}
-                  beforeUpload={() => false}
-                >
-                  <Button icon={<UploadOutlined />}>Select Files</Button>
-                </Upload>
-                {fileList.length > 0 && (
-                  <div className="mt-2">
-                    {fileList.map(file => (
-                      <Image key={file.uid} width={100} src={URL.createObjectURL(file.originFileObj)} />
-                    ))}
-                  </div>
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item label="Image Upload" required>
+            <Row gutter={16}>
+              <Col xs={24} sm={24} md={6}>
+                <Button
+                  type="text"
+                  icon={<PlusCircleOutlined
+                    style={{ fontSize: '24px' }}
+                    className="hover:text-blue-500 transition duration-150 ease-in-out" />}
+                  onClick={showModal}
+                />
+                <Modal title="Add Image Link" visible={isModalVisible} onOk={handleModalOk} onCancel={handleModalCancel}>
+                  <Input value={imageLink} onChange={handleImageLinkChange} placeholder="Enter image URL" />
+                </Modal>
+              </Col>
+              <Col xs={24} sm={24} md={12}>
+              <Row gutter={16}>
+              {Array.isArray(data.images) && data.images.map((image, index) => (
+  <Col xs={12} sm={8} md={6} key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
+      <Image src={image.link} alt={`Image ${index}`} width="100%" />
+      <Button
+        type="text"
+        icon={<DeleteOutlined className="hover:text-red-500 transition duration-150 ease-in-out" />}
+        onClick={() => handleDeleteImage(index)}
+        style={{ position: 'absolute', top: '5px', right: '5px' }}
+      />
+    </div>
+  </Col>
+))}
+
+</Row>
+
+              </Col>
+            </Row>
+          </Form.Item>
+
+
+
         </Form>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Button, Modal } from 'antd';
 
-const CKEditorComponent = () => {
+const CKEditorComponent = ({ onChange }) => { // Accept onChange as a prop
   const [editorData, setEditorData] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -27,6 +27,7 @@ const CKEditorComponent = () => {
           const data = editor.getData();
           setEditorData(data);
           console.log({ event, editor, data });
+          onChange(data); // Call the onChange prop to propagate data
         }}
         onBlur={(event, editor) => {
           console.log('Blur.', editor);
@@ -45,8 +46,8 @@ const CKEditorComponent = () => {
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        width={1200} // Set a fixed width for the modal
-        bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }} // Allow scrolling if content is too tall
+        width={1200}
+        bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
       >
         <div style={{ width: '100%', maxWidth: '280mm', margin: '0 auto' }}>
           <div dangerouslySetInnerHTML={{ __html: editorData }} style={{ wordWrap: 'break-word' }} />
