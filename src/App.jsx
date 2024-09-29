@@ -104,6 +104,7 @@ const App = () => {
                   </Route>
                   {/* Product End */}
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+                  <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
                 </Routes>
               </div>

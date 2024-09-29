@@ -57,20 +57,35 @@ const ProductNew = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setData({ ...data, [name]: value });
+    setData(prevData => ({
+      ...prevData, // Giữ lại dữ liệu đã nhập trước đó
+      [name]: value // Chỉ cập nhật trường đang nhập liệu
+    }));
   };
+  
 
-  const handleDescriptionChange = (data) => {
-    setData({ ...data, description: data });
+  const handleDescriptionChange = (description) => {
+    setData(prevData => ({
+      ...prevData, // Giữ lại toàn bộ các giá trị khác trong data
+      description // Chỉ cập nhật trường description
+    }));
   };
+  
 
   const handlePublisherChange = (value) => {
-    setData({ ...data, publisherId: value });
+    setData(prevData => ({
+      ...prevData,
+      publisherId: value // Chỉ cập nhật publisherId
+    }));
   };
-
+  
   const handleMultipleObjectChange = (name, objects) => (value) => {
-    setData({ ...data, [name]: value.map(name => objects.find(object => object.name === name)) });
+    setData(prevData => ({
+      ...prevData,
+      [name]: value.map(name => objects.find(object => object.name === name))
+    }));
   };
+  
 
   const showModal = () => {
     setIsModalVisible(true);

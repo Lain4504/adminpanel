@@ -56,6 +56,9 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   useEffect(() => {
     fetchData();
   }, [itemsPerPage, sortOrder]); // Thay đổi sortOrder sẽ gọi lại fetchData
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const filteredData = data
     .filter((item) => (filterValue === '' || item[filterField] === filterValue))
@@ -92,7 +95,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
         />
       )}
 
-<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -113,7 +116,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
               ))}
               <th className="px-6 py-3">Actions</th>
             </tr>
-            </thead>
+          </thead>
           <tbody>
             {loading ? (
               <tr>

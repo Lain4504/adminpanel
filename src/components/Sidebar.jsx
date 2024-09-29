@@ -18,12 +18,11 @@ const { SubMenu } = Menu;
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
-  const navigate = useNavigate();
   
   const menuItems = [
     { key: '/', label: 'Home', icon: <HomeOutlined/> },
     { key: '/dashboard', label: 'Bảng thống kê', icon: <DashboardOutlined /> },
-    { key: '/users', label: 'Người dùng', icon: <UserOutlined/> },
+    { key: '/user-management/users', label: 'Người dùng', icon: <UserOutlined/> },
     {
       key: 'product-management',
       label: 'Sản phẩm',
