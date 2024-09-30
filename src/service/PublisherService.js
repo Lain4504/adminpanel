@@ -18,8 +18,12 @@ const getPublisherById = (id) => {
     return axios.get(PUBLISHER_BASE_URL + '/' + id);
 }
 
-const updatePublisher = (data) => {
-    return axios.put(PUBLISHER_BASE_URL , data);
+const updatePublisher = async (id, data) => {
+    try {
+        return await axios.put(`${PUBLISHER_BASE_URL}/${id}`, data);
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
 }
-
 export {getAllPublishers, deletePublisher, addPublisher, getPublisherById, updatePublisher}

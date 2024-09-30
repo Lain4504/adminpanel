@@ -21,6 +21,7 @@ const Login = () => {
         login(account)
             .then(res => {
                 const user = jwtDecode(res.data.token); // Decode the JWT token
+                alert(`JWT Token: ${res.data.token}`);
                 dispatch({ type: "LOGIN", payload: user });
                 navigate("/");
                 notification.success({
