@@ -4,7 +4,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { login } from '../service/UserService';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 const Login = () => {
     const [form] = Form.useForm();
@@ -15,33 +15,30 @@ const Login = () => {
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
-
-        // Handle login
-        let account = { email, password };
-        login(account)
-            .then(res => {
-                const user = jwtDecode(res.data.token); // Decode the JWT token
-                alert(`JWT Token: ${res.data.token}`);
-                dispatch({ type: "LOGIN", payload: user });
-                navigate("/");
-                notification.success({
-                    message: 'Đăng nhập thành công',
-                    description: 'Chào mừng bạn trở lại!',
-                });
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 1000);
-            })
-            .catch(err => {
-                notification.error({
-                    message: 'Đăng nhập không thành công',
-                    description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
-                });
-            })
-            .finally(() => {
-                setLoading(false);
+    
+        try {
+            const res = await login({ email, password });
+            const decodedToken = jwtDecode(res.data.token);
+            // Cập nhật state và localStorage
+            dispatch({ type: "LOGIN", payload: { token: res.data.token } });
+            localStorage.setItem("user", JSON.stringify({ token: res.data.token }));
+    
+            notification.success({
+                message: 'Đăng nhập thành công',
+                description: 'Chào mừng bạn trở lại!',
             });
+    
+            navigate('/');
+        } catch (error) {
+            notification.error({
+                message: 'Đăng nhập không thành công',
+                description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
+    
 
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

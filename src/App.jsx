@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { Layout, Button } from 'antd';
+import React, { useContext, useEffect, useState } from "react";
+import { Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
+import { Layout, Button, message } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
@@ -29,6 +29,7 @@ import PublisherSingle from "./pages/publisher/PublisherSingle";
 import PublisherList from "./pages/publisher/PublisherList";
 import { addPublisher } from "./service/PublisherService";
 import { AuthContext } from "./context/AuthContext";
+import { jwtDecode } from 'jwt-decode';
 
 const { Header, Sider, Content } = Layout;
 
@@ -36,19 +37,37 @@ const App = () => {
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate(); // Khởi tạo navigate
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentUser) {
       console.log("Token:", currentUser.token);
+      try {
+        const decodedToken = jwtDecode(currentUser.token);
+        console.log("Decoded Token:", decodedToken);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    } else {
+      console.log("Không có người dùng hiện tại");
     }
   }, [currentUser]);
-  
+
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to={"/login"} />;
   };
 
   const isLoginPage = location.pathname === "/login";
 
+ useEffect(() => {
+    if (currentUser && isLoginPage) {
+      // Chuyển hướng ngay lập tức
+      navigate("/"); // Sử dụng navigate thay vì window.location.href
+
+      // Hiển thị thông báo sau khi chuyển hướng
+      message.info("Bạn đã được chuyển hướng đến trang chính...");
+    }
+  }, [currentUser, isLoginPage, navigate]); 
   return (
     <>
       {isLoginPage ? (
@@ -58,25 +77,19 @@ const App = () => {
         </Routes>
       ) : (
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider
-            width={250}
-            style={{ background: '#001529' }}
-            collapsed={collapsed}
-          >
+          <Sider width={250} style={{ background: '#001529' }} collapsed={collapsed}>
             <Sidebar />
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              {/* Button toggle in Header */}
               <Button
                 type="primary"
                 style={{ marginLeft: 16, background: 'black', borderColor: 'black', color: '#001529' }}
-                icon={collapsed ? <MenuUnfoldOutlined style={{color: 'white'}}/> : <MenuFoldOutlined style={{color: 'white'}} />}
+                icon={collapsed ? <MenuUnfoldOutlined style={{ color: 'white' }} /> : <MenuFoldOutlined style={{ color: 'white' }} />}
                 onClick={() => setCollapsed(!collapsed)}
               />
               <Navbar />
             </Header>
-            
             <Content style={{ margin: '16px' }}>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                 <Routes>
