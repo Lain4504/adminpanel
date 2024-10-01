@@ -6,8 +6,6 @@ import {
   ShoppingCartOutlined,
   FileAddOutlined,
   CommentOutlined,
-  LogoutOutlined,
-  MenuOutlined,
   UserOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
@@ -47,9 +45,6 @@ const Sidebar = () => {
     { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
   ];
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
 
   const handleClickOutside = (event) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -78,20 +73,11 @@ const Sidebar = () => {
   return (
     <>
       <div>
-        <button
-          onClick={toggleSidebar}
-          aria-controls="default-sidebar"
-          type="button"
-          className="inline-flex items-center p-2 mt-2 ms-3 text-white rounded-lg sm:hidden hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-black"
-        >
-          <span className="sr-only">Open sidebar</span>
-          <MenuOutlined className="w-6 h-6" />
-        </button>
 
         <aside
           ref={sidebarRef}
           id="default-sidebar"
-          className={`transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
+          className={`transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} translate-x-0`}
           aria-label="Sidebar"
         >
           <div className="h-full px-3 py-4 overflow-y-auto bg-gray-900 text-white">

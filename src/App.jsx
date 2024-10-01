@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { Layout } from 'antd';
+import { Layout, Button } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
 import FormNew from "./components/FormNew";
@@ -29,13 +30,19 @@ import PublisherList from "./pages/publisher/PublisherList";
 import { addPublisher } from "./service/PublisherService";
 import { AuthContext } from "./context/AuthContext";
 
-
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
 
+  React.useEffect(() => {
+    if (currentUser) {
+      console.log("Token:", currentUser.token);
+    }
+  }, [currentUser]);
+  
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to={"/login"} />;
   };
@@ -45,7 +52,6 @@ const App = () => {
   return (
     <>
       {isLoginPage ? (
-        // Chỉ hiển thị trang đăng nhập khi ở trang login
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/login" />} />
@@ -55,15 +61,22 @@ const App = () => {
           <Sider
             width={250}
             style={{ background: '#001529' }}
-            breakpoint="lg"
-            collapsedWidth="0"
+            collapsed={collapsed}
           >
             <Sidebar />
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
+            <Header style={{ background: '#fff', padding: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {/* Button toggle in Header */}
+              <Button
+                type="primary"
+                style={{ marginLeft: 16, background: 'black', borderColor: 'black', color: '#001529' }}
+                icon={collapsed ? <MenuUnfoldOutlined style={{color: 'white'}}/> : <MenuFoldOutlined style={{color: 'white'}} />}
+                onClick={() => setCollapsed(!collapsed)}
+              />
               <Navbar />
             </Header>
+            
             <Content style={{ margin: '16px' }}>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                 <Routes>
