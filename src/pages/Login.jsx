@@ -1,44 +1,54 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { login } from '../service/UserService';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import {jwtDecode} from 'jwt-decode';
 
 const Login = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
+  
+    // Show error notification if any exists in localStorage
+    useEffect(() => {
+        const errorMessage = localStorage.getItem('loginError');
+        if (errorMessage) {
+            notification.error({
+                message: 'Đăng nhập không thành công',
+                description: errorMessage,
+            });
+            localStorage.removeItem('loginError'); // Clear the error message
+        }
+    }, []);
 
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
-    
+
         try {
             const res = await login({ email, password });
-            const decodedToken = jwtDecode(res.data.token);
-            // Cập nhật state và localStorage
             dispatch({ type: "LOGIN", payload: { token: res.data.token } });
             localStorage.setItem("user", JSON.stringify({ token: res.data.token }));
-    
+
             notification.success({
                 message: 'Đăng nhập thành công',
                 description: 'Chào mừng bạn trở lại!',
             });
-    
+
             navigate('/');
         } catch (error) {
-            notification.error({
-                message: 'Đăng nhập không thành công',
-                description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
-            });
+            const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
+            localStorage.setItem('loginError', errorMessage); // Store the error message
+            form.resetFields(); // Optionally reset the form fields
+
+            // Navigate to the same page to trigger the notification on reload
+            navigate('/login');
         } finally {
             setLoading(false);
         }
     };
-    
 
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
