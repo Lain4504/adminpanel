@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { login } from '../service/UserService';
@@ -10,18 +10,6 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const { dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
-  
-    // Show error notification if any exists in localStorage
-    useEffect(() => {
-        const errorMessage = localStorage.getItem('loginError');
-        if (errorMessage) {
-            notification.error({
-                message: 'Đăng nhập không thành công',
-                description: errorMessage,
-            });
-            localStorage.removeItem('loginError'); // Clear the error message
-        }
-    }, []);
 
     const onSubmitHandler = async (values) => {
         setLoading(true);
@@ -40,11 +28,11 @@ const Login = () => {
             navigate('/');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
-            localStorage.setItem('loginError', errorMessage); // Store the error message
-            form.resetFields(); // Optionally reset the form fields
 
-            // Navigate to the same page to trigger the notification on reload
-            navigate('/login');
+            notification.error({
+                message: 'Đăng nhập không thành công',
+                description: errorMessage,
+            });
         } finally {
             setLoading(false);
         }
@@ -69,34 +57,19 @@ const Login = () => {
                         label="Địa chỉ email"
                         name="email"
                         rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng nhập email!',
-                            },
-                            {
-                                type: 'email',
-                                message: 'Định dạng email không hợp lệ!',
-                            },
+                            { required: true, message: 'Vui lòng nhập email!' },
+                            { type: 'email', message: 'Định dạng email không hợp lệ!' },
                         ]}
                     >
-                        <Input
-                            type="email"
-                            className="block w-full py-1.5 text-gray-900 shadow-sm"
-                        />
+                        <Input type="email" className="block w-full py-1.5 text-gray-900 shadow-sm" />
                     </Form.Item>
 
                     <Form.Item
                         label="Mật khẩu"
                         name="password"
                         rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng nhập mật khẩu!',
-                            },
-                            {
-                                min: 6,
-                                message: 'Mật khẩu phải có ít nhất 6 ký tự!',
-                            },
+                            { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                            { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
                         ]}
                     >
                         <Input.Password
@@ -112,12 +85,7 @@ const Login = () => {
                     </div>
 
                     <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="w-full"
-                            loading={loading}
-                        >
+                        <Button type="primary" htmlType="submit" className="w-full" loading={loading}>
                             Đăng nhập
                         </Button>
                     </Form.Item>

@@ -37,7 +37,8 @@ const App = () => {
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate(); // Khởi tạo navigate
+  const [sessionExpired, setSessionExpired] = useState(false); // New state for session expiration
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {
@@ -54,20 +55,50 @@ const App = () => {
   }, [currentUser]);
 
   const RequireAuth = ({ children }) => {
-    return currentUser ? children : <Navigate to={"/login"} />;
+    if (sessionExpired) {
+      // Nếu phiên đã hết hạn, không chuyển hướng ngay lập tức
+      return null; // Không render gì cả
+    }
+    
+    // Nếu không có currentUser, hiển thị thông báo và chuyển hướng
+    if (!currentUser) {
+      message.warning("Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000); // Chuyển hướng sau 3 giây
+      return null; // Không render gì cả
+    }
+    
+    return children; // Render children nếu có currentUser
   };
 
   const isLoginPage = location.pathname === "/login";
 
- useEffect(() => {
+  useEffect(() => {
     if (currentUser && isLoginPage) {
-      // Chuyển hướng ngay lập tức
-      navigate("/"); // Sử dụng navigate thay vì window.location.href
-
-      // Hiển thị thông báo sau khi chuyển hướng
+      navigate("/");
       message.info("Bạn đã được chuyển hướng đến trang chính...");
     }
-  }, [currentUser, isLoginPage, navigate]); 
+  }, [currentUser, isLoginPage, navigate]);
+
+ // Check for session expiration and redirect if needed
+
+// Kiểm tra sessionExpiration
+useEffect(() => {
+  if (sessionExpired) {
+    // Nếu sessionExpired là true, hiển thị thông báo cảnh báo
+    message.warning("Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.");
+    
+    // Chờ 3 giây trước khi chuyển hướng
+    const timeoutId = setTimeout(() => {
+      navigate("/login");
+    }, 1500); // Redirect after 1.5 seconds
+
+    // Dọn dẹp khi component bị unmount hoặc sessionExpired thay đổi
+    return () => clearTimeout(timeoutId);
+  }
+}, [sessionExpired, navigate]);
+
   return (
     <>
       {isLoginPage ? (
@@ -94,41 +125,36 @@ const App = () => {
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                 <Routes>
                   <Route index element={<RequireAuth><Home /></RequireAuth>} />
-                  {/* Collection Start */}
+                  {/* Collection Routes */}
                   <Route path="/product-management/collections">
                     <Route index element={<RequireAuth><CollectionList /></RequireAuth>} />
                     <Route path="new" element={<RequireAuth><FormNew inputs={collectionInputs} title="Add New Collection" location="/product-management/collections" handleAdd={addCollection} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><CollectionSingle /></RequireAuth>} />
                   </Route>
-                  {/* Collection End */}
-                  {/* Publisher Start */}
+                  {/* Publisher Routes */}
                   <Route path="/product-management/publishers">
                     <Route index element={<RequireAuth><PublisherList /></RequireAuth>} />
                     <Route path="new" element={<RequireAuth><FormNew inputs={publisherInputs} title="Add New Publisher" location="/product-management/publishers" handleAdd={addPublisher} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><PublisherSingle /></RequireAuth>} />
                   </Route>
-                  {/* Publisher End */}
-                  {/* Post Start */}
+                  {/* Post Routes */}
                   <Route path="/post-management/posts">
                     <Route index element={<RequireAuth><PostList /></RequireAuth>} />
                     <Route path="new" element={<RequireAuth><PostNew inputs={collectionInputs} title="Add New Post" location="/post-management/posts" handleAdd={createPost} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><PostSingle /></RequireAuth>} />
                   </Route>
-                  {/* Post End */}
-                  {/* Orders Start */}
+                  {/* Orders Routes */}
                   <Route path="/order-management/orders">
                     <Route index element={<RequireAuth><OrderList /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><OrderDetail /></RequireAuth>} />
                   </Route>
                   <Route path="/order-state/:id" element={<RequireAuth><ChangeState /></RequireAuth>} />
-                  {/* Orders End */}
-                  {/* Product Start */}
+                  {/* Product Routes */}
                   <Route path="/product-management/products">
                     <Route index element={<RequireAuth><ProductList /></RequireAuth>} />
                     <Route path="new" element={<RequireAuth><ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><ProductSingle /></RequireAuth>} />
                   </Route>
-                  {/* Product End */}
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
                   <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
