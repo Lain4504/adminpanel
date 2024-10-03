@@ -54,7 +54,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
 
   useEffect(() => {
     fetchData();
-  }, [itemsPerPage, sortOrder]);
+  }, [itemsPerPage, sortOrder, dataService]);
 
   useEffect(() => {
     setCurrentPage(1);

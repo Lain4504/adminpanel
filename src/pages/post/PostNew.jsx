@@ -1,48 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { createPost, getAllPostCategories } from '../../service/PostService';
 import { Select, Input, Button, Form, message } from 'antd';
-import { getUserInfoByEmail } from '../../service/UserService';
+import { getUserProfile } from '../../service/UserService';
 import { useParams } from 'react-router-dom';
 import CKEditorComponent from '../../components/CKEditor';
+import { AuthContext } from '../../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
 const { Option } = Select;
 
-const PostNew = ({ currentUser }) => {
+const PostNew = () => {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(false);
+    const { currentUser } = useContext(AuthContext); // Lấy thông tin người dùng từ AuthContext
     const [data, setData] = useState({
         title: "",
         content: "",
-        category: {
-            id: ""
-        },
+        categoryId: "",
         brief: "",
         thumbnail: "",
-        user: {
-            id: ""
-        }
+        userId: ""
     });
 
-    // useEffect(() => {
-    //     getAllPostCategories().then((res) => {
-    //         setCategories(res.data);
-    //     });
-    //     getUserInfoByEmail(currentUser.sub)
-    //         .then((res) => setData({ ...data, user: { id: res.data.id } }));
-    // }, []);
-
-    const handleObjectChange = (value) => {
-        setData({
-            ...data,
-            category: {
-                id: Number(value)
-            }
+    useEffect(() => {
+        getAllPostCategories().then((res) => {
+            setCategories(res.data);
         });
+        if (currentUser) {
+            try {
+                const decoded = jwtDecode(currentUser.token);
+                const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
+                console.log("User id:", userId);
+                setData(prevData => ({
+                    ...prevData, userId: userId 
+                }));
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+    }, [currentUser]);
+
+    const handleCategoryChange = (value) => {
+        setData(prevData => ({
+          ...prevData,
+          categoryId: value 
+        }));
+      };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setData(prevData => ({
+            ...prevData, // Giữ lại dữ liệu đã nhập trước đó
+            [name]: value // Chỉ cập nhật trường đang nhập liệu
+        }));
     };
 
-    const handleContentChange = (e, editor) => {
-        const editorData = editor.getData();
-        setData({ ...data, content: editorData });
+    const handleContentChange = (content) => {
+        setData(prevData => ({
+            ...prevData, // Giữ lại toàn bộ các giá trị khác trong data
+            content // Chỉ cập nhật trường content
+        }));
     };
 
     const handleCancel = () => {
@@ -50,11 +67,13 @@ const PostNew = ({ currentUser }) => {
     };
 
     const handleSave = () => {
+        console.log("Data to be saved:", data); // Log data before sending to createPost
         createPost(data).then(() => {
             message.success('Post created successfully!');
             window.location.replace("/post-management/posts");
-        }).catch(() => {
+        }).catch((err) => {
             setError(true);
+            console.error("Error creating post:", err); // Log error details
             message.error('Error creating post.');
         });
     };
@@ -73,7 +92,7 @@ const PostNew = ({ currentUser }) => {
                             id="title"
                             name="title"
                             value={data.title}
-                            onChange={(e) => setData({ ...data, title: e.target.value })}
+                            onChange={handleInputChange}
                         />
                     </Form.Item>
                     <Form.Item label="Brief" required>
@@ -81,21 +100,21 @@ const PostNew = ({ currentUser }) => {
                             id="brief"
                             name="brief"
                             value={data.brief}
-                            onChange={(e) => setData({ ...data, brief: e.target.value })}
+                            onChange={handleInputChange}
                         />
                     </Form.Item>
-                    <Form.Item label="Thumbnail" required>
+                    <Form.Item label="Thumbnail (link image)" required>
                         <Input
                             id="thumbnail"
                             name="thumbnail"
                             value={data.thumbnail}
-                            onChange={(e) => setData({ ...data, thumbnail: e.target.value })}
+                            onChange={handleInputChange}
                         />
                     </Form.Item>
                     <Form.Item label="Category" required>
                         <Select
-                            value={data.category.id || ''}
-                            onChange={handleObjectChange}
+                            value={data.categoryId || ''}
+                            onChange={handleCategoryChange}
                             placeholder="--Select category--"
                         >
                             {categories.map(category => (
@@ -103,10 +122,11 @@ const PostNew = ({ currentUser }) => {
                                     {category.name}
                                 </Option>
                             ))}
+                            
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Description" required>
-                        <CKEditorComponent className='spacing' name={'Description'} editorData={data.content || ''} setEditorData={handleContentChange} />
+                    <Form.Item label="Content" required>
+                        <CKEditorComponent onChange={handleContentChange} />
                     </Form.Item>
                 </Form>
             </div>

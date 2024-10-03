@@ -1,3 +1,5 @@
+
+
 export const collectionColumns = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "name", headerName: "Name", width: 450 },
@@ -77,7 +79,7 @@ export const postColumns = [
     renderCell: (params) => {
       return (
         <div>
-          {params?.row?.category?.name}
+          {params.row.categoryId}
         </div>
       );
     },
@@ -88,7 +90,7 @@ export const postColumns = [
     renderCell: (params) => {
       return (
         <div>
-          {params.row.user.fullName}
+          {params.row.userId}
         </div>
       );
     },
