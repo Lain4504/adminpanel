@@ -8,7 +8,7 @@ const PostCategoryList = () => {
       columns={postCategoryColumns}
       dataService={getAllPostCategories}
       deleteService={deletePostCategories}
-      entityName="PostCategory"
+      entityName="Post Category"
       createPath="/post-management/categories/new"
       updatePath="/post-management/categories"
       filterField="name"
