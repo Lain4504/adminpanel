@@ -1,53 +1,45 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { login } from '../service/UserService';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const { dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
-  
-    // Show error notification if any exists in localStorage
-    useEffect(() => {
-        const errorMessage = localStorage.getItem('loginError');
-        if (errorMessage) {
-            notification.error({
-                message: 'Đăng nhập không thành công',
-                description: errorMessage,
-            });
-            localStorage.removeItem('loginError'); // Clear the error message
-        }
-    }, []);
 
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
 
-        try {
-            const res = await login({ email, password });
-            dispatch({ type: "LOGIN", payload: { token: res.data.token } });
-            localStorage.setItem("user", JSON.stringify({ token: res.data.token }));
-
-            notification.success({
-                message: 'Đăng nhập thành công',
-                description: 'Chào mừng bạn trở lại!',
+        // Handle login
+        let account = { email, password };
+        login(account)
+            .then(res => {
+                const user = jwtDecode(res.data.token); // Decode the JWT token
+                dispatch({ type: "LOGIN", payload: user });
+                navigate("/");
+                notification.success({
+                    message: 'Đăng nhập thành công',
+                    description: 'Chào mừng bạn trở lại!',
+                });
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            })
+            .catch(err => {
+                notification.error({
+                    message: 'Đăng nhập không thành công',
+                    description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
+                });
+            })
+            .finally(() => {
+                setLoading(false);
             });
-
-            navigate('/');
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
-            localStorage.setItem('loginError', errorMessage); // Store the error message
-            form.resetFields(); // Optionally reset the form fields
-
-            // Navigate to the same page to trigger the notification on reload
-            navigate('/login');
-        } finally {
-            setLoading(false);
-        }
     };
 
     return (

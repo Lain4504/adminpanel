@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAllPublishers } from '../../service/PublisherService';
 import { getAllAuthors } from '../../service/AuthorService';
 import { getAllCollections } from '../../service/CollectionService';
-import { addBook, addBookToCollection } from '../../service/BookService';
+import { addBook } from '../../service/BookService';
 const { Option } = Select;
 
 const ProductNew = () => {
@@ -19,7 +19,7 @@ const ProductNew = () => {
     description: '',
     publisherId: '',
     authors: [],
-    collectionIds: [],
+    collections: [],
     stock: 0,
     isbn: '',
     images: [],
@@ -31,6 +31,7 @@ const ProductNew = () => {
     discount: 0,
     sold: 0,
   });
+
   const [imageLink, setImageLink] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ const ProductNew = () => {
       [name]: value // Chỉ cập nhật trường đang nhập liệu
     }));
   };
-
+  
 
   const handleDescriptionChange = (description) => {
     setData(prevData => ({
@@ -69,7 +70,7 @@ const ProductNew = () => {
       description // Chỉ cập nhật trường description
     }));
   };
-
+  
 
   const handlePublisherChange = (value) => {
     setData(prevData => ({
@@ -77,20 +78,14 @@ const ProductNew = () => {
       publisherId: value // Chỉ cập nhật publisherId
     }));
   };
-
+  
   const handleMultipleObjectChange = (name, objects) => (value) => {
     setData(prevData => ({
       ...prevData,
       [name]: value.map(name => objects.find(object => object.name === name))
     }));
   };
-  const handleMultipleCollectionChange = (value) => {
-    setData(prevData => ({
-        ...prevData,
-        collectionIds: value.map(name => collections.find(collection => collection.name === name)?.id).filter(id => id) // Map names to IDs
-    }));
-};
-
+  
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -106,7 +101,7 @@ const ProductNew = () => {
       setIsModalVisible(false);
     }
   };
-
+  
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
@@ -125,59 +120,44 @@ const ProductNew = () => {
 
   const handleSave = async () => {
     try {
-        // Perform validations
-        if (!data.title.trim() || !data.publisherId || !data.authors.length || 
-            !data.collectionIds.length || !data.isbn.trim() || !data.images[0]?.link.trim() ||
-            !data.page || !data.stock || !data.weight || !data.size.trim() || 
-            !data.cover.trim() || !data.price) {
-            setError(true);
-            return;
-        }
-
-        // Ensure numeric fields are positive
-        if (parseInt(data.price) < 0 || parseInt(data.page) < 0 || 
-            parseInt(data.stock) < 0 || parseInt(data.weight) < 0 || 
-            parseFloat(data.discount) < 0) {
-            setError(true);
-            return;
-        }
-
-        // Convert string values to integers
-        setData(prevData => ({
-            ...prevData,
-            price: parseInt(prevData.price),
-            page: parseInt(prevData.page),
-            stock: parseInt(prevData.stock),
-            weight: parseInt(prevData.weight),
-            discount: parseFloat(prevData.discount)
-        }));
-
-        console.log('Data is', data);
-        
-        // Call the API to add the book first
-        const bookResponse = await addBook(data);
-        
-        // Check if the book was created successfully
-        if (bookResponse.status === 201) {
-            // Then add the book to the selected collections
-            await Promise.all(data.collectionIds.map(async (collectionId) => {
-                try {
-                    await addBookToCollection(bookResponse.data.id, collectionId);
-                } catch (error) {
-                    console.error(`Failed to add book ${bookResponse.data.id} to collection ${collectionId}`, error);
-                }
-            }));
-            navigate("/product-management/products");
-        } else {
-            setError(true);
-            console.error('Failed to create book:', bookResponse.data.id);
-        }
-    } catch (err) {
+      // Perform validations
+      if (!data.title.trim()
+        || !data.publisherId
+        || !data.authors.length || !data.collections.length ||
+        !data.isbn.trim()
+        || !data.images[0].link.trim()
+        || !data.page ||
+        !data.stock || !data.weight || !data.size.trim() || !data.cover.trim() || !data.price) {
         setError(true);
-        console.error(err);
-    }
-};
+        return;
+      }
 
+      // Ensure numeric fields are positive
+      if (parseInt(data.price) < 0 || parseInt(data.page) < 0 || parseInt(data.stock) < 0 ||
+        parseInt(data.weight) < 0 || parseFloat(data.discount) < 0) {
+        setError(true);
+        return;
+      }
+
+      // Convert string values to integers
+      setData(prevData => ({
+        ...prevData,
+        price: parseInt(prevData.price),
+        page: parseInt(prevData.page),
+        stock: parseInt(prevData.stock),
+        weight: parseInt(prevData.weight),
+        discount: parseFloat(prevData.discount)
+      }));
+
+      console.log('Data is', data);
+      // Call the API to add the book
+      await addBook(data);
+      navigate("/product-management/products");
+    } catch (err) {
+      setError(true);
+      console.error(err);
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-100">
@@ -226,7 +206,7 @@ const ProductNew = () => {
                   showSearch
                   placeholder="Select collection"
                   optionFilterProp="children"
-                  onChange={handleMultipleCollectionChange}
+                  onChange={handleMultipleObjectChange('collections', collections)}
                   allowClear
                   className="w-full"
                 >
@@ -318,22 +298,22 @@ const ProductNew = () => {
                 </Modal>
               </Col>
               <Col xs={24} sm={24} md={12}>
-                <Row gutter={16}>
-                  {Array.isArray(data.images) && data.images.map((image, index) => (
-                    <Col xs={12} sm={8} md={6} key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-                      <div style={{ position: 'relative', width: '100%' }}>
-                        <Image src={image.link} alt={`Image ${index}`} width="100%" />
-                        <Button
-                          type="text"
-                          icon={<DeleteOutlined className="hover:text-red-500 transition duration-150 ease-in-out" />}
-                          onClick={() => handleDeleteImage(index)}
-                          style={{ position: 'absolute', top: '5px', right: '5px' }}
-                        />
-                      </div>
-                    </Col>
-                  ))}
+              <Row gutter={16}>
+              {Array.isArray(data.images) && data.images.map((image, index) => (
+  <Col xs={12} sm={8} md={6} key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
+      <Image src={image.link} alt={`Image ${index}`} width="100%" />
+      <Button
+        type="text"
+        icon={<DeleteOutlined className="hover:text-red-500 transition duration-150 ease-in-out" />}
+        onClick={() => handleDeleteImage(index)}
+        style={{ position: 'absolute', top: '5px', right: '5px' }}
+      />
+    </div>
+  </Col>
+))}
 
-                </Row>
+</Row>
 
               </Col>
             </Row>

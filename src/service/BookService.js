@@ -30,21 +30,4 @@ const deleteBook = (bookId) => {
     return axios.delete(BOOK_BASE_URL + '/' + bookId);
 }
 
-const addBookToCollection = async (bookId, collectionId) => {
-    console.log('Adding book to collection:', { bookId, collectionId });
-    try {
-        const response = await axios.post(BOOK_BASE_URL + '/add-to-collection', {
-            bookId,
-            collectionId,
-        });
-        console.log('Book added to collection:', response.data);
-        return response.data; // Return response if needed
-    } catch (error) {
-        console.error('Error adding book to collection:', error);
-        throw error; // Optionally rethrow or handle the error as needed
-    }
-};
-
-
-
-export {getAllBooks, getBookById, updateBook, addBook, deleteBook, addBookToCollection}
+export {getAllBooks, getBookById, updateBook, addBook, deleteBook}

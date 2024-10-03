@@ -50,16 +50,13 @@ export const collectionColumns = [
     },
   ];
   export const userColumns = [
-    { field: "id", headerName: "ID", width: 10 },            
-    { field: "email", headerName: "Email", width: 100 }, 
-    { field: "fullName", headerName: "Name", width: 250 },
-    { field: "phone", headerName: "Phone", width: 100 },   
-    { field: "gender", headerName: "Gender", width: 50 },                 
-    { field: "role", headerName: "Role", width: 50 },              
+    { field: "id", headerName: "ID", width: 70 },            
+    { field: "email", headerName: "Email", width: 250 },     
+    { field: "role", headerName: "Role", width: 150 },       
     { 
       field: "isActive",                                     
       headerName: "Active", 
-      width: 100,
+      width: 150,
       renderCell: (params) => (
         <div>
           {params.row.state ? "Yes" : "No"}               

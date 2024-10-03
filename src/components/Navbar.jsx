@@ -8,6 +8,7 @@ import { AuthContext } from "../context/AuthContext";
 const Navbar = () => {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
+  
   const logout = () => {
     authContext.dispatch({ type: "LOGOUT" });
   }
