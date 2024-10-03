@@ -31,9 +31,11 @@ const getPostCategoriesById = (id) => axios.get("http://localhost:5146/api/post-
 const updatePostCategories = async (id, data)  => {
     return await axios.put("http://localhost:5146/api/post-category" + '/' + id, data);
 }
-
+const addPostCategory = (data) =>{
+    return axios.post("http://localhost:5146/api/post-category", data);
+}
 const deletePostCategories = (id) => {
     return axios.delete("http://localhost:5146/api/post-category" + '/' + id)
 }
 
-export { getAllPosts, getPostById, createPost, updatePost, deletePost, getAllPostCategories,getPostCategoriesById, updatePostCategories, deletePostCategories}
+export { getAllPosts, getPostById, createPost, updatePost, deletePost, getAllPostCategories,getPostCategoriesById, updatePostCategories, deletePostCategories, addPostCategory}

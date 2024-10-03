@@ -12,7 +12,6 @@ const CollectionList = () => {
       entityName="Collection"
       createPath="/product-management/collections/new"
       updatePath="/product-management/collections"
-      filterField="type"
       searchField="name"
     />
   );
