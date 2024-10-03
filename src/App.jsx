@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import CollectionSingle from "./pages/collection/CollectionSingle";
 import { addCollection } from "./service/CollectionService";
-import { collectionInputs, publisherInputs } from "./context/formSource";
+import { collectionInputs, postCategoryInputs, publisherInputs } from "./context/formSource";
 import Login from "./pages/Login";
 import Page404 from "./components/Page404";
 import ProductList from "./pages/product/ProductList";
@@ -24,7 +24,7 @@ import Navbar from "./components/Navbar";
 import OrderList from "./pages/order/OrderList";
 import OrderDetail from "./pages/order/OrderDetail";
 import ChangeState from "./pages/order/ChangeState";
-import { createPost } from "./service/PostService";
+import { addPostCategory, createPost } from "./service/PostService";
 import PublisherSingle from "./pages/publisher/PublisherSingle";
 import PublisherList from "./pages/publisher/PublisherList";
 import { addPublisher } from "./service/PublisherService";
@@ -121,6 +121,7 @@ const App = () => {
                   {/* PostCategory Start */}
                   <Route path="/post-management/categories">
                     <Route index element={<RequireAuth><PostCategoryList /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><FormNew inputs={postCategoryInputs} title="Add New Post Category" location="/post-management/categories" handleAdd={addPostCategory} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><PostCategorySingle /></RequireAuth>} />
                   </Route>
                   {/* PostCategory End */}

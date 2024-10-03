@@ -36,3 +36,12 @@ export const publisherInputs = [
     placeholder: "https://nxbkimdong.com.vn/",
   }
 ]
+
+export const postCategoryInputs = [
+  {
+    id: 'name',
+    label: "Name",
+    type: "text",
+    placeholder: "THỂ LOẠI",
+  }
+]
