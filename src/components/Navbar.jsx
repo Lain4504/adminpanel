@@ -9,8 +9,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   const logout = () => {
-    authContext.dispatch({ type: "LOGOUT" });
+    authContext.dispatch({ type: "LOGOUT", isSessionExpired: false }); // Logout bình thường
   }
+  
   const handleChangePassword = () => {
     // Điều hướng đến trang thay đổi mật khẩu
     navigate('/change-password');
