@@ -1,11 +1,20 @@
-import React from 'react'
-import DataTable from '../../components/DataTable'
+import {getAllPostCategories, deletePostCategories} from "../../service/PostService";
+import DataTable from "../../components/DataTable";
+import {postCategoryColumns} from "../../context/DataSet";
 
 const PostCategoryList = () => {
-  return (
-    <DataTable
+    return (
+      <DataTable
+      columns={postCategoryColumns}
+      dataService={getAllPostCategories}
+      deleteService={deletePostCategories}
+      entityName="Post Category"
+      createPath="/post-management/categories/new"
+      updatePath="/post-management/categories"
+      filterField="name"
+      searchField="name"
     />
-  )
-}
+  );
+};
 
-export default PostCategoryList
+export default PostCategoryList ;

@@ -26,4 +26,14 @@ const getAllPostCategories = () => {
     return axios.get("http://localhost:5146/api/post-category");
 }
 
-export { getAllPosts, getPostById, createPost, updatePost, deletePost, getAllPostCategories}
+const getPostCategoriesById = (id) => axios.get("http://localhost:5146/api/post-category" + '/' + id);
+
+const updatePostCategories = async (id, data)  => {
+    return await axios.put("http://localhost:5146/api/post-category" + '/' + id, data);
+}
+
+const deletePostCategories = (id) => {
+    return axios.delete("http://localhost:5146/api/post-category" + '/' + id)
+}
+
+export { getAllPosts, getPostById, createPost, updatePost, deletePost, getAllPostCategories,getPostCategoriesById, updatePostCategories, deletePostCategories}
