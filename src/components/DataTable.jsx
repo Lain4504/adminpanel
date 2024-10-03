@@ -12,7 +12,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterValue, setFilterValue] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc'); // Trạng thái sắp xếp
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const handleDelete = (id) => {
     deleteService(id)
@@ -36,7 +36,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
     dataService()
       .then((res) => {
         const allData = res.data || [];
-        // Sắp xếp toàn bộ dữ liệu
         const sortedData = allData.sort((a, b) => {
           return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
         });
@@ -55,7 +54,8 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
 
   useEffect(() => {
     fetchData();
-  }, [itemsPerPage, sortOrder]); // Thay đổi sortOrder sẽ gọi lại fetchData
+  }, [itemsPerPage, sortOrder]);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -73,7 +73,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
       <div>
         <h1 className='text-lg mb-4'>Quản lý {entityName}s</h1>
         <hr className="my-4" />
-
         <div className="flex justify-between items-center mb-4">
           <Link to={createPath}>
             <Button type="primary">Create</Button>
@@ -103,7 +102,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                 <th key={column.field} className="px-6 py-3">
                   <div className="flex items-center justify-between">
                     <span>{column.headerName}</span>
-                    {column.field === 'id' && ( // Thêm nút sắp xếp cho trường id
+                    {column.field === 'id' && (
                       <Button
                         type="link"
                         onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
@@ -114,7 +113,9 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                   </div>
                 </th>
               ))}
-              <th className="px-6 py-3">Actions</th>
+              <th className="px-6 py-3 text-center">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -139,9 +140,8 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                     </td>
                   ))}
                   <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center space-x-2">
-                      <Link to={`${updatePath}/${row.id}`}
-                        onClick={() => localStorage.setItem('currentPage', currentPage)}>
+                    <div className="flex justify-center items-center space-x-2">
+                      <Link to={`${updatePath}/${row.id}`} onClick={() => localStorage.setItem('currentPage', currentPage)}>
                         <Button type="primary">Update</Button>
                       </Link>
                       <Popconfirm
@@ -158,6 +158,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
               ))
             )}
           </tbody>
+
         </table>
       </div>
 

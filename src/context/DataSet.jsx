@@ -131,5 +131,5 @@ export const publisherColumns = [
 
 export const postCategoryColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 150 },
+  { field: "name", headerName: "Name", width: 400 },
 ]
