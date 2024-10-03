@@ -18,7 +18,8 @@ const getPostById = (id) => {
 }
 
 const createPost = (data) => {
-    return axios.post(API_URL, data);
+    data.CreatedAt = new Date().toISOString().slice(0, 19);
+    return axios.post(API_URL, data)
 }
 
 const updatePost = (data) => {
