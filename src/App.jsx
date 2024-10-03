@@ -29,7 +29,10 @@ import PublisherSingle from "./pages/publisher/PublisherSingle";
 import PublisherList from "./pages/publisher/PublisherList";
 import { addPublisher } from "./service/PublisherService";
 import { AuthContext } from "./context/AuthContext";
+import PostCategorySingle from "./pages/post-category/PostCategorySingle";
+import PostCategoryList from "./pages/post-category/PostCategoryList";
 import { jwtDecode } from 'jwt-decode';
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -115,6 +118,12 @@ const App = () => {
                     <Route path=":id" element={<RequireAuth><PostSingle /></RequireAuth>} />
                   </Route>
                   {/* Post End */}
+                  {/* PostCategory Start */}
+                  <Route path="/post-management/categories">
+                    <Route index element={<RequireAuth><PostCategoryList /></RequireAuth>} />
+                    <Route path=":id" element={<RequireAuth><PostCategorySingle /></RequireAuth>} />
+                  </Route>
+                  {/* PostCategory End */}
                   {/* Orders Start */}
                   <Route path="/order-management/orders">
                     <Route index element={<RequireAuth><OrderList /></RequireAuth>} />

@@ -45,16 +45,21 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await getDataById(id);
-            setData(res.data);
+            if (Array.isArray(res.data)) {
+                setData(res.data[0]); // Chọn phần tử đầu tiên nếu là mảng
+            } else {
+                setData(res.data); // Nếu không phải mảng, lưu trực tiếp
+            }
         };
         fetchData();
     }, [id, getDataById]);
-
     const handleChange = (fieldId, value) => {
         setData(prevData => ({
             ...prevData,
             [fieldId]: fieldId === 'isDisplay' ? (value === 'true') : value // Convert to boolean for isDisplay
         }));
+        console.log(res);
+
     };
     
     return (
