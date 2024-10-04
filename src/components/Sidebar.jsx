@@ -18,8 +18,12 @@ const Sidebar = () => {
   const sidebarRef = useRef(null);
   
   const menuItems = [
-    { key: '/', label: 'Home', icon: <HomeOutlined/> },
-    { key: '/dashboard', label: 'Bảng thống kê', icon: <DashboardOutlined /> },
+    { key: '/', 
+      label: 'Bảng thống kê', 
+      icon: <DashboardOutlined />,
+    children: [
+      {key: '/orderchart', label: 'Thống kê đơn hàng'}
+    ] },
     { key: '/user-management/users', label: 'Người dùng', icon: <UserOutlined/> },
     {
       key: 'product-management',

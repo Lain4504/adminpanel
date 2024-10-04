@@ -5,7 +5,16 @@ import SearchBar from './SearchBar';
 import Filter from './Filter';
 import { Button, Pagination } from 'antd';
 
-const DataTable = ({ columns, dataService, deleteService, entityName, createPath, updatePath, filterField, searchField }) => {
+const DataTable = ({
+  columns, 
+  dataService, 
+  deleteService, 
+  entityName, 
+  createPath, 
+  updatePath, 
+  filterField, 
+  searchField
+}) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -99,7 +108,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               {columns.map((column) => (
-                <th key={column.field} className="px-6 py-3">
+                <th key={column.field} style={{ width: `${column.width}px` }} className="px-6 py-3">
                   <div className="flex items-center justify-between">
                     <span>{column.headerName}</span>
                     {column.field === 'id' && (
@@ -113,9 +122,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
                   </div>
                 </th>
               ))}
-              <th className="px-6 py-3 text-center">
-                Actions
-              </th>
+              <th className="px-6 py-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +142,7 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
               paginatedData.map((row) => (
                 <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   {columns.map((column) => (
-                    <td key={column.field} className="px-6 py-4">
+                    <td key={column.field} style={{ width: `${column.width}px` }} className="px-6 py-4">
                       {column.renderCell ? column.renderCell({ row }) : row[column.field]}
                     </td>
                   ))}
@@ -158,7 +165,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
               ))
             )}
           </tbody>
-
         </table>
       </div>
 
@@ -179,5 +185,6 @@ const DataTable = ({ columns, dataService, deleteService, entityName, createPath
     </>
   );
 };
+
 
 export default DataTable;

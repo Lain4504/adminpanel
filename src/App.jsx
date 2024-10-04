@@ -32,6 +32,7 @@ import { AuthContext } from "./context/AuthContext";
 import PostCategorySingle from "./pages/post-category/PostCategorySingle";
 import PostCategoryList from "./pages/post-category/PostCategoryList";
 import { jwtDecode } from 'jwt-decode';
+import OrderChart from "./chart/OrderChart";
 
 
 const { Header, Sider, Content } = Layout;
@@ -170,6 +171,7 @@ useEffect(() => {
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
                   <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
+                  <Route path="/orderchart" element={<OrderChart/>}/>
                 </Routes>
               </div>
             </Content>

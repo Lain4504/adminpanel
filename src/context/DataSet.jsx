@@ -2,7 +2,7 @@
 
 export const collectionColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 450 },
+  { field: "name", headerName: "Name", width: 400 },
   { field: "type", headerName: "Type", width: 150 },
   { 
     field: "isDisplay", 
@@ -126,7 +126,7 @@ export const orderColumns = [
 ]
 export const publisherColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 150 },
+  { field: "name", headerName: "Name", width: 200 },
   { field: "website", headerName: "Website", width: 250 },
 
 ]
