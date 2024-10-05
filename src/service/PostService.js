@@ -14,8 +14,8 @@ const createPost = (data) => {
     return axios.post(API_URL, data);
 }
 
-const updatePost = (data) => {
-    return axios.put(API_URL, data);
+const updatePost = (id, data) => {
+    return axios.put(`${API_URL}/${id}`, data);
 }
 
 const deletePost = (id) => {
