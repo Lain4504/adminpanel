@@ -27,4 +27,7 @@ const deleteUser = async (id) => {
 const getUserInfoByEmail = (email) => {
     return axios.get(`http://localhost:5146/api/user/by-email/${email}`);
 }
-export {createAccount, login, getAllUsers, deleteUser, getUserInfoByEmail}
+const getUserProfile = async (userId) => {
+    return await axios.get(`${ACCOUNT_URL}get-profile/${userId}`);
+};
+export {getUserProfile, createAccount, login, getAllUsers, deleteUser, getUserInfoByEmail}

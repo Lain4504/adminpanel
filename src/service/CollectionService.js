@@ -43,7 +43,7 @@ const addCollection = (collection) => {
     const token = getToken();
     try {
         collection.isDisplay = Boolean(collection.isDisplay === 'true');
-        return axios.post(API_URL, collection, {
+        return axios.post(API_URL + "/" + "create", collection, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -56,7 +56,7 @@ const addCollection = (collection) => {
 
 const getCollectionsById = (id) => {
     const token = getToken();
-    return axios.get(`${API_URL}/${id}`, {
+    return axios.get(`${API_URL}/get/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

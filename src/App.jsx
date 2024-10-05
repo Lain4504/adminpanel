@@ -32,6 +32,7 @@ import { AuthContext } from "./context/AuthContext";
 import PostCategorySingle from "./pages/post-category/PostCategorySingle";
 import PostCategoryList from "./pages/post-category/PostCategoryList";
 import { jwtDecode } from 'jwt-decode';
+import OrderChart from "./chart/OrderChart";
 
 
 const { Header, Sider, Content } = Layout;
@@ -58,23 +59,24 @@ const App = () => {
   }, [currentUser]);
 
   const RequireAuth = ({ children }) => {
-    if (sessionExpired) {
-      // Nếu phiên đã hết hạn, không chuyển hướng ngay lập tức
-      return null; // Không render gì cả
-    }
-    
-    // Nếu không có currentUser, hiển thị thông báo và chuyển hướng
-    if (!currentUser) {
+    const { currentUser, isSessionExpired } = useContext(AuthContext);
+  
+    if (isSessionExpired) {
       message.warning("Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.");
       setTimeout(() => {
         navigate("/login");
-      }, 3000); // Chuyển hướng sau 3 giây
-      return null; // Không render gì cả
+      }, 1500);
+      return null;
     }
-    
-    return children; // Render children nếu có currentUser
+  
+    if (!currentUser) {
+        navigate("/login");
+      return null;
+    }
+  
+    return children;
   };
-
+  
   const isLoginPage = location.pathname === "/login";
 
   useEffect(() => {
@@ -169,6 +171,7 @@ useEffect(() => {
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
                   <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
+                  <Route path="/orderchart" element={<OrderChart/>}/>
                 </Routes>
               </div>
             </Content>

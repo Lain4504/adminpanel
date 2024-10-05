@@ -13,6 +13,7 @@ const CollectionList = () => {
       createPath="/product-management/collections/new"
       updatePath="/product-management/collections"
       searchField="name"
+     
     />
   );
 };
