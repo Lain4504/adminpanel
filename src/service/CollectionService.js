@@ -32,7 +32,7 @@ const getAllCollections = () => {
 
 const deleteCollection = (collectionId) => {
     const token = getToken();
-    return axios.delete(`${API_URL}/${collectionId}`, {
+    return axios.delete(`${API_URL}/delete/${collectionId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -43,7 +43,7 @@ const addCollection = (collection) => {
     const token = getToken();
     try {
         collection.isDisplay = Boolean(collection.isDisplay === 'true');
-        return axios.post(API_URL + "/" + "create", collection, {
+        return axios.post(API_URL + "/create", collection, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -56,7 +56,7 @@ const addCollection = (collection) => {
 
 const getCollectionsById = (id) => {
     const token = getToken();
-    return axios.get(`${API_URL}/get/${id}`, {
+    return axios.get(`${API_URL}/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -67,7 +67,7 @@ const updateCollection = async (id, data) => {
     const token = getToken();
     try {
         data.isDisplay = Boolean(data.isDisplay);
-        return await axios.put(`${API_URL}/${id}`, data, {
+        return await axios.put(`${API_URL}/update/${id}`, data, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

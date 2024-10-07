@@ -84,9 +84,9 @@ const Sidebar = () => {
           className={`transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} translate-x-0`}
           aria-label="Sidebar"
         >
-          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-900 text-white">
+          <div className="h-full px-3 py-4 overflow-y-auto bg-white text-white">
             <Menu
-              theme="dark"
+              theme="light"
               mode="inline"
               defaultSelectedKeys={['/']}
               style={{ border: 'none' }}

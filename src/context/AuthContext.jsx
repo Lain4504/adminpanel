@@ -20,7 +20,7 @@ export const AuthContextProvider = ({ children }) => {
       error => {
         if (error.response && error.response.status === 401) {
           console.log("Nhận mã lỗi 401 - Thoát phiên...");
-          dispatch({ type: "LOGOUT", isSessionExpired: true }); // Logout do hết hạn
+          dispatch({ type: "LOGOUT", isSessionExpired: true });
         }
         return Promise.reject(error);
       }

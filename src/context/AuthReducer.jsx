@@ -7,6 +7,7 @@ const AuthReducer = (state, action) => {
         };
       }
       case "LOGOUT": {
+        localStorage.removeItem("user"); // Xóa token khỏi local storage
         return {
           currentUser: null,
           isSessionExpired: action.isSessionExpired || false, // Kiểm tra logout do hết hạn hay không
