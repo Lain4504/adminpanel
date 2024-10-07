@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { Layout, Button, message } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
@@ -33,15 +33,16 @@ import PostCategorySingle from "./pages/post-category/PostCategorySingle";
 import PostCategoryList from "./pages/post-category/PostCategoryList";
 import { jwtDecode } from 'jwt-decode';
 import OrderChart from "./chart/OrderChart";
+import AuthReducer from "./context/AuthReducer";
 
 
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
+  const [state, dispatch] = useReducer(AuthReducer);
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const [sessionExpired, setSessionExpired] = useState(false); // New state for session expiration
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const App = () => {
 
   const RequireAuth = ({ children }) => {
     const { currentUser, isSessionExpired } = useContext(AuthContext);
-  
+
     if (isSessionExpired) {
       message.warning("Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.");
       setTimeout(() => {
@@ -68,42 +69,45 @@ const App = () => {
       }, 1500);
       return null;
     }
-  
+
     if (!currentUser) {
+      message.warning("Bạn cần đăng nhập để truy cập trang này.");
+      setTimeout(() => {
         navigate("/login");
+      }, 1500);
       return null;
     }
-  
+
     return children;
   };
-  
+
   const isLoginPage = location.pathname === "/login";
 
   useEffect(() => {
+    console.log("Test user", currentUser)
     if (currentUser && isLoginPage) {
       navigate("/");
-      message.info("Bạn đã được chuyển hướng đến trang chính...");
     }
   }, [currentUser, isLoginPage, navigate]);
 
- // Check for session expiration and redirect if needed
 
-// Kiểm tra sessionExpiration
-useEffect(() => {
-  if (sessionExpired) {
-    // Nếu sessionExpired là true, hiển thị thông báo cảnh báo
-    message.warning("Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.");
-    
-    // Chờ 3 giây trước khi chuyển hướng
-    const timeoutId = setTimeout(() => {
-      navigate("/login");
-    }, 1500); // Redirect after 1.5 seconds
+  useEffect(() => {
+    const checkToken = () => {
+      if (currentUser) {
+        // Kiểm tra xem token đã hết hạn chưa
+        const decodedToken = jwtDecode(currentUser.token);
+        const isExpired = decodedToken.exp * 1000 < Date.now(); // Thời gian hết hạn
 
-    // Dọn dẹp khi component bị unmount hoặc sessionExpired thay đổi
-    return () => clearTimeout(timeoutId);
-  }
-}, [sessionExpired, navigate]);
+        if (isExpired) {
+          dispatch({ type: "LOGOUT", isSessionExpired: true });
+          navigate("/login");
+        }
+      }
+    };
 
+    checkToken();
+  }, [currentUser, navigate, dispatch]);
+  
   return (
     <>
       {isLoginPage ? (
@@ -113,15 +117,21 @@ useEffect(() => {
         </Routes>
       ) : (
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider width={250} style={{ background: '#001529' }} collapsed={collapsed}>
+          <Sider width={250}
+            style={{
+              background: 'white',
+              border: '2px solid #ccc',
+              borderRadius: '5px'
+            }}
+            collapsed={collapsed}>
             <Sidebar />
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Button
                 type="primary"
-                style={{ marginLeft: 16, background: 'black', borderColor: 'black', color: '#001529' }}
-                icon={collapsed ? <MenuUnfoldOutlined style={{ color: 'white' }} /> : <MenuFoldOutlined style={{ color: 'white' }} />}
+                style={{ marginLeft: 16, background: 'white', borderColor: 'black', color: '#001529' }}
+                icon={collapsed ? <MenuUnfoldOutlined style={{ color: 'black' }} /> : <MenuFoldOutlined style={{ color: 'black' }} />}
                 onClick={() => setCollapsed(!collapsed)}
               />
               <Navbar />
@@ -171,7 +181,7 @@ useEffect(() => {
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
                   <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
-                  <Route path="/orderchart" element={<OrderChart/>}/>
+                  <Route path="/orderchart" element={<RequireAuth><OrderChart /> </RequireAuth>} />
                 </Routes>
               </div>
             </Content>
