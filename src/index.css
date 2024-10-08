@@ -27,3 +27,14 @@ a.active hr{
 .group:hover .group-hover\:opacity-100 {
     opacity: 1;
 }
+/* CSS styles for the sidebar */
+@media (max-width: 768px) {
+    #default-sidebar {
+      width: 80px; /* hoặc kích thước bạn muốn */
+    }
+  
+    .menu-toggle {
+      display: none; /* Ẩn button MenuUnfoldOutlined */
+    }
+  }
+  

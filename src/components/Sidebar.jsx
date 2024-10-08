@@ -7,7 +7,7 @@ import {
   FileAddOutlined,
   CommentOutlined,
   UserOutlined,
-  HomeOutlined,
+  BuildOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 
@@ -47,6 +47,12 @@ const Sidebar = () => {
       ],
     },
     { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
+    { key: 'marketing', 
+      label: 'Marketing', 
+      icon: <BuildOutlined/>,
+    children: [
+      {key: '/marketing/banners', label: 'Quản lý banner'},
+    ]}
   ];
 
 

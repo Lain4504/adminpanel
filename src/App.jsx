@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import CollectionSingle from "./pages/collection/CollectionSingle";
 import { addCollection } from "./service/CollectionService";
-import { collectionInputs, postCategoryInputs, postInputs, publisherInputs } from "./context/formSource";
+import { collectionInputs, postCategoryInputs, publisherInputs } from "./context/formSource";
 import Login from "./pages/Login";
 import Page404 from "./components/Page404";
 import ProductList from "./pages/product/ProductList";
@@ -42,9 +42,26 @@ const App = () => {
   const [state, dispatch] = useReducer(AuthReducer);
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(window.innerWidth <= 768); // Thiết lập trạng thái ban đầu dựa trên kích thước màn hình
   const navigate = useNavigate();
+  const handleToggleSidebar = () => {
+    // Chỉ cho phép chuyển đổi khi không phải trên kích thước md trở xuống
+    if (window.innerWidth > 768) {
+      setCollapsed(!collapsed);
+    }
+  };
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setCollapsed(true); // Luôn đóng sidebar khi màn hình nhỏ hơn md
+      }
+    };
 
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   useEffect(() => {
     if (currentUser) {
       console.log("Token:", currentUser.token);
@@ -120,19 +137,18 @@ const App = () => {
           <Sider width={250}
             style={{
               background: 'white',
-              border: '2px solid #ccc',
-              borderRadius: '5px'
             }}
             collapsed={collapsed}>
             <Sidebar />
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Button
+            <Button
                 type="primary"
                 style={{ marginLeft: 16, background: 'white', borderColor: 'black', color: '#001529' }}
                 icon={collapsed ? <MenuUnfoldOutlined style={{ color: 'black' }} /> : <MenuFoldOutlined style={{ color: 'black' }} />}
-                onClick={() => setCollapsed(!collapsed)}
+                onClick={handleToggleSidebar} // Sử dụng hàm toggle đã cập nhật
+                className={collapsed ? "menu-toggle" : ""} // Thêm class để ẩn button khi collapsed
               />
               <Navbar />
             </Header>
@@ -155,7 +171,7 @@ const App = () => {
                   {/* Post Routes */}
                   <Route path="/post-management/posts">
                     <Route index element={<RequireAuth><PostList /></RequireAuth>} />
-                    <Route path="new" element={<RequireAuth><PostNew inputs={postInputs} title="Add New Post" location="/post-management/posts" handleAdd={createPost} /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><PostNew title="Add New Post" location="/post-management/posts" handleAdd={createPost} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><PostSingle /></RequireAuth>} />
                   </Route>
                   {/* Post End */}
@@ -175,7 +191,7 @@ const App = () => {
                   {/* Product Routes */}
                   <Route path="/product-management/products">
                     <Route index element={<RequireAuth><ProductList /></RequireAuth>} />
-                    <Route path="new" element={<RequireAuth><ProductNew inputs={collectionInputs} title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
+                    <Route path="new" element={<RequireAuth><ProductNew title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><ProductSingle /></RequireAuth>} />
                   </Route>
                   <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
