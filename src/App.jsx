@@ -2,11 +2,9 @@ import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { Layout, Button, message } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
 import FormNew from "./components/FormNew";
 import CollectionList from "./pages/collection/CollectionList";
-import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import CollectionSingle from "./pages/collection/CollectionSingle";
 import { addCollection } from "./service/CollectionService";
@@ -32,8 +30,10 @@ import { AuthContext } from "./context/AuthContext";
 import PostCategorySingle from "./pages/post-category/PostCategorySingle";
 import PostCategoryList from "./pages/post-category/PostCategoryList";
 import { jwtDecode } from 'jwt-decode';
-import OrderChart from "./chart/OrderChart";
+import OrderChart from "./components/chart/OrderChart";
 import AuthReducer from "./context/AuthReducer";
+import AuthorList from "./pages/author/AuthorList";
+import BannerList from "./pages/banner/BannerList";
 
 
 const { Header, Sider, Content } = Layout;
@@ -155,7 +155,6 @@ const App = () => {
             <Content style={{ margin: '16px' }}>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                 <Routes>
-                  <Route index element={<RequireAuth><Home /></RequireAuth>} />
                   {/* Collection Routes */}
                   <Route path="/product-management/collections">
                     <Route index element={<RequireAuth><CollectionList /></RequireAuth>} />
@@ -194,7 +193,14 @@ const App = () => {
                     <Route path="new" element={<RequireAuth><ProductNew title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
                     <Route path=":id" element={<RequireAuth><ProductSingle /></RequireAuth>} />
                   </Route>
-                  <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+                  {/*Author Routes */}
+                  <Route path="/product-management/authors">
+                    <Route index element={<RequireAuth><AuthorList/></RequireAuth>}/>
+                  </Route>
+                  {/*Banner Routes */}
+                  <Route path="/marketing-management/banners">
+                    <Route index element={<RequireAuth><BannerList/></RequireAuth>}/>
+                  </Route>
                   <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
                   <Route path="/orderchart" element={<RequireAuth><OrderChart /> </RequireAuth>} />

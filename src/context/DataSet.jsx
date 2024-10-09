@@ -135,3 +135,34 @@ export const postCategoryColumns = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "name", headerName: "Name", width: 400 },
 ]
+
+
+export const bannerColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "title", headerName: "Title", width: 150 },
+  {
+    field: "imageUrl", headerName: "Image", width: 250,
+    renderCell: (params) => {
+      return (
+        <div>
+          <img src={params.row.imageUrl} alt="banner" />
+        </div>
+      );
+    },
+  },
+  { field: "backLink", headerName: "Back Link", width: 150, },
+  { field: "description", headerName: "Description", width: 150, }
+]
+
+export const authorColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "author",headerName: "Author", width: 230,
+    renderCell: (params) => {
+      return (
+        <div>
+          {params.row.name}
+        </div>
+      );
+    },
+  },
+];

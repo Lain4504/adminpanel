@@ -47,11 +47,11 @@ const Sidebar = () => {
       ],
     },
     { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
-    { key: 'marketing', 
+    { key: 'marketing-management', 
       label: 'Marketing', 
       icon: <BuildOutlined/>,
     children: [
-      {key: '/marketing/banners', label: 'Quản lý banner'},
+      {key: '/marketing-management/banners', label: 'Quản lý banner'},
     ]}
   ];
 
