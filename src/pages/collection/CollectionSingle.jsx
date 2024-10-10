@@ -1,8 +1,10 @@
 import React from 'react';
 import { getCollectionsById, updateCollection } from '../../service/CollectionService';
 import FormEdit from '../../components/FormEdit';
+import { useNavigate } from 'react-router-dom';
 
 const CollectionSingle = () => {
+    const navigate = useNavigate();
     const fields = {
         title: "Collection",
         inputs: [
@@ -20,7 +22,7 @@ const CollectionSingle = () => {
             getDataById={getCollectionsById}
             updateData={updateCollection}
             fields={fields}
-            onSuccess={() => window.location.replace("/product-management/collections")}
+            onSuccess={() => navigate("/product-management/collections")}
             onError={() => console.error('Failed to update collections')}
         />
     );

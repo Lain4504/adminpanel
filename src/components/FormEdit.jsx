@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { notification, Button, Form, Input, Select } from 'antd';
 
 const { Option } = Select;
@@ -7,9 +7,10 @@ const { Option } = Select;
 const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     const [data, setData] = useState({});
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const handleCancel = () => {
-        window.location.replace("/product-management/collections"); 
+        navigate("/product-management/collections"); 
     };
 
     const handleSave = async () => {

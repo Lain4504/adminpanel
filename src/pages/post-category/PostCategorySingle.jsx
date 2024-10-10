@@ -1,8 +1,10 @@
 import React from 'react';
 import { getPostCategoriesById, updatePostCategories} from '../../service/PostService';
 import FormEdit from '../../components/FormEdit';
+import { useNavigate } from 'react-router-dom';
 
 const PostCategorySingle = () => {
+    const navigate = useNavigate();
     const fields = {
         title: "Post Category",
         inputs: [
@@ -15,7 +17,7 @@ const PostCategorySingle = () => {
             getDataById={getPostCategoriesById}
             updateData={updatePostCategories}
             fields={fields}
-            onSuccess={() => window.location.replace("/post-management/categories")}
+            onSuccess={() => navigate("/post-management/categories")}
             onError={() => console.error('Failed to update post category')}
         />
     );
