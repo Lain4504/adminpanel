@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { createPost, getAllPostCategories } from '../../service/PostService';
 import { Select, Input, Button, Form, message } from 'antd';
-import { getUserProfile } from '../../service/UserService';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CKEditorComponent from '../../components/CKEditor';
 import { AuthContext } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
@@ -12,7 +11,8 @@ const { Option } = Select;
 const PostNew = () => {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(false);
-    const { currentUser } = useContext(AuthContext); // Lấy thông tin người dùng từ AuthContext
+    const { currentUser } = useContext(AuthContext);
+    const navigate = useNavigate()
     const [data, setData] = useState({
         title: "",
         content: "",
@@ -62,15 +62,15 @@ const PostNew = () => {
         }));
     };
 
-    const handleCancel = () => {
-        window.location.replace("/post-management/posts");
-    };
+    const handleCancel = () => 
+        navigate("/post-management/posts");
+    ;
 
     const handleSave = () => {
         console.log("Data to be saved:", data); // Log data before sending to createPost
         createPost(data).then(() => {
             message.success('Post created successfully!');
-            window.location.replace("/post-management/posts");
+            navigate("/post-management/posts");
         }).catch((err) => {
             setError(true);
             console.error("Error creating post:", err); // Log error details

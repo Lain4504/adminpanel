@@ -30,11 +30,12 @@ a.active hr{
 /* CSS styles for the sidebar */
 @media (max-width: 768px) {
     #default-sidebar {
-      width: 80px; /* hoặc kích thước bạn muốn */
+      width: 80px; 
     }
   
     .menu-toggle {
       display: none; /* Ẩn button MenuUnfoldOutlined */
     }
   }
+
   

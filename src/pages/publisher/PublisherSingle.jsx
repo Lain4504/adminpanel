@@ -2,8 +2,10 @@ import React from 'react';
 import { getCollectionsById, updateCollection } from '../../service/CollectionService';
 import FormEdit from '../../components/FormEdit';
 import { getPublisherById, updatePublisher } from '../../service/PublisherService';
+import { useNavigate } from 'react-router-dom';
 
 const PublisherSingle = () => {
+    const navigate = useNavigate();
     const fields = {
         title: "Publisher",
         inputs: [
@@ -17,7 +19,7 @@ const PublisherSingle = () => {
             getDataById={getPublisherById}
             updateData={updatePublisher}
             fields={fields}
-            onSuccess={() => window.location.replace("/product-management/publishers")}
+            onSuccess={() => navigate("/product-management/publishers")}
             onError={() => console.error('Failed to update publishers')}
         />
     );

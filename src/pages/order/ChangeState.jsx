@@ -12,9 +12,9 @@ const ChangeState = () => {
     const [orderState, setOrderState] = useState('');
     const [data, setData] = useState({});
 
-    const handleSave = () => {
-        window.location.href = '/order-management/orders';
-    };
+    const handleSave = () => 
+        navigate('/order-management/orders');
+    ;
 
     const handleCancel = () => {
         navigate(-1); // Navigate back to the previous page

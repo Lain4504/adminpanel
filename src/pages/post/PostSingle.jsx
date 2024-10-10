@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { updatePost, getPostById, getAllPostCategories } from '../../service/PostService';
 import { Select, Input, Button, Form, message } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CKEditorComponent from '../../components/CKEditor';
 import { AuthContext } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
@@ -13,6 +13,7 @@ const PostSingle = () => {
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState(false);
     const { currentUser } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [data, setData] = useState({
         title: "",
         content: "",
@@ -35,7 +36,7 @@ const PostSingle = () => {
                 const postData = res.data;
                 setData({
                     title: postData.title,
-                    content: postData.content, // Giữ nguyên HTML // Convert HTML to text
+                    content: postData.content, 
                     categoryId: postData.categoryId,
                     brief: postData.brief,
                     thumbnail: postData.thumbnail,
@@ -87,19 +88,18 @@ const PostSingle = () => {
 
     // Cancel button action
     const handleCancel = () => {
-        window.location.replace("/post-management/posts");
+        navigate("/post-management/posts");
     };
 
     // Save updated post
     const handleSave = async () => {
         try {
-            // Ensure id is included in data
-            const updatedData = { ...data, id }; // Add id to the data object
+            const updatedData = { ...data, id }; 
 
-            console.log("Data to be updated:", updatedData); // Log data before sending
-            await updatePost(id, updatedData); // Pass the updatedData with id
+            console.log("Data to be updated:", updatedData); 
+            await updatePost(id, updatedData);
             message.success('Post updated successfully!');
-            window.location.replace("/post-management/posts");
+            navigate("/post-management/posts");
         } catch (err) {
             setError(true);
             console.error("Error updating post:", err);

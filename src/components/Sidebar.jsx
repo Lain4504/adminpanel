@@ -22,7 +22,7 @@ const Sidebar = () => {
       label: 'Bảng thống kê', 
       icon: <DashboardOutlined />,
     children: [
-      {key: '/orderchart', label: 'Thống kê đơn hàng'}
+      {key: '/', label: 'Tổng quan'}
     ] },
     { key: '/user-management/users', label: 'Người dùng', icon: <UserOutlined/> },
     {
@@ -47,11 +47,11 @@ const Sidebar = () => {
       ],
     },
     { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
-    { key: 'marketing', 
+    { key: 'marketing-management', 
       label: 'Marketing', 
       icon: <BuildOutlined/>,
     children: [
-      {key: '/marketing/banners', label: 'Quản lý banner'},
+      {key: '/marketing-management/banners', label: 'Quản lý banner'},
     ]}
   ];
 
