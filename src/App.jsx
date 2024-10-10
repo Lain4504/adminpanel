@@ -30,7 +30,7 @@ import { AuthContext } from "./context/AuthContext";
 import PostCategorySingle from "./pages/post-category/PostCategorySingle";
 import PostCategoryList from "./pages/post-category/PostCategoryList";
 import { jwtDecode } from 'jwt-decode';
-import OrderChart from "./components/chart/OrderChart";
+import Dashboard from "./components/chart/Dashboard";
 import AuthReducer from "./context/AuthReducer";
 import AuthorList from "./pages/author/AuthorList";
 import BannerList from "./pages/banner/BannerList";
@@ -203,7 +203,7 @@ const App = () => {
                   </Route>
                   <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
                   <Route path="*" element={<Page404 />} />
-                  <Route path="/orderchart" element={<RequireAuth><OrderChart /> </RequireAuth>} />
+                  <Route path="/" element={<RequireAuth><Dashboard /> </RequireAuth>} />
                 </Routes>
               </div>
             </Content>

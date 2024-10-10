@@ -22,7 +22,7 @@ const Sidebar = () => {
       label: 'Bảng thống kê', 
       icon: <DashboardOutlined />,
     children: [
-      {key: '/orderchart', label: 'Thống kê đơn hàng'}
+      {key: '/', label: 'Tổng quan'}
     ] },
     { key: '/user-management/users', label: 'Người dùng', icon: <UserOutlined/> },
     {
