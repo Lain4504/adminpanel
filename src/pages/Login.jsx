@@ -4,6 +4,7 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { login } from '../service/UserService';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Title from '../components/Title';
 
 const Login = () => {
     const [form] = Form.useForm();
@@ -39,59 +40,64 @@ const Login = () => {
     };
 
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                    ĐĂNG NHẬP
-                </h2>
-            </div>
-            <hr className="my-4 w-1/2 mx-auto border-t-2 border-gray-300" />
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <Form
-                    form={form}
-                    onFinish={onSubmitHandler}
-                    layout="vertical"
-                    className="space-y-6"
-                >
-                    <Form.Item
-                        label="Địa chỉ email"
-                        name="email"
-                        rules={[
-                            { required: true, message: 'Vui lòng nhập email!' },
-                            { type: 'email', message: 'Định dạng email không hợp lệ!' },
-                        ]}
-                    >
-                        <Input type="email" className="block w-full py-1.5 text-gray-900 shadow-sm" />
-                    </Form.Item>
+        <section className="bg-gray-50 dark:bg-gray-900">
+            <div className="flex flex-col items-center justify-center px-6 py-48 mx-auto md:h-screen lg:py-0">
+                <a className="flex items-center mb-6 text-lg font-light text-gray-900 dark:text-white">
+                <Title text1={'FOREVER'} text2={'Book Store Management'}/>
+                </a>
+                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                            ĐĂNG NHẬP
+                        </h1>
+                        <Form
+                            form={form}
+                            onFinish={onSubmitHandler}
+                            layout="vertical"
+                            className="space-y-4 md:space-y-6"
+                        >
+                            <Form.Item
+                                label="Địa chỉ email"
+                                name="email"
+                                rules={[
+                                    { required: true, message: 'Vui lòng nhập email!' },
+                                    { type: 'email', message: 'Định dạng email không hợp lệ!' },
+                                ]}
+                            >
+                                <Input type="email" className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                 />
+                            </Form.Item>
 
-                    <Form.Item
-                        label="Mật khẩu"
-                        name="password"
-                        rules={[
-                            { required: true, message: 'Vui lòng nhập mật khẩu!' },
-                            { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
-                        ]}
-                    >
-                        <Input.Password
-                            className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                        />
-                    </Form.Item>
+                            <Form.Item
+                                label="Mật khẩu"
+                                name="password"
+                                rules={[
+                                    { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                                    { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+                                ]}
+                            >
+                                <Input.Password
+                                    className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                />
+                            </Form.Item>
 
-                    <div className="flex items-center justify-between">
-                        <Link to="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-500">
-                            Quên mật khẩu?
-                        </Link>
+                            <div className="flex items-center justify-between">
+                                <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                                    Quên mật khẩu?
+                                </Link>
+                            </div>
+
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" loading={loading}>
+                                    Đăng nhập
+                                </Button>
+                            </Form.Item>
+                        </Form>
                     </div>
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" className="w-full" loading={loading}>
-                            Đăng nhập
-                        </Button>
-                    </Form.Item>
-                </Form>
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 

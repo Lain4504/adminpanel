@@ -38,4 +38,19 @@ a.active hr{
     }
   }
 
+  .post-content img {
+    display: block;
+    margin: 0 auto; /* Centers the image horizontally */
+    max-width: 100%; /* Ensures image is responsive */
+    height: auto;
+  }
   
+  .post-content figure {
+    display: flex;
+    justify-content: center; /* Center the image in the figure */
+  }
+  
+  .post-content figure img {
+    max-width: 100%; /* Ensures image is responsive */
+    height: auto;
+  }

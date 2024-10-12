@@ -18,10 +18,9 @@ const getBookById = (bookId) => {
     return axios.get(BOOK_BASE_URL + '/' + bookId);
 }
 
-const updateBook = (data) => {
-    return axios.put(BOOK_BASE_URL, data);
+const updateBook = (id, data) => {
+    return axios.put(`${BOOK_BASE_URL}/${id}`, data);
 }
-
 const addBook = (data) => {
     return axios.post(BOOK_BASE_URL, data);
 }
@@ -45,6 +44,8 @@ const addBookToCollection = async (bookId, collectionId) => {
     }
 };
 
+const getBookCollectionsByBookId = async (bookId) =>{
+    return axios.get(BOOK_BASE_URL + '/get-collections' + '/' + bookId );
+}
 
-
-export {getAllBooks, getBookById, updateBook, addBook, deleteBook, addBookToCollection}
+export {getAllBooks, getBookById, updateBook, addBook, deleteBook, addBookToCollection, getBookCollectionsByBookId}

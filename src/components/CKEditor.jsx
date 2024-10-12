@@ -57,7 +57,9 @@ const CKEditorComponent = ({ onChange, value }) => {
         width={1200}
         bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
       >
-        <div style={{ width: '100%', maxWidth: '280mm', margin: '0 auto' }}>
+        <div 
+        style={{ width: '100%', maxWidth: '280mm', margin: '0 auto' }}
+        className='post-content'>
           {parse(editorData)} {/* Render HTML safely using html-react-parser */}
         </div>
       </Modal>
