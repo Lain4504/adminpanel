@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { login } from '../service/UserService';
+import { login } from '../../service/UserService';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import Title from '../components/Title';
+import { AuthContext } from '../../context/AuthContext';
+import Title from '../../components/Title';
+import ForgotPasswordModal from './ForgotPassword';
 
 const Login = () => {
     const [form] = Form.useForm();
@@ -38,7 +39,15 @@ const Login = () => {
             setLoading(false);
         }
     };
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-48 mx-auto md:h-screen lg:py-0">
@@ -83,9 +92,10 @@ const Login = () => {
                             </Form.Item>
 
                             <div className="flex items-center justify-between">
-                                <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                                <a onClick={showModal} className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
                                     Quên mật khẩu?
-                                </Link>
+                                </a>
+                                 <ForgotPasswordModal visible={isModalVisible} onCancel={handleCancel} />
                             </div>
 
                             <Form.Item>

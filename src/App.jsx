@@ -3,7 +3,7 @@ import { Routes, Route, useLocation, Navigate, useNavigate } from "react-router-
 import { Layout, Button, message } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Sidebar from "./components/Sidebar";
-import Login from "./pages/Login";
+import Login from "./pages/user/Login";
 import Navbar from "./components/Navbar";
 import { AuthContext } from "./context/AuthContext";
 import { jwtDecode } from 'jwt-decode';
