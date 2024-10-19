@@ -30,4 +30,10 @@ const getUserInfoByEmail = (email) => {
 const getUserProfile = async (userId) => {
     return await axios.get(`${ACCOUNT_URL}get-profile/${userId}`);
 };
-export {getUserProfile, createAccount, login, getAllUsers, deleteUser, getUserInfoByEmail}
+const forgetPassword = (email) => {
+    return axios.post(ACCOUNT_URL + 'forgot-password', {
+        Email: email 
+    });
+};
+
+export {getUserProfile, createAccount, login, getAllUsers, deleteUser, getUserInfoByEmail,forgetPassword}
