@@ -116,13 +116,17 @@ export const orderColumns = [
   },
   { field: 'state', headerName: 'Order State', width: 150, },
   {
-    field: "totalPrice", headerName: "Total Price", width: 120,
+    field: "totalPrice", 
+    headerName: "Total Price", 
+    width: 120,
     renderCell: (params) => {
+      // Check if totalPrice is defined and is a number
+      const price = params.row.totalPrice;
       return (
-        <div>{params.row.totalPrice.toLocaleString()}₫</div>
-      )
+        <div>{price !== undefined && !isNaN(price) ? price.toLocaleString() + '₫' : 'N/A'}</div>
+      );
     }
-  },
+  }
 ]
 export const publisherColumns = [
   { field: "id", headerName: "ID", width: 70 },

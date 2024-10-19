@@ -47,5 +47,8 @@ const addBookToCollection = async (bookId, collectionId) => {
 const getBookCollectionsByBookId = async (bookId) =>{
     return axios.get(BOOK_BASE_URL + '/get-collections' + '/' + bookId );
 }
+const getAuthorByBookId = (bookId) => {
+    return axios.get(`${BOOK_BASE_URL}/get-authors/${bookId}`);
+};
 
-export {getAllBooks, getBookById, updateBook, addBook, deleteBook, addBookToCollection, getBookCollectionsByBookId}
+export {getAllBooks, getBookById, updateBook, addBook, deleteBook, addBookToCollection, getBookCollectionsByBookId, getAuthorByBookId}

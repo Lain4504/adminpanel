@@ -1,62 +1,65 @@
-import React, { useEffect, useState, useRef } from 'react'; // Thêm useRef
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Table, Typography, Row, Col, Divider, Button } from 'antd';
-import moment from 'moment';
+import { Table, Typography, Divider, Button, Row, Col } from 'antd';
 import ReactToPrint from 'react-to-print';
 import { PrinterOutlined } from '@ant-design/icons';
-
+import { getOrderDetailByOrderId, getOrderById } from '../../service/OrderService';
+import { getBookById } from '../../service/BookService';
 const { Title, Text } = Typography;
 
 const OrderDetail = () => {
   const { id } = useParams();
-  const [order, setOrder] = useState({});
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [orderInfo, setOrderInfo] = useState(null); 
   const navigate = useNavigate();
-  const componentRef = useRef(); 
- 
-  {/*Call cái method này */}
-  // useEffect(() => {
-  //   getOrderById(id).then((res) => {
-  //     setOrder(res.data);
-  //   });
-  // }, [id]);
-
-  // Fake data để mô phỏng
-  const fakeOrderData = {
-    id: 'ORD123456',
-    created: '2024-09-27T10:00:00Z',
-    address: '123 Đường ABC',
-    ward: 'Phường 1',
-    district: 'Quận 2',
-    province: 'Thành phố Hồ Chí Minh',
-    orderDetails: [
-      {
-        book: { title: 'Sách A' },
-        amount: 2,
-        salePrice: 150000,
-      },
-      {
-        book: { title: 'Sách B' },
-        amount: 1,
-        salePrice: 200000,
-      },
-      {
-        book: { title: 'Sách C' },
-        amount: 3,
-        salePrice: 100000,
-      },
-    ],
-  };
+  const componentRef = useRef();
 
   useEffect(() => {
-    setOrder(fakeOrderData);
-  }, []);
+    const fetchOrderDetails = async () => {
+      try {
+        // Fetch order info
+        const orderResponse = await getOrderById(id);
+        setOrderInfo(orderResponse.data); // Store order info (address, etc.)
+
+        // Fetch order details
+        const detailsResponse = await getOrderDetailByOrderId(id);
+        const details = detailsResponse.data;
+
+        // Fetch book titles and images
+        const detailsWithTitlesAndImages = await Promise.all(
+          details.map(async (detail) => {
+            const bookResponse = await getBookById(detail.bookId);
+            return {
+              ...detail,
+              bookTitle: bookResponse.data.title,
+              imageLink: bookResponse.data.images?.[0]?.link || '', // Get the first image if available
+            };
+          })
+        );
+
+        setOrderDetails(detailsWithTitlesAndImages);
+      } catch (error) {
+        console.error('Error fetching order details:', error);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [id]);
 
   const columns = [
     {
-      title: 'Product',
-      dataIndex: 'book',
-      key: 'book',
-      render: (book) => book.title,
+      title: 'Book Title',
+      key: 'bookTitle',
+      render: (text, record) => (
+        <div className="flex items-center space-x-2">
+          <img
+            src={record.imageLink}
+            alt={record.bookTitle}
+            style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px' }}
+          />
+          <span>{record.bookTitle}</span>
+        </div>
+      ),
     },
     {
       title: 'Qty.',
@@ -66,15 +69,15 @@ const OrderDetail = () => {
       render: (amount) => amount.toLocaleString(),
     },
     {
-      title: 'Unit',
+      title: 'Unit Price',
       dataIndex: 'salePrice',
       key: 'salePrice',
       align: 'right',
       render: (salePrice) => salePrice.toLocaleString(),
     },
     {
-      title: 'Sum',
-      key: 'sum',
+      title: 'Total',
+      key: 'total',
       align: 'right',
       render: (text, record) => (record.amount * record.salePrice).toLocaleString(),
     },
@@ -91,32 +94,35 @@ const OrderDetail = () => {
             width: '100px',
             color: 'black',
           }}
-          className='bg-gray-100 text-black transition duration-300 hover:bg-gray-300 hover:text-white'
+          className="bg-gray-100 text-black transition duration-300 hover:bg-gray-300 hover:text-white"
         >
-         Back
+          Back
         </Button>
       </div>
 
-      <div ref={componentRef}> {/* Bọc phần tử chính trong ref */}
-        <Title level={3}>Order: {order.id}</Title>
-
-        <Row>
-          <Col span={12}>
-            <Text strong>Order date:</Text> {moment(order.created).format('DD/MM/YYYY HH:mm:ss')}
-          </Col>
-        </Row>
-
-        <Row style={{ margin: '10px 0' }}>
-          <Col span={12}>
-            <Text strong>Address:</Text> {order.address + ', ' + order.ward + ', ' + order.district + ', ' + order.province}
-          </Col>
-        </Row>
-
-        <Divider />
+      <div ref={componentRef}>
+        <Title level={3}>Order Details</Title>
+        {orderInfo && (
+          <>
+            <Row>
+              <Col span={12}>
+                <Text strong>Order Date: </Text>
+                {new Date(orderInfo.created).toLocaleDateString()} {/* Display formatted order date */}
+              </Col>
+            </Row>
+            <Row style={{ margin: '10px 0' }}>
+              <Col span={12}>
+                <Text strong>Address: </Text>
+                {`${orderInfo.address}, ${orderInfo.ward}, ${orderInfo.district}, ${orderInfo.province}`} {/* Display address */}
+              </Col>
+            </Row>
+            <Divider />
+          </>
+        )}
 
         <Table
           columns={columns}
-          dataSource={order?.orderDetails}
+          dataSource={orderDetails}
           pagination={false}
           summary={(pageData) => {
             let total = 0;
@@ -127,20 +133,19 @@ const OrderDetail = () => {
             return (
               <>
                 <Table.Summary.Row>
-                  <Table.Summary.Cell colSpan={2}>Fee</Table.Summary.Cell>
+                  <Table.Summary.Cell colSpan={3}>Total Amount</Table.Summary.Cell>
                   <Table.Summary.Cell align="right">{total.toLocaleString()}</Table.Summary.Cell>
                 </Table.Summary.Row>
                 <Table.Summary.Row>
-                  <Table.Summary.Cell>Shipping</Table.Summary.Cell>
-                  <Table.Summary.Cell align="right"></Table.Summary.Cell>
-                  <Table.Summary.Cell align="right">30,000</Table.Summary.Cell>
+                  <Table.Summary.Cell colSpan={3}>Shipping</Table.Summary.Cell>
+                  <Table.Summary.Cell align="right">{orderInfo?.shippingPrice?.toLocaleString() || '30,000'}</Table.Summary.Cell> {/* Use shipping price from orderInfo */}
                 </Table.Summary.Row>
                 <Table.Summary.Row>
-                  <Table.Summary.Cell colSpan={2}>
-                    <Text strong>Total</Text>
+                  <Table.Summary.Cell colSpan={3}>
+                    <Text strong>Grand Total</Text>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell align="right">
-                    <Text strong>{(total + 30000).toLocaleString()}</Text>
+                    <Text strong>{(total + (orderInfo?.shippingPrice || 30000)).toLocaleString()}</Text>
                   </Table.Summary.Cell>
                 </Table.Summary.Row>
               </>
@@ -156,7 +161,7 @@ const OrderDetail = () => {
               <PrinterOutlined /> Print Invoice
             </Button>
           )}
-          content={() => componentRef.current} // Tham chiếu đến phần tử cần in
+          content={() => componentRef.current}
         />
       </div>
     </div>

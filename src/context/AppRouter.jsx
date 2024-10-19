@@ -25,6 +25,8 @@ import { createPost } from "../service/PostService";
 import { addPostCategory } from "../service/PostService";
 import RequireAuth from "./RequireAuth";
 import { collectionInputs, postCategoryInputs, publisherInputs } from "../context/formSource";
+import BannerList from "../pages/banner/BannerList";
+import AuthorList from "../pages/author/AuthorList";
 
 const AppRouter = () => {
   return (
@@ -70,7 +72,14 @@ const AppRouter = () => {
         <Route path="new" element={<RequireAuth><ProductNew title="Add New Product" location="/product-management/products" handleAdd={addCollection} /></RequireAuth>} />
         <Route path=":id" element={<RequireAuth><ProductSingle /></RequireAuth>} />
       </Route>
-
+       {/* Banners Routes */}
+       <Route path="/marketing-management/banners">
+        <Route index element={<RequireAuth><BannerList /></RequireAuth>} />
+      </Route>
+      {/*Author Management */}
+      <Route path="/product-management/authors">
+        <Route index element={<RequireAuth><AuthorList /></RequireAuth>} />
+      </Route>
       {/* User Management */}
       <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
       <Route path="*" element={<Page404 />} />

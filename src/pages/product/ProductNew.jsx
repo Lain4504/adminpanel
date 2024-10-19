@@ -4,7 +4,7 @@ import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import CKEditorComponent from '../../components/CKEditor';
 import { useNavigate } from 'react-router-dom';
 import { getAllPublishers } from '../../service/PublisherService';
-import { getAllAuthors } from '../../service/AuthorService';
+import { addBookToAuthor, getAllAuthors } from '../../service/AuthorService';
 import { getAllCollections } from '../../service/CollectionService';
 import { addBook, addBookToCollection } from '../../service/BookService';
 const { Option } = Select;
@@ -18,7 +18,7 @@ const ProductNew = () => {
     title: '',
     description: '',
     publisherId: '',
-    authors: [],
+    authorIds: [],
     collectionIds: [],
     stock: 0,
     isbn: '',
@@ -78,19 +78,19 @@ const ProductNew = () => {
     }));
   };
 
-  const handleMultipleObjectChange = (name, objects) => (value) => {
-    setData(prevData => ({
-      ...prevData,
-      [name]: value.map(name => objects.find(object => object.name === name))
-    }));
-  };
   const handleMultipleCollectionChange = (value) => {
     setData(prevData => ({
-        ...prevData,
-        collectionIds: value.map(name => collections.find(collection => collection.name === name)?.id).filter(id => id) // Map names to IDs
+      ...prevData,
+      collectionIds: value.map(name => collections.find(collection => collection.name === name)?.id).filter(id => id) // Map names to IDs
     }));
-};
+  };
 
+  const handleMultipleAuthorChange = (value) => {
+    setData(prevData => ({
+      ...prevData,
+      authorIds: value.map(name => authors.find(author => author.name === name)?.id).filter(id => id)
+    }));
+  }
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -125,58 +125,77 @@ const ProductNew = () => {
 
   const handleSave = async () => {
     try {
-        // Perform validations
-        if (!data.title.trim() || !data.publisherId || !data.authors.length || 
-            !data.collectionIds.length || !data.isbn.trim() || !data.images[0]?.link.trim() ||
-            !data.page || !data.stock || !data.weight || !data.size.trim() || 
-            !data.cover.trim() || !data.price) {
-            setError(true);
-            return;
+      // Validation function
+      const validateData = () => {
+        if (!data.title.trim() || !data.publisherId || !data.authorIds.length ||
+          !data.collectionIds.length || !data.isbn.trim() || !data.images[0]?.link.trim() ||
+          !data.page || !data.stock || !data.weight || !data.size.trim() ||
+          !data.cover.trim() || !data.price) {
+          setError("All fields must be filled out correctly.");
+          return false;
         }
 
         // Ensure numeric fields are positive
-        if (parseInt(data.price) < 0 || parseInt(data.page) < 0 || 
-            parseInt(data.stock) < 0 || parseInt(data.weight) < 0 || 
-            parseFloat(data.discount) < 0) {
-            setError(true);
-            return;
+        if (Number(data.price) < 0 || Number(data.page) < 0 ||
+          Number(data.stock) < 0 || Number(data.weight) < 0 ||
+          Number(data.discount) < 0) {
+          setError("Numeric fields must be positive.");
+          return false;
         }
 
-        // Convert string values to integers
-        setData(prevData => ({
-            ...prevData,
-            price: parseInt(prevData.price),
-            page: parseInt(prevData.page),
-            stock: parseInt(prevData.stock),
-            weight: parseInt(prevData.weight),
-            discount: parseFloat(prevData.discount)
+        return true;
+      };
+
+      // Perform validations
+      if (!validateData()) {
+        return;
+      }
+
+      // Convert string values to numbers
+      const updatedData = {
+        ...data,
+        price: Number(data.price),
+        page: Number(data.page),
+        stock: Number(data.stock),
+        weight: Number(data.weight),
+        discount: Number(data.discount)
+      };
+
+      console.log('Data is', data);
+
+      // Call the API to add the book first
+      const bookResponse = await addBook(updatedData);
+
+      // Check if the book was created successfully
+      if (bookResponse.status === 201) {
+        // Add authors
+        await Promise.all(data.authorIds.map(async (authorId) => {
+          try {
+            await addBookToAuthor(bookResponse.data.id, authorId);
+          } catch (error) {
+            console.error(`Failed to add book ${bookResponse.data.id} to authors ${authorId}`, error);
+          }
         }));
 
-        console.log('Data is', data);
-        
-        // Call the API to add the book first
-        const bookResponse = await addBook(data);
-        
-        // Check if the book was created successfully
-        if (bookResponse.status === 201) {
-            // Then add the book to the selected collections
-            await Promise.all(data.collectionIds.map(async (collectionId) => {
-                try {
-                    await addBookToCollection(bookResponse.data.id, collectionId);
-                } catch (error) {
-                    console.error(`Failed to add book ${bookResponse.data.id} to collection ${collectionId}`, error);
-                }
-            }));
-            navigate("/product-management/products");
-        } else {
-            setError(true);
-            console.error('Failed to create book:', bookResponse.data.id);
-        }
+        // Then add the book to the selected collections
+        await Promise.all(data.collectionIds.map(async (collectionId) => {
+          try {
+            await addBookToCollection(bookResponse.data.id, collectionId);
+          } catch (error) {
+            console.error(`Failed to add book ${bookResponse.data.id} to collection ${collectionId}`, error);
+          }
+        }));
+
+        navigate("/product-management/products");
+      } else {
+        setError("Failed to create book: " + bookResponse.data.id);
+        console.error('Failed to create book:', bookResponse.data.id);
+      }
     } catch (err) {
-        setError(true);
-        console.error(err);
+      setError("An error occurred while saving the book.");
+      console.error(err);
     }
-};
+  };
 
 
   return (
@@ -208,7 +227,7 @@ const ProductNew = () => {
                   showSearch
                   placeholder="Select author(s)"
                   optionFilterProp="children"
-                  onChange={handleMultipleObjectChange('authors', authors)}
+                  onChange={handleMultipleAuthorChange}
                   allowClear
                   className="w-full"
                 >
@@ -332,15 +351,10 @@ const ProductNew = () => {
                       </div>
                     </Col>
                   ))}
-
                 </Row>
-
               </Col>
             </Row>
           </Form.Item>
-
-
-
         </Form>
       </div>
     </div>
