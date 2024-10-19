@@ -11,7 +11,6 @@ const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [filterValue, setFilterValue] = useState('');
   const [sortOrder, setSortOrder] = useState('asc'); // Trạng thái sắp xếp
   const updatePath="/order-management/orders";

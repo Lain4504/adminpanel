@@ -4,9 +4,9 @@ import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import CKEditorComponent from '../../components/CKEditor';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAllPublishers } from '../../service/PublisherService';
-import { getAllAuthors } from '../../service/AuthorService';
-import { getAllCollections } from '../../service/CollectionService';
-import { getBookById, updateBook, getBookCollectionsByBookId, addBookToCollection } from '../../service/BookService';
+import { addBookToAuthor, getAllAuthors, removeAuthorFromBook } from '../../service/AuthorService';
+import { getAllCollections, removeCollectionFromBook } from '../../service/CollectionService';
+import { getBookById, updateBook, getBookCollectionsByBookId, addBookToCollection, getAuthorByBookId } from '../../service/BookService';
 const { Option } = Select;
 
 const ProductSingle = () => {
@@ -19,7 +19,7 @@ const ProductSingle = () => {
     title: '',
     description: '',
     publisherId: '',
-    authors: [],
+    authorIds: [],
     collectionIds: [],
     stock: 0,
     isbn: '',
@@ -35,30 +35,35 @@ const ProductSingle = () => {
   const [imageLink, setImageLink] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
-
+  const [previousAuthorIds, setPreviousAuthorIds] = useState([]);
+  const [previousCollectionIds, setPreviousCollectionIds] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [publishersRes, collectionsRes, authorsRes, bookRes, bookCollectionsRes] = await Promise.all([
+        const [publishersRes, collectionsRes, authorsRes, bookRes, bookCollectionsRes, authorBookRes] = await Promise.all([
           getAllPublishers(),
           getAllCollections(),
           getAllAuthors(),
           getBookById(id),
-          getBookCollectionsByBookId(id) // Fetch the collections associated with the book
+          getBookCollectionsByBookId(id),
+          getAuthorByBookId(id)
         ]);
         setPublishers(publishersRes.data);
         setCollections(collectionsRes.data);
         setAuthors(authorsRes.data);
         setData(bookRes.data);
-
+        console.log("author:",authorBookRes)
+        console.log("collection:",bookCollectionsRes)
         // Set the collection IDs and names in the state based on the fetched collections
         const collectionIds = bookCollectionsRes.data.map(collection => collection.collectionId);
-        const collectionNames = collectionIds.map(id => collectionsRes.data.find(collection => collection.id === id)?.name);
-
+        const authorIds = authorBookRes.data.map(author => author.authorId);
+        setPreviousAuthorIds(authorIds);
+        setPreviousCollectionIds(collectionIds);
+  
         setData(prevData => ({
           ...prevData,
           collectionIds,
-          collectionNames
+          authorIds,
         }));
       } catch (err) {
         console.error(err);
@@ -91,27 +96,28 @@ const ProductSingle = () => {
     }));
   };
 
-  const handleMultipleObjectChange = (name, objects) => (value) => {
-    setData(prevData => ({
-      ...prevData,
-      [name]: value.map(name => objects.find(object => object.name === name))
-    }));
-  };
-
   const handleMultipleCollectionChange = (value) => {
     const updatedCollectionIds = value.map(name => 
         collections.find(collection => collection.name === name)?.id
-    ).filter(id => id); // Filter out any undefined values
+    ).filter(id => id); 
 
     setData(prevData => ({
         ...prevData,
         collectionIds: updatedCollectionIds
     }));
-
     // Log the updated collection IDs after setting the state
     console.log('Updated Collection IDs:', updatedCollectionIds);
 };
-
+  const handleMultipleAuthorChange = (value) =>{
+    const updatedAuthorIds = value.map(name =>
+      authors.find(author => author.name === name)?.id
+    ).filter(id => id);
+    setData(prevData =>({
+      ...prevData,
+      authorIds: updatedAuthorIds
+    }));
+    console.log("Update author ID:", updatedAuthorIds )
+  }
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -145,10 +151,14 @@ const ProductSingle = () => {
   const handleSave = async () => {
     try {    
       console.log('Before Save - Collection IDs:', data.collectionIds);
-
+      console.log('Before Save - Author IDs', data.authorIds);
+      const removedAuthors = previousAuthorIds.filter(id => !data.authorIds.includes(id));
+      const removedCollections = previousCollectionIds.filter(id => !data.collectionIds.includes(id));
+      
+  
       // Perform validations
       if (!data.title.trim() || !data.publisherId ||
-      //  !data.authors.length ||
+       !data.authorIds.length ||
         !data.collectionIds.length || !data.isbn.trim() || !data.images[0]?.link.trim() ||
         !data.page || !data.stock || !data.weight || !data.size.trim() ||
         !data.cover.trim() || !data.price) {
@@ -179,6 +189,29 @@ const ProductSingle = () => {
       const response = await updateBook(id, updatedData);
 
       if (response.status === 200) {
+        await Promise.all(removedAuthors.map(async (authorId) => {
+          try {
+            await removeAuthorFromBook(id, authorId); // Hàm xóa author
+          } catch (error) {
+            console.error(`Failed to remove author ${authorId} from book ${id}`, error);
+          }
+        }));
+    
+        await Promise.all(removedCollections.map(async (collectionId) => {
+          try {
+            await removeCollectionFromBook(id, collectionId); // Hàm xóa collection
+          } catch (error) {
+            console.error(`Failed to remove collection ${collectionId} from book ${id}`, error);
+          }
+        }));
+
+        await Promise.all(data.authorIds.map(async (authorId) =>{
+          try{
+            await addBookToAuthor(id, authorId);
+          }catch (error){
+            console.log(`Failed to add book ${id} with author ${authorId}`, error);
+          }
+        }));
         await Promise.all(data.collectionIds.map(async (collectionId) => {
           try {
             await addBookToCollection(id, collectionId); // Ensure you use the correct ID
@@ -226,10 +259,10 @@ const ProductSingle = () => {
                   showSearch
                   placeholder="Select author(s)"
                   optionFilterProp="children"
-                  onChange={handleMultipleObjectChange('authors', authors)}
+                  onChange={handleMultipleAuthorChange}
                   allowClear
                   className="w-full"
-                // value={data.authors.map(author => author.name)}
+                  value={data.authorIds.map(id => authors.find(author => author.id === id)?.name)}
                 >
                   {authors.map(author => (
                     <Option key={author.id} value={author.name}>{author.name}</Option>

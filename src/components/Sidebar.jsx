@@ -51,7 +51,8 @@ const Sidebar = () => {
       label: 'Marketing', 
       icon: <BuildOutlined/>,
     children: [
-      {key: '/marketing-management/banners', label: 'Quản lý banner'},
+      {key: '/marketing-management/banners', label: 'Quản lý biểu ngữ'},
+      {key: '/marketing-management/ads', label:'Quản lý quảng cáo'}
     ]}
   ];
 

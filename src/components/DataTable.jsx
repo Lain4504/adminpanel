@@ -4,7 +4,6 @@ import { notification, Spin, Popconfirm } from 'antd';
 import SearchBar from './SearchBar';
 import Filter from './Filter';
 import { Button, Pagination } from 'antd';
-
 const DataTable = ({
   columns, 
   dataService, 

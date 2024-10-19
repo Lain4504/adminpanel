@@ -7,7 +7,7 @@ const getToken = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const token = user ? user.token : null;
     console.log('Retrieved Token:', token);
-    return token; 
+    return token;
 };
 
 
@@ -16,7 +16,7 @@ const getAllCollections = () => {
     return axios.get(API_URL, {
         headers: {
             'Authorization': `Bearer ${token}`,
-           
+
         }
     })
         .then(response => {
@@ -77,5 +77,18 @@ const updateCollection = async (id, data) => {
         throw err;
     }
 };
+const removeCollectionFromBook = async (bookId, collectionId) => {
+    try {
+        const response = await axios.delete(`${API_URL}/${bookId}/collection/${collectionId}`);
+        console.log('Response:', response.data);
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            console.error('Error:', error.response.data.message);
+        } else {
+            console.error('An error occurred:', error);
+            alert('An error occurred while removing the collection.');
+        }
+    }
+};
 
-export { getAllCollections, deleteCollection, addCollection, getCollectionsById, updateCollection };
+export { getAllCollections, deleteCollection, addCollection, getCollectionsById, updateCollection, removeCollectionFromBook };
