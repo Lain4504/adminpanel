@@ -1,15 +1,15 @@
 import React from 'react'
 import DataTable from '../../components/DataTable'
 import { bannerColumns } from '../../context/DataSet'
-import { getAllSliders } from '../../service/BannerService'
-
+import { deleteBanner, getAllBanners } from '../../service/BannerService'
 const BannerList = () => {
   return (
     <DataTable
     columns={bannerColumns}
-    dataService={getAllSliders}
+    dataService={getAllBanners}
+    deleteService={deleteBanner}
     entityName="Banner"
-    createPath="/marketing-management/banners"
+    createPath="/marketing-management/banners/new"
     updatePath="/marketing-management/banners"
     />
   )

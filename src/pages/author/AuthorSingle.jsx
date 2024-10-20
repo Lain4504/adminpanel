@@ -1,7 +1,10 @@
 import React from 'react'
 import FormEdit from '../../components/FormEdit'
+import { updateAuthor } from '../../service/AuthorService'
+import { useNavigate } from 'react-router-dom'
 
 const AuthorSingle = () => {
+  const navigate = useNavigate();
     const fields = {
         name: "Author",
         inputs: [
@@ -10,6 +13,11 @@ const AuthorSingle = () => {
     }
   return (
     <FormEdit
+    getDataById={getAuthorById}
+    updateData={updateAuthor}
+    fields={fields}
+    onSuccess={() => navigate("/product-management/authors")}
+    onError={() => console.error('Failed to update author')}
     />
   )
 }

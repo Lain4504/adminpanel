@@ -33,4 +33,16 @@ const removeAuthorFromBook = async (bookId, authorId) => {
   }
 };
 
-export {getAllAuthors, addBookToAuthor, removeAuthorFromBook};
+const addAuthor = (data) => {
+    return axios.post(API_URL, data);
+}
+const deleteAuthor = (id) => {
+    return axios.delete(API_URL+ '/' + id);
+}
+const getAuthorById = (authorId) => {
+    return axios.get(API_URL + '/' + authorId);
+}
+const updateAuthor = (id, data) => {
+    return axios.put(API_URL + '/' + id, data);
+}
+export {getAllAuthors, addBookToAuthor, removeAuthorFromBook, updateAuthor, getAuthorById, addAuthor, deleteAuthor };

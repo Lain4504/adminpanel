@@ -24,9 +24,14 @@ import { addPublisher } from "../service/PublisherService";
 import { createPost } from "../service/PostService";
 import { addPostCategory } from "../service/PostService";
 import RequireAuth from "./RequireAuth";
-import { collectionInputs, postCategoryInputs, publisherInputs } from "../context/formSource";
+import { authorInputs, bannerInputs, collectionInputs, postCategoryInputs, publisherInputs } from "./DataInput";
 import BannerList from "../pages/banner/BannerList";
 import AuthorList from "../pages/author/AuthorList";
+import { addAuthor } from "../service/AuthorService";
+import AuthorSingle from "../pages/author/AuthorSingle";
+import { addBanner } from "../service/BannerService";
+import FormEdit from "../components/FormEdit";
+import BannerSingle from "../pages/banner/BannerSingle";
 
 const AppRouter = () => {
   return (
@@ -73,12 +78,16 @@ const AppRouter = () => {
         <Route path=":id" element={<RequireAuth><ProductSingle /></RequireAuth>} />
       </Route>
        {/* Banners Routes */}
-       <Route path="/marketing-management/banners">
-        <Route index element={<RequireAuth><BannerList /></RequireAuth>} />
+       <Route path="/product-management/authors">
+        <Route index element={<RequireAuth><AuthorList /></RequireAuth>} />
+        <Route path="new" element={<RequireAuth><FormNew inputs={authorInputs} title="Add New Author" location="/product-management/authors" handleAdd={addAuthor} /></RequireAuth>} />
+        <Route path=":id" element={<RequireAuth><AuthorSingle /></RequireAuth>} />
       </Route>
       {/*Author Management */}
-      <Route path="/product-management/authors">
-        <Route index element={<RequireAuth><AuthorList /></RequireAuth>} />
+      <Route path="/marketing-management/banners">
+        <Route index element={<RequireAuth><BannerList /></RequireAuth>} />
+        <Route path="new" element={<RequireAuth><FormNew inputs={bannerInputs} title="Add New Banner" location="/marketing-management/banners" handleAdd={addBanner} /></RequireAuth>} />
+        <Route path=":id" element={<RequireAuth><BannerSingle /></RequireAuth>} />
       </Route>
       {/* User Management */}
       <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />
