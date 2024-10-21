@@ -10,7 +10,7 @@ const FormEdit = ({ getDataById, updateData, fields, onSuccess, onError }) => {
     const navigate = useNavigate();
 
     const handleCancel = () => {
-        navigate("/product-management/collections"); 
+        navigate(-1); 
     };
 
     const handleSave = async () => {

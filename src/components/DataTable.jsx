@@ -48,6 +48,12 @@ const DataTable = ({
           return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
         });
         setData(sortedData);
+  
+        const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+        if (currentPage > totalPages && totalPages > 0) {
+          setCurrentPage(totalPages); // Nếu trang hiện tại lớn hơn tổng số trang, set về trang cuối cùng
+        }
+  
         setLoading(false);
       })
       .catch(() => {
@@ -59,7 +65,7 @@ const DataTable = ({
         setLoading(false);
       });
   };
-
+  
   useEffect(() => {
     fetchData();
   }, [itemsPerPage, sortOrder, dataService]);

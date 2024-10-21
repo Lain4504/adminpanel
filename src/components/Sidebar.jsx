@@ -5,7 +5,6 @@ import {
   ShoppingOutlined,
   ShoppingCartOutlined,
   FileAddOutlined,
-  CommentOutlined,
   UserOutlined,
   BuildOutlined,
 } from '@ant-design/icons';
@@ -46,7 +45,6 @@ const Sidebar = () => {
         { key: '/post-management/categories', label: 'Quản lí thể loại bài viết' },
       ],
     },
-    { key: '/feedback', label: 'Phản hồi', icon: <CommentOutlined /> },
     { key: 'marketing-management', 
       label: 'Marketing', 
       icon: <BuildOutlined/>,
@@ -115,7 +113,6 @@ const Sidebar = () => {
                   </Menu.Item>
                 )
               )}
-
               <Menu.Divider />
             </Menu>
           </div>

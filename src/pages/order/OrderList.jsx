@@ -13,9 +13,9 @@ const OrderList = () => {
   const [loading, setLoading] = useState(true);
   const [filterValue, setFilterValue] = useState('');
   const [sortOrder, setSortOrder] = useState('asc'); // Trạng thái sắp xếp
-  const updatePath="/order-management/orders";
-  const filterField="state";
-  
+  const updatePath = "/order-management/orders";
+  const filterField = "state";
+
 
   const fetchData = () => {
     setLoading(true);
@@ -64,7 +64,7 @@ const OrderList = () => {
         />
       )}
 
-<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -85,7 +85,7 @@ const OrderList = () => {
               ))}
               <th className="px-6 py-3">Actions</th>
             </tr>
-            </thead>
+          </thead>
           <tbody>
             {loading ? (
               <tr>
