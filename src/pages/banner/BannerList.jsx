@@ -11,6 +11,7 @@ const BannerList = () => {
     entityName="Banner"
     createPath="/marketing-management/banners/new"
     updatePath="/marketing-management/banners"
+    searchField="title"
     />
   )
 }
