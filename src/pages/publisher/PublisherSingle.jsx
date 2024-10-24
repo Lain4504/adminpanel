@@ -1,7 +1,7 @@
 import React from 'react';
-import { getCollectionsById, updateCollection } from '../../service/CollectionService';
+import { getCollectionsById, updateCollection } from '../../services/CollectionService';
 import FormEdit from '../../components/FormEdit';
-import { getPublisherById, updatePublisher } from '../../service/PublisherService';
+import { getPublisherById, updatePublisher } from '../../services/PublisherService';
 import { useNavigate } from 'react-router-dom';
 
 const PublisherSingle = () => {

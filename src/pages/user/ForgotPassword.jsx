@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Input, Button, Form, message } from 'antd';
-import { forgetPassword } from '../../service/UserService';
+import { forgetPassword } from '../../services/UserService';
 
 const ForgotPasswordModal = ({ visible, onCancel }) => {
     const [isSending, setIsSending] = useState(false);
@@ -51,9 +51,9 @@ const ForgotPasswordModal = ({ visible, onCancel }) => {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="w-full">
+                    <button type="primary" htmlType="submit" className="w-full rounded-md bg-indigo-600 text-white py-2 px-4 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         Gửi
-                    </Button>
+                    </button>
                 </Form.Item>
 
                 {isSending && (

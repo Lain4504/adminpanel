@@ -1,7 +1,7 @@
 import React from 'react'
 import DataTable from '../../components/DataTable'
 import { authorColumns } from '../../context/DataSet'
-import { deleteAuthor, getAllAuthors } from '../../service/AuthorService'
+import { deleteAuthor, getAllAuthors } from '../../services/AuthorService'
 
 const AuthorList = () => {
   return (

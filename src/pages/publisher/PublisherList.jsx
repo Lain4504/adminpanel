@@ -1,7 +1,7 @@
 
 import DataTable from "../../components/DataTable";
 import { publisherColumns } from "../../context/DataSet";
-import { deletePublisher, getAllPublishers } from "../../service/PublisherService";
+import { deletePublisher, getAllPublishers } from "../../services/PublisherService";
 
 const PublisherList = () => {
     return (

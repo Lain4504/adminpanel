@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPostCategoriesById, updatePostCategories} from '../../service/PostService';
+import { getPostCategoriesById, updatePostCategories} from '../../services/PostService';
 import FormEdit from '../../components/FormEdit';
 import { useNavigate } from 'react-router-dom';
 

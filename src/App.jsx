@@ -50,22 +50,13 @@ const App = () => {
       console.log("Không có người dùng hiện tại");
     }
   }, [currentUser]);
-  const isLoginPage = location.pathname === "/login";
-
-  useEffect(() => {
-    console.log("Test user", currentUser)
-    if (currentUser && isLoginPage) {
-      navigate("/");
-    }
-  }, [currentUser, isLoginPage, navigate]);
-
   useEffect(() => {
     const checkToken = () => {
       if (currentUser) {
         // Kiểm tra xem token đã hết hạn chưa
         const decodedToken = jwtDecode(currentUser.token);
         const isExpired = decodedToken.exp * 1000 < Date.now(); // Thời gian hết hạn
-
+  
         if (isExpired) {
           dispatch({ type: "LOGOUT", isSessionExpired: true });
           navigate("/login");
@@ -75,6 +66,19 @@ const App = () => {
     checkToken();
   }, [currentUser, navigate, dispatch]);
   
+  const isLoginPage = location.pathname === "/login";
+
+  useEffect(() => {
+    console.log("Test user", currentUser)
+    if (currentUser && isLoginPage) {
+      navigate("/");
+    }
+  }, [currentUser, isLoginPage, navigate]);
+  useEffect(() => {
+    if (!currentUser) {
+        navigate('/login');
+    }
+}, [currentUser, navigate]);
   return (
     <>
       {isLoginPage ? (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllOrders } from '../../service/OrderService'
+import { getAllOrders } from '../../services/OrderService'
 import { orderColumns } from '../../context/DataSet'
 import { notification, Spin, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';

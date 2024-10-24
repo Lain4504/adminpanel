@@ -1,6 +1,6 @@
 import React from 'react'
 import FormEdit from '../../components/FormEdit'
-import { updateAuthor } from '../../service/AuthorService'
+import { updateAuthor } from '../../services/AuthorService'
 import { useNavigate } from 'react-router-dom'
 
 const AuthorSingle = () => {

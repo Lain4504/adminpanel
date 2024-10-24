@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import CKEditorComponent from '../../components/CKEditor';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAllPublishers } from '../../service/PublisherService';
-import { addBookToAuthor, getAllAuthors, removeAuthorFromBook } from '../../service/AuthorService';
-import { getAllCollections, removeCollectionFromBook } from '../../service/CollectionService';
-import { getBookById, updateBook, getBookCollectionsByBookId, addBookToCollection, getAuthorByBookId } from '../../service/BookService';
+import { getAllPublishers } from '../../services/PublisherService';
+import { addBookToAuthor, getAllAuthors, removeAuthorFromBook } from '../../services/AuthorService';
+import { getAllCollections, removeCollectionFromBook } from '../../services/CollectionService';
+import { getBookById, updateBook, getBookCollectionsByBookId, addBookToCollection, getAuthorByBookId } from '../../services/BookService';
 const { Option } = Select;
 
 const ProductSingle = () => {
@@ -48,15 +48,19 @@ const ProductSingle = () => {
           getBookCollectionsByBookId(id),
           getAuthorByBookId(id)
         ]);
+        
         setPublishers(publishersRes.data);
-        setCollections(collectionsRes.data);
+        setCollections(Array.isArray(collectionsRes.data) ? collectionsRes.data : []); // Ensure it's an array
         setAuthors(authorsRes.data);
         setData(bookRes.data);
-        console.log("author:",authorBookRes)
-        console.log("collection:",bookCollectionsRes)
-        // Set the collection IDs and names in the state based on the fetched collections
-        const collectionIds = bookCollectionsRes.data.map(collection => collection.collectionId);
+  
+        // Check if there are any collections
+        const collectionIds = bookCollectionsRes.data?.length > 0
+          ? bookCollectionsRes.data.map(collection => collection.collectionId)
+          : [];  // If no collections found, set to an empty array
+  
         const authorIds = authorBookRes.data.map(author => author.authorId);
+  
         setPreviousAuthorIds(authorIds);
         setPreviousCollectionIds(collectionIds);
   
@@ -65,14 +69,15 @@ const ProductSingle = () => {
           collectionIds,
           authorIds,
         }));
+  
       } catch (err) {
         console.error(err);
       }
     };
-
+  
     fetchData();
   }, [id]);
-
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

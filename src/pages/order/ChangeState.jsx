@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Row, Col, Button, Select, Card } from 'antd';
-import { getOrderById, changeShippingState, changeOrderState } from "../../service/OrderService";
+import { getOrderById, changeShippingState, changeOrderState } from "../../services/OrderService";
 
 const { Option } = Select;
 

@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Table, Typography, Divider, Button, Row, Col } from 'antd';
 import ReactToPrint from 'react-to-print';
 import { PrinterOutlined } from '@ant-design/icons';
-import { getOrderDetailByOrderId, getOrderById } from '../../service/OrderService';
-import { getBookById } from '../../service/BookService';
+import { getOrderDetailByOrderId, getOrderById } from '../../services/OrderService';
+import { getBookById } from '../../services/BookService';
 const { Title, Text } = Typography;
 
 const OrderDetail = () => {

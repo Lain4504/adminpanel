@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCollectionsById, updateCollection } from '../../service/CollectionService';
+import { getCollectionsById, updateCollection } from '../../services/CollectionService';
 import FormEdit from '../../components/FormEdit';
 import { useNavigate } from 'react-router-dom';
 
