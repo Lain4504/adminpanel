@@ -16,7 +16,7 @@ const Navbar = () => {
 
         if (user) {
             try {
-                await axios.post('http://localhost:5146/api/user/logout', { RefreshToken: user.refreshToken });
+                await axios.post('https://localhost:3001/api/user/logout', { RefreshToken: user.refreshToken });
                 console.log("Đăng xuất thành công");
             } catch (error) {
                 console.error("Lỗi khi gọi API logout:", error);

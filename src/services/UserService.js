@@ -27,7 +27,7 @@ const deleteUser = async (id) => {
 };
 
 const getUserInfoByEmail = (email) => {
-    return axios.get(`http://localhost:5146/api/user/by-email/${email}`);
+    return axios.get(`https://localhost:3001/api/user/by-email/${email}`);
 };
 
 const getUserProfile = async (userId) => {
