@@ -78,7 +78,7 @@ const Login = () => {
             const expirationTime = new Date(decodedToken.exp * 1000);
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
 
-            dispatch({ type: 'LOGIN', payload: { token, refreshToken, expirationTime, userId } });
+            dispatch({ type: 'LOGIN', payload: { token, refreshToken, expirationTime, userId, refreshExpirationTime: new Date(expirationDate).toISOString() } });
 
             localStorage.setItem("user", JSON.stringify({ token, refreshToken, expirationTime, userId, refreshExpirationTime: new Date(expirationDate).toISOString() }));
 

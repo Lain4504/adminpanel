@@ -1,51 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { getAllOrders } from '../../services/OrderService'
-import { orderColumns } from '../../context/DataSet'
-import { notification, Spin, Popconfirm } from 'antd';
-import { Link } from 'react-router-dom';
-import { Button, Pagination } from 'antd';
+import { getAllOrders } from '../../services/OrderService';
+import { getProvinceById, getDistrictById, getWardById } from '../../services/AddressService';
+import { orderColumns } from '../../context/DataSet';
+import { notification, Spin, Button, Pagination } from 'antd';
 import Filter from '../../components/Filter';
+import { Link } from 'react-router-dom';
 
 const OrderList = () => {
   const [data, setData] = useState([]);
+  const [addressData, setAddressData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [filterValue, setFilterValue] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc'); // Trạng thái sắp xếp
+  const [sortOrder, setSortOrder] = useState('asc');
   const updatePath = "/order-management/orders";
   const filterField = "state";
 
-
-  const fetchData = () => {
+  const fetchData = async () => {
     setLoading(true);
-    getAllOrders()
-      .then((res) => {
-        const allData = res.data || [];
-        // Sắp xếp toàn bộ dữ liệu
-        const sortedData = allData.sort((a, b) => {
-          return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
-        });
-        setData(sortedData);
-        setLoading(false);
-      })
-      .catch(() => {
-        notification.error({
-          message: `Failed to fetch Order!`,
-          placement: "topRight",
-        });
-        setData([]);
-        setLoading(false);
+    try {
+      const res = await getAllOrders();
+      const allData = res.data || [];
+
+      // Sắp xếp toàn bộ dữ liệu
+      const sortedData = allData.sort((a, b) => {
+        return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
       });
+
+      setData(sortedData);
+      setLoading(false);
+
+      // Gọi API để lấy địa chỉ chi tiết cho từng order
+      const addresses = {};
+      for (const order of sortedData) {
+        const [wardId, districtId, provinceId] = order.address.split(',').map(Number);
+        const [ward, district, province] = await Promise.all([
+          getWardById(wardId),
+          getDistrictById(districtId),
+          getProvinceById(provinceId)
+        ]);
+        addresses[order.id] = `${ward}, ${district}, ${province}`;
+      }
+      setAddressData(addresses);
+
+    } catch (error) {
+      notification.error({
+        message: `Failed to fetch Order!`,
+        placement: "topRight",
+      });
+      setData([]);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, [itemsPerPage, sortOrder]); // Thay đổi sortOrder sẽ gọi lại fetchData
+  }, [itemsPerPage, sortOrder]);
 
-  const filteredData = data
-    .filter((item) => (filterValue === '' || item[filterField] === filterValue));
-
+  const filteredData = data.filter((item) => (filterValue === '' || item[filterField] === filterValue));
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
@@ -72,7 +85,7 @@ const OrderList = () => {
                 <th key={column.field} className="px-6 py-3">
                   <div className="flex items-center justify-between">
                     <span>{column.headerName}</span>
-                    {column.field === 'id' && ( // Thêm nút sắp xếp cho trường id
+                    {column.field === 'id' && (
                       <Button
                         type="link"
                         onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
@@ -83,19 +96,20 @@ const OrderList = () => {
                   </div>
                 </th>
               ))}
+              <th className="px-6 py-3">Address</th>
               <th className="px-6 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={orderColumns.length + 1} className="text-center py-4">
+                <td colSpan={orderColumns.length + 2} className="text-center py-4">
                   <Spin spinning={true} />
                 </td>
               </tr>
             ) : paginatedData.length === 0 ? (
               <tr>
-                <td colSpan={orderColumns.length + 1} className="text-center py-4">
+                <td colSpan={orderColumns.length + 2} className="text-center py-4">
                   Không có nội dung
                 </td>
               </tr>
@@ -107,10 +121,12 @@ const OrderList = () => {
                       {column.renderCell ? column.renderCell({ row }) : row[column.field]}
                     </td>
                   ))}
+                  <td className="px-6 py-4">
+                    {addressData[row.id] || 'Loading...'}
+                  </td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center space-x-2">
-                      <Link to={`${updatePath}/${row.id}`}
-                        onClick={() => localStorage.setItem('currentPage', currentPage)}>
+                      <Link to={`${updatePath}/${row.id}`}>
                         <Button type="primary">View Details</Button>
                       </Link>
                       <Link to={`/order-state/${row.id}`}>
@@ -143,4 +159,4 @@ const OrderList = () => {
   );
 };
 
-export default OrderList
+export default OrderList;
