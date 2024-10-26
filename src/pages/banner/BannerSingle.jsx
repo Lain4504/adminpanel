@@ -1,6 +1,6 @@
 import React from 'react'
 import FormEdit from '../../components/FormEdit'
-import { getBannerById, updateBanner } from '../../service/BannerService'
+import { getBannerById, updateBanner } from '../../services/BannerService'
 import { useNavigate } from 'react-router-dom'
 
 const BannerSingle = () => {

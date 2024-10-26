@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import CKEditorComponent from '../../components/CKEditor';
 import { useNavigate } from 'react-router-dom';
-import { getAllPublishers } from '../../service/PublisherService';
-import { addBookToAuthor, getAllAuthors } from '../../service/AuthorService';
-import { getAllCollections } from '../../service/CollectionService';
-import { addBook, addBookToCollection } from '../../service/BookService';
+import { getAllPublishers } from '../../services/PublisherService';
+import { addBookToAuthor, getAllAuthors } from '../../services/AuthorService';
+import { getAllCollections } from '../../services/CollectionService';
+import { addBook, addBookToCollection } from '../../services/BookService';
 const { Option } = Select;
 
 const ProductNew = () => {

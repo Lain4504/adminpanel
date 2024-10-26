@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { createPost, getAllPostCategories } from '../../service/PostService';
+import { createPost, getAllPostCategories } from '../../services/PostService';
 import { Select, Input, Button, Form, message } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import CKEditorComponent from '../../components/CKEditor';

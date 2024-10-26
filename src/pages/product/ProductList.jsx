@@ -1,4 +1,4 @@
-import { getAllBooks, deleteBook } from "../../service/BookService";
+import { getAllBooks, deleteBook } from "../../services/BookService";
 import { productColumns } from '../../context/DataSet';
 import DataTable from "../../components/DataTable";
 

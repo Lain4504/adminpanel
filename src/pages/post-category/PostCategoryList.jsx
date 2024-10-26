@@ -1,4 +1,4 @@
-import {getAllPostCategories, deletePostCategories} from "../../service/PostService";
+import {getAllPostCategories, deletePostCategories} from "../../services/PostService";
 import DataTable from "../../components/DataTable";
 import {postCategoryColumns} from "../../context/DataSet";
 

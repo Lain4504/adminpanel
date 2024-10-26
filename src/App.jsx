@@ -14,7 +14,6 @@ import ScrollToTop from "./components/ScrollToTop";
 const { Header, Sider, Content, Footer } = Layout;
 
 const App = () => {
-  const [state, dispatch] = useReducer(AuthReducer);
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(window.innerWidth <= 768); 
@@ -37,19 +36,6 @@ const App = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  useEffect(() => {
-    if (currentUser) {
-      console.log("Token:", currentUser.token);
-      try {
-        const decodedToken = jwtDecode(currentUser.token);
-        console.log("Decoded Token:", decodedToken);
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
-    } else {
-      console.log("Không có người dùng hiện tại");
-    }
-  }, [currentUser]);
   const isLoginPage = location.pathname === "/login";
 
   useEffect(() => {
@@ -58,23 +44,6 @@ const App = () => {
       navigate("/");
     }
   }, [currentUser, isLoginPage, navigate]);
-
-  useEffect(() => {
-    const checkToken = () => {
-      if (currentUser) {
-        // Kiểm tra xem token đã hết hạn chưa
-        const decodedToken = jwtDecode(currentUser.token);
-        const isExpired = decodedToken.exp * 1000 < Date.now(); // Thời gian hết hạn
-
-        if (isExpired) {
-          dispatch({ type: "LOGOUT", isSessionExpired: true });
-          navigate("/login");
-        }
-      }
-    };
-    checkToken();
-  }, [currentUser, navigate, dispatch]);
-  
   return (
     <>
       {isLoginPage ? (

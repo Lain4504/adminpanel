@@ -1,5 +1,5 @@
 
-import { getAllCollections, deleteCollection } from "../../service/CollectionService";
+import { getAllCollections, deleteCollection } from "../../services/CollectionService";
 import DataTable from "../../components/DataTable";
 import { collectionColumns } from "../../context/DataSet";
 

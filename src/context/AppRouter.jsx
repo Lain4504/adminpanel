@@ -19,18 +19,17 @@ import PostCategorySingle from "../pages/post-category/PostCategorySingle";
 import PostCategoryList from "../pages/post-category/PostCategoryList";
 import Dashboard from "../components/chart/Dashboard";
 import Page404 from "../components/Page404";
-import { addCollection } from "../service/CollectionService";
-import { addPublisher } from "../service/PublisherService";
-import { createPost } from "../service/PostService";
-import { addPostCategory } from "../service/PostService";
+import { addCollection } from "../services/CollectionService";
+import { addPublisher } from "../services/PublisherService";
+import { createPost } from "../services/PostService";
+import { addPostCategory } from "../services/PostService";
 import RequireAuth from "./RequireAuth";
 import { authorInputs, bannerInputs, collectionInputs, postCategoryInputs, publisherInputs } from "./DataInput";
 import BannerList from "../pages/banner/BannerList";
 import AuthorList from "../pages/author/AuthorList";
-import { addAuthor } from "../service/AuthorService";
+import { addAuthor } from "../services/AuthorService";
 import AuthorSingle from "../pages/author/AuthorSingle";
-import { addBanner } from "../service/BannerService";
-import FormEdit from "../components/FormEdit";
+import { addBanner } from "../services/BannerService";
 import BannerSingle from "../pages/banner/BannerSingle";
 
 const AppRouter = () => {

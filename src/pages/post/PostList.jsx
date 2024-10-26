@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { postColumns } from '../../context/DataSet';
-import { deletePost, getAllPosts } from '../../service/PostService';
-import { getPostCategoriesById } from '../../service/PostService';
-import { getUserProfile } from '../../service/UserService';
+import { deletePost, getAllPosts } from '../../services/PostService';
+import { getPostCategoriesById } from '../../services/PostService';
+import { getUserProfile } from '../../services/UserService';
 import DataTable from '../../components/DataTable';
 
 const PostList = () => {

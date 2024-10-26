@@ -17,7 +17,7 @@ const Sidebar = () => {
   const sidebarRef = useRef(null);
   
   const menuItems = [
-    { key: '/', 
+    { key: '/dashboard', 
       label: 'Bảng thống kê', 
       icon: <DashboardOutlined />,
     children: [

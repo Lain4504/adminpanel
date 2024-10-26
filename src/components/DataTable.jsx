@@ -44,6 +44,14 @@ const DataTable = ({
     dataService()
       .then((res) => {
         const allData = res.data || [];
+        
+        // Kiểm tra xem allData có phải là mảng và không rỗng không
+        if (!Array.isArray(allData) || allData.length === 0) {
+          setData([]);
+          setLoading(false);
+          return;
+        }
+  
         const sortedData = allData.sort((a, b) => {
           return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
         });
@@ -56,7 +64,8 @@ const DataTable = ({
   
         setLoading(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("Error fetching data:", error); // Ghi log lỗi ra console để xem nguyên nhân
         notification.error({
           message: `Failed to fetch ${entityName}s!`,
           placement: "topRight",
@@ -64,6 +73,7 @@ const DataTable = ({
         setData([]);
         setLoading(false);
       });
+      
   };
   
   useEffect(() => {
