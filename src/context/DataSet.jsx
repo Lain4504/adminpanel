@@ -144,18 +144,28 @@ export const bannerColumns = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "title", headerName: "Title", width: 150 },
   {
-    field: "imageUrl", headerName: "Image", width: 250,
+    field: "imageBackLink",
+    headerName: "Image & Back Link",
+    width: 300,
     renderCell: (params) => {
       return (
         <div>
-          <img src={params.row.imageUrl} alt="banner" />
+          <a href={params.row.backLink} target="_blank" rel="noopener noreferrer">
+            <img src={params.row.imageUrl} alt="banner" style={{ width: "180px", height: "auto", marginRight: "10px" }} />
+          </a>
         </div>
       );
     },
   },
-  { field: "backLink", headerName: "Back Link", width: 150, },
-  { field: "description", headerName: "Description", width: 150, }
-]
+  { field: "description", headerName: "Description", width: 150 },
+];
+
+export const adsColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "title", headerName: "Title", width: 200 },
+  { field: "description", headerName: "Description", width: 300 },
+  { field: "image", headerName: "Image", width: 200 },
+];
 
 export const authorColumns = [
   { field: "id", headerName: "ID", width: 70 },
