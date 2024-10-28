@@ -3,7 +3,7 @@ import { getAllUsers } from '../../services/UserService';
 import { Modal, Button, Table, notification, Pagination } from 'antd';
 import SearchBar from '../../components/SearchBar'; // Custom search bar component
 import Filter from '../../components/Filter'; // Custom filter component
-
+import { updateUser } from '../../services/UserService';
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]); // For search and filter
@@ -43,14 +43,29 @@ const UserList = () => {
     setSelectedUser(null);
   };
 
-  const handleUpdateStatus = () => {
-    // Handle the update of user status and role
-    setIsModalVisible(false);
-    notification.success({
-      message: 'User status and role updated successfully!',
-    });
-    fetchUsers();
-  };
+  const handleUpdateStatus = async () => {
+    if (selectedUser.role === 'ADMIN' && selectedUser.state === 'INACTIVE') {
+        notification.error({
+            message: 'Admin cannot deactivate their own account!',
+        });
+        return;
+    }
+
+    try {
+        await updateUser(selectedUser.id, selectedUser.role, selectedUser.state);
+        notification.success({
+            message: 'User status and role updated successfully!',
+        });
+
+        setIsModalVisible(false);
+        fetchUsers(); // Refresh the user list to reflect the updates
+    } catch (error) {
+        console.error('Error updating user:', error);
+        notification.error({
+            message: 'Failed to update user status!',
+        });
+    }
+};
 
   const handleRoleChange = (value) => {
     if (value === 'ADMIN' && selectedUser.role === 'USER') {
