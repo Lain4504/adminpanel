@@ -5,18 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import ChangePassword from './ChangePassword'; // Import ChangePassword component
+import { logout } from '../services/UserService';
 
 const Navbar = () => {
     const navigate = useNavigate();
     const { dispatch } = useContext(AuthContext);
     const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
 
-    const logout = async () => {
+    const handleLogout = async () => {
         const user = JSON.parse(localStorage.getItem('user'));
 
         if (user) {
             try {
-                await axios.post('https://localhost:3001/api/user/logout', { RefreshToken: user.refreshToken });
+                await logout(user.refreshToken);
                 console.log("Đăng xuất thành công");
             } catch (error) {
                 console.error("Lỗi khi gọi API logout:", error);
@@ -36,7 +37,7 @@ const Navbar = () => {
     const menu = (
         <Menu>
             <Menu.Item onClick={handleChangePassword}>Thay đổi mật khẩu</Menu.Item>
-            <Menu.Item onClick={logout}>Đăng xuất</Menu.Item>
+            <Menu.Item onClick={handleLogout}>Đăng xuất</Menu.Item>
         </Menu>
     );
 

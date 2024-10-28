@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Table, Typography, Divider, Button, Row, Col } from 'antd';
+import { Table, Typography, Divider, Button, Row, Col, message } from 'antd'; // Import message from antd for notifications
 import ReactToPrint from 'react-to-print';
 import { PrinterOutlined } from '@ant-design/icons';
 import { getOrderDetailByOrderId, getOrderById } from '../../services/OrderService';
 import { getBookById } from '../../services/BookService';
+import { getDistrictById, getProvinceById, getWardById } from '../../services/AddressService';
+
 const { Title, Text } = Typography;
 
 const OrderDetail = () => {
@@ -13,6 +15,7 @@ const OrderDetail = () => {
   const [orderInfo, setOrderInfo] = useState(null); 
   const navigate = useNavigate();
   const componentRef = useRef();
+  const [fullAddress, setFullAddress] = useState('');
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -40,11 +43,36 @@ const OrderDetail = () => {
         setOrderDetails(detailsWithTitlesAndImages);
       } catch (error) {
         console.error('Error fetching order details:', error);
+        message.error('Could not fetch order details. Please try again later.'); // Display error message
       }
     };
 
     fetchOrderDetails();
   }, [id]);
+
+  useEffect(() => {
+    const fetchAddressDetails = async () => {
+      if (!orderInfo) return; // Ensure orderInfo is set
+
+      const [wardId, districtId, provinceId] = orderInfo.address.split(', ').map(id => id.trim());
+
+      try {
+        const [wardName, districtName, provinceName] = await Promise.all([
+          getWardById(wardId),
+          getDistrictById(districtId),
+          getProvinceById(provinceId)
+        ]);
+
+        const address = `${wardName}, ${districtName}, ${provinceName}`;
+        setFullAddress(address);
+      } catch (error) {
+        console.error('Error fetching address details:', error);
+        message.error('Could not fetch address details. Please try again later.'); // Display error message
+      }
+    };
+
+    fetchAddressDetails();
+  }, [orderInfo]); // Update dependency to orderInfo
 
   const columns = [
     {
@@ -113,7 +141,21 @@ const OrderDetail = () => {
             <Row style={{ margin: '10px 0' }}>
               <Col span={12}>
                 <Text strong>Address: </Text>
-                {`${orderInfo.address}, ${orderInfo.ward}, ${orderInfo.district}, ${orderInfo.province}`} {/* Display address */}
+                {fullAddress} 
+              </Col>
+            </Row>
+            <Row style={{ margin: '10px 0' }}>
+              <Col span={12}>
+                <label htmlFor="CartSpecialInstructions" className="font-medium">
+                  Note
+                </label>
+                <textarea
+                  name="note"
+                  id="CartSpecialInstructions"
+                  className="input-full form-control w-full border rounded p-2"
+                  value={orderInfo.customerNote || ''} // Display customer note here
+                  readOnly // Set as read-only to prevent editing
+                />
               </Col>
             </Row>
             <Divider />
@@ -138,14 +180,14 @@ const OrderDetail = () => {
                 </Table.Summary.Row>
                 <Table.Summary.Row>
                   <Table.Summary.Cell colSpan={3}>Shipping</Table.Summary.Cell>
-                  <Table.Summary.Cell align="right">{orderInfo?.shippingPrice?.toLocaleString() || '30,000'}</Table.Summary.Cell> {/* Use shipping price from orderInfo */}
+                  <Table.Summary.Cell align="right">{orderInfo?.shippingPrice?.toLocaleString()}</Table.Summary.Cell> {/* Use shipping price from orderInfo */}
                 </Table.Summary.Row>
                 <Table.Summary.Row>
                   <Table.Summary.Cell colSpan={3}>
                     <Text strong>Grand Total</Text>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell align="right">
-                    <Text strong>{(total + (orderInfo?.shippingPrice || 30000)).toLocaleString()}</Text>
+                    <Text strong>{(total + (orderInfo?.shippingPrice)).toLocaleString()}</Text>
                   </Table.Summary.Cell>
                 </Table.Summary.Row>
               </>

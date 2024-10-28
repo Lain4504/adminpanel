@@ -46,7 +46,7 @@ if (user) {
     const expirationDate = new Date(user.expirationTime);
     if (new Date() >= expirationDate) {
       try {
-        const response = await axios.post('https://localhost:3001/api/user/refresh-token', { refreshToken });
+        const response = await axios.post('http://localhost:3001/api/user/refresh-token', { refreshToken });
         const newToken = response.data.token;
        
 
@@ -97,7 +97,7 @@ if (user) {
 
     if (refreshToken) {
       try {
-        await axios.post('https://localhost:3001/api/user/logout', { refreshToken });
+        await axios.post('http://localhost:3001/api/user/logout', { refreshToken });
         console.log("Đăng xuất thành công");
       } catch (error) {
         console.error("Lỗi khi gọi API logout:", error);
