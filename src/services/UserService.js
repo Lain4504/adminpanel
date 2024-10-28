@@ -74,7 +74,7 @@ export {
     getUserInfoByEmail,
     forgetPassword,
     changePassword,
-    updateUser
+    updateUser,
     googleLogin,
     logout
 };

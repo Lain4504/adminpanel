@@ -140,7 +140,7 @@ const UserList = () => {
 
   return (
     <div>
-      <h1>User Management</h1>
+      <h1 className='text-xl my-5'>Quản lý người dùng</h1>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         {/* Search Bar */}
