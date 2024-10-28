@@ -9,7 +9,19 @@ const createAccount = (account) => {
 const login = (account) => {
     return axios.post(`${ACCOUNT_API}/login`, account);
 };
-
+const googleLogin = (credential) => {
+    return axios.post(`${ACCOUNT_API}/google-login`, 
+        { token: credential }, 
+        {
+            headers: {
+                'Content-Type': 'application/json', 
+            }
+        }
+    );
+};
+const logout = (refreshToken) => {
+    return axios.post(`${ACCOUNT_API}/logout`, { RefreshToken: refreshToken });
+};
 const getAllUsers = () => {
     return axios.get(ACCOUNT_API)
         .then(response => {
@@ -27,7 +39,7 @@ const deleteUser = async (id) => {
 };
 
 const getUserInfoByEmail = (email) => {
-    return axios.get(`https://localhost:3001/api/user/by-email/${email}`);
+    return axios.get(`${ACCOUNT_API}/by-email/${email}`);
 };
 
 const getUserProfile = async (userId) => {
@@ -54,5 +66,7 @@ export {
     deleteUser,
     getUserInfoByEmail,
     forgetPassword,
-    changePassword
+    changePassword,
+    googleLogin,
+    logout
 };

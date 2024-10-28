@@ -1,7 +1,15 @@
+// Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Table } from 'antd';
 import { Line } from '@ant-design/charts'; 
-import axios from 'axios';
+import {
+  getSalesData,
+  getEarningsData,
+  getOrdersData,
+  getUsersData,
+  getRevenueData,
+  getTopSellingProducts
+} from '../../services/ChartService'; // Adjust the import path as necessary
 
 const Dashboard = () => {
   const [sales, setSales] = useState({ value: 0, percentageChange: 0 });
@@ -17,12 +25,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const salesResponse = await axios.get('https://localhost:3001/api/chart/total-products-sold-last-7-days');
-        const earningsResponse = await axios.get('https://localhost:3001/api/chart/total-revenue-last-7-days');
-        const ordersResponse = await axios.get('https://localhost:3001/api/chart/total-orders-last-7-days');
-        const newAccountResponse = await axios.get('https://localhost:3001/api/chart/new-users-count-last-7-days');
-        const revenueResponse = await axios.get('https://localhost:3001/api/chart/revenue-last-14-days');
-        
+        const [salesResponse, earningsResponse, ordersResponse, newAccountResponse, revenueResponse] = await Promise.all([
+          getSalesData(),
+          getEarningsData(),
+          getOrdersData(),
+          getUsersData(),
+          getRevenueData()
+        ]);
+
         setSales(salesResponse.data);
         setEarnings(earningsResponse.data);
         setOrders(ordersResponse.data);
@@ -46,11 +56,9 @@ const Dashboard = () => {
   const fetchTopSellingProducts = async (page = 1, pageSize = 10) => {
     try {
       setLoading(true);
-      const topSellingResponse = await axios.get(
-        `https://localhost:3001/api/chart/best-selling-products-last-7-days?page=${page}&pageSize=${pageSize}`
-      );
+      const topSellingResponse = await getTopSellingProducts(page, pageSize);
       setTopSellingProducts(topSellingResponse.data.items);
-      setTotalProducts(topSellingResponse.data.total); // Assuming the API returns total items
+      setTotalProducts(topSellingResponse.data.total);
       setCurrentPage(page);
     } catch (error) {
       console.error('Error fetching top-selling products:', error);
