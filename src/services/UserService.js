@@ -58,6 +58,13 @@ const changePassword = (token) => {
         }
     });
 };
+const updateUser = async (id, role, state) => {
+    return axios.put(`${ACCOUNT_API}/update-user/${id}`, 
+        { role, state }, 
+        { headers: { 'Content-Type': 'application/json' } } // Đặt Content-Type ở đây
+    );
+};
+
 export {
     getUserProfile,
     createAccount,
@@ -67,6 +74,7 @@ export {
     getUserInfoByEmail,
     forgetPassword,
     changePassword,
+    updateUser
     googleLogin,
     logout
 };
