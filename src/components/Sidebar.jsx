@@ -42,7 +42,7 @@ const Sidebar = () => {
       icon: <FileAddOutlined />,
       children: [
         { key: '/post-management/posts', label: 'Quản lý bài viết' },
-        { key: '/post-management/categories', label: 'Quản lí thể loại bài viết' },
+        { key: '/post-management/categories', label: 'Quản lý thể loại bài viết' },
       ],
     },
     { key: 'marketing-management', 

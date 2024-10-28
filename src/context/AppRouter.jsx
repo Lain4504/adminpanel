@@ -24,13 +24,16 @@ import { addPublisher } from "../services/PublisherService";
 import { createPost } from "../services/PostService";
 import { addPostCategory } from "../services/PostService";
 import RequireAuth from "./RequireAuth";
-import { authorInputs, bannerInputs, collectionInputs, postCategoryInputs, publisherInputs } from "./DataInput";
+import { adsInputs, authorInputs, bannerInputs, collectionInputs, postCategoryInputs, publisherInputs } from "./DataInput";
 import BannerList from "../pages/banner/BannerList";
 import AuthorList from "../pages/author/AuthorList";
 import { addAuthor } from "../services/AuthorService";
 import AuthorSingle from "../pages/author/AuthorSingle";
 import { addBanner } from "../services/BannerService";
 import BannerSingle from "../pages/banner/BannerSingle";
+import AdsList from "../pages/ads/AdsList";
+import { addAds } from "../services/AdsServcie";
+import AdsSingle from "../pages/ads/AdsSingle";
 
 const AppRouter = () => {
   return (
@@ -82,11 +85,18 @@ const AppRouter = () => {
         <Route path="new" element={<RequireAuth><FormNew inputs={authorInputs} title="Add New Author" location="/product-management/authors" handleAdd={addAuthor} /></RequireAuth>} />
         <Route path=":id" element={<RequireAuth><AuthorSingle /></RequireAuth>} />
       </Route>
-      {/*Author Management */}
+      {/*Banner Management */}
       <Route path="/marketing-management/banners">
         <Route index element={<RequireAuth><BannerList /></RequireAuth>} />
         <Route path="new" element={<RequireAuth><FormNew inputs={bannerInputs} title="Add New Banner" location="/marketing-management/banners" handleAdd={addBanner} /></RequireAuth>} />
         <Route path=":id" element={<RequireAuth><BannerSingle /></RequireAuth>} />
+      </Route>
+
+      {/*Ads Management */}
+      <Route path="/marketing-management/ads">
+        <Route index element={<RequireAuth><AdsList /></RequireAuth>} />
+        <Route path="new" element={<RequireAuth><FormNew inputs={adsInputs} title="Add New Ads" location="/marketing-management/ads" handleAdd={addAds} /></RequireAuth>} />
+        <Route path=":id" element={<RequireAuth><AdsSingle /></RequireAuth>} />
       </Route>
       {/* User Management */}
       <Route path="/user-management/users" element={<RequireAuth><UserList /></RequireAuth>} />

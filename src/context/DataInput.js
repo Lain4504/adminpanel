@@ -82,3 +82,23 @@ export const bannerInputs = [
   }
 ]
 
+export const adsInputs = [
+  {
+    id: 'title',
+    label: "Title",
+    type: "text",
+    placeholder: "Enter ad title",
+  },
+  {
+    id: 'description',
+    label: "Description",
+    type: "text",
+    placeholder: 'Enter ad description',
+  },
+  {
+    id: 'image',
+    label: "Image",
+    type: "text",
+    placeholder: "Enter image URL",
+  },
+];
