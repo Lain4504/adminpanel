@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import Title from '../../components/Title';
 import ForgotPasswordModal from './ForgotPassword';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const Login = () => {
@@ -29,6 +29,16 @@ const Login = () => {
             const decodedToken = jwtDecode(token);
             const expirationTime = new Date(decodedToken.exp * 1000);
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
+            const userRole = decodedToken[Object.keys(decodedToken).find(key => key.includes("role"))];
+
+            if (userRole !== 'ADMIN') {
+                notification.error({
+                    message: 'Đăng nhập không thành công',
+                    description: 'Bạn không có quyền truy cập trang này.',
+                });
+                setLoading(false);
+                return;
+            }
 
             // Save to local storage
             const userData = { token, refreshToken, userId, expirationTime, refreshExpirationTime };
@@ -71,6 +81,15 @@ const Login = () => {
             const decodedToken = jwtDecode(token);
             const expirationTime = new Date(decodedToken.exp * 1000);
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
+            const userRole = decodedToken[Object.keys(decodedToken).find(key => key.includes("role"))];
+
+            if (userRole !== 'ADMIN') {
+                notification.error({
+                    message: 'Đăng nhập không thành công',
+                    description: 'Bạn không có quyền truy cập trang này.',
+                });
+                return;
+            }
 
             dispatch({ type: 'LOGIN', payload: { token, refreshToken, expirationTime, userId, refreshExpirationTime: new Date(expirationDate).toISOString() } });
 
