@@ -9,7 +9,7 @@ const AuthorList = () => {
     columns={authorColumns}
     dataService={getAllAuthors}
     deleteService={deleteAuthor}
-    entityName="Author"
+    entityName="tác giả"
     createPath="/product-management/authors/new"
     updatePath="/product-management/authors"
     searchField="name"

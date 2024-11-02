@@ -4,14 +4,15 @@ import { notification, Spin, Popconfirm } from 'antd';
 import SearchBar from './SearchBar';
 import Filter from './Filter';
 import { Button, Pagination } from 'antd';
+
 const DataTable = ({
-  columns, 
-  dataService, 
-  deleteService, 
-  entityName, 
-  createPath, 
-  updatePath, 
-  filterField, 
+  columns,
+  dataService,
+  deleteService,
+  entityName,
+  createPath,
+  updatePath,
+  filterField,
   searchField
 }) => {
   const [data, setData] = useState([]);
@@ -44,28 +45,26 @@ const DataTable = ({
     dataService()
       .then((res) => {
         const allData = res.data || [];
-        
-        // Kiểm tra xem allData có phải là mảng và không rỗng không
         if (!Array.isArray(allData) || allData.length === 0) {
           setData([]);
           setLoading(false);
           return;
         }
-  
+
         const sortedData = allData.sort((a, b) => {
           return sortOrder === 'asc' ? a.id - b.id : b.id - a.id;
         });
         setData(sortedData);
-  
+
         const totalPages = Math.ceil(sortedData.length / itemsPerPage);
         if (currentPage > totalPages && totalPages > 0) {
-          setCurrentPage(totalPages); // Nếu trang hiện tại lớn hơn tổng số trang, set về trang cuối cùng
+          setCurrentPage(totalPages);
         }
-  
+
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error); // Ghi log lỗi ra console để xem nguyên nhân
+        console.error("Error fetching data:", error);
         notification.error({
           message: `Failed to fetch ${entityName}s!`,
           placement: "topRight",
@@ -73,9 +72,8 @@ const DataTable = ({
         setData([]);
         setLoading(false);
       });
-      
   };
-  
+
   useEffect(() => {
     fetchData();
   }, [itemsPerPage, sortOrder, dataService]);
@@ -85,59 +83,65 @@ const DataTable = ({
   }, [searchTerm]);
 
   const filteredData = data
-    .filter((item) => (filterValue === '' || item[filterField] === filterValue))
-    .filter((item) =>
-      String(item[searchField]).toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  .filter((item) => (filterValue === '' || item[filterField] === filterValue))
+  .filter((item) =>
+    String(item[searchField]).toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
       <div>
-        <h1 className='text-lg mb-4'>Quản lý {entityName}s</h1>
+        <h1 className='text-lg mb-4'>Quản lý {entityName}</h1>
         <hr className="my-4" />
         <div className="flex justify-between items-center mb-4">
           <Link to={createPath}>
             <Button type="primary">Create</Button>
           </Link>
-          <SearchBar
-            searchTerm={searchTerm}
-            handleSearch={(e) => setSearchTerm(e.target.value)}
-            placeholder={`Search ${entityName}s by ${searchField}...`}
-          />
+          {searchField && (
+            <SearchBar
+              searchTerm={searchTerm}
+              handleSearch={(e) => setSearchTerm(e.target.value)}
+              placeholder={`Tìm kiếm ${entityName} theo ${columns.find(col => col.field === searchField)?.headerName.toLowerCase() || searchField.toLowerCase()}...`}
+            />
+          )}
         </div>
       </div>
 
+      
       {filterField && (
         <Filter
           filterField={filterField}
           filterValue={filterValue}
           setFilterValue={setFilterValue}
           data={data}
+          headerName={columns.find(col => col.field === filterField)?.headerName || filterField}
         />
       )}
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               {columns.map((column) => (
-                <th key={column.field} style={{ width: `${column.width}px` }} className="px-6 py-3">
-                  <div className="flex items-center justify-between">
-                    <span>{column.headerName}</span>
-                    {column.field === 'id' && (
-                      <Button
-                        type="link"
-                        onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                      >
-                        {sortOrder === 'asc' ? '↑' : '↓'}
-                      </Button>
-                    )}
-                  </div>
-                </th>
+                !column.hide && ( // Chỉ hiển thị các cột không bị ẩn
+                  <th key={column.field} style={{ width: `${column.width}px` }} className="px-6 py-3">
+                    <div className="flex items-center justify-between">
+                      <span>{column.headerName}</span>
+                      {column.field === 'id' && (
+                        <Button
+                          type="link"
+                          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                        >
+                          {sortOrder === 'asc' ? '↑' : '↓'}
+                        </Button>
+                      )}
+                    </div>
+                  </th>
+                )
               ))}
-              <th className="px-6 py-3 text-center">Actions</th>
+              <th className="px-6 py-3 text-center">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -155,11 +159,13 @@ const DataTable = ({
               </tr>
             ) : (
               paginatedData.map((row) => (
-                <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr key={row.id} className="bg-white border-b hover:bg-gray-50">
                   {columns.map((column) => (
-                    <td key={column.field} style={{ width: `${column.width}px` }} className="px-6 py-4">
-                      {column.renderCell ? column.renderCell({ row }) : row[column.field]}
-                    </td>
+                    !column.hide && ( // Chỉ hiển thị các cột không bị ẩn
+                      <td key={column.field} style={{ width: `${column.width}px` }} className="px-6 py-4">
+                        {column.renderCell ? column.renderCell({ row }) : row[column.field]}
+                      </td>
+                    )
                   ))}
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center items-center space-x-2">
@@ -200,6 +206,5 @@ const DataTable = ({
     </>
   );
 };
-
 
 export default DataTable;

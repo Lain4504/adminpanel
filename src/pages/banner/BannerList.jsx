@@ -8,7 +8,7 @@ const BannerList = () => {
     columns={bannerColumns}
     dataService={getAllBanners}
     deleteService={deleteBanner}
-    entityName="Banner"
+    entityName="biểu ngữ"
     createPath="/marketing-management/banners/new"
     updatePath="/marketing-management/banners"
     searchField="title"

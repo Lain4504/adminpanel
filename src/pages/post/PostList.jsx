@@ -103,7 +103,7 @@ const PostList = () => {
       dataService={() => Promise.resolve({ data: modifiedPosts.length ? modifiedPosts : [] })}
       deleteService={handleDelete}
       fetchData={fetchPosts}
-      entityName="Post"
+      entityName="bài viết"
       createPath="/post-management/posts/new"
       updatePath="/post-management/posts"
       searchField="title"
