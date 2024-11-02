@@ -9,7 +9,7 @@ const CollectionList = () => {
       columns={collectionColumns}
       dataService={getAllCollections}
       deleteService={deleteCollection}
-      entityName="Collection"
+      entityName="bộ sưu tập sách"
       createPath="/product-management/collections/new"
       updatePath="/product-management/collections"
       searchField="name"

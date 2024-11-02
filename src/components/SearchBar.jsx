@@ -8,7 +8,7 @@ const SearchBar = ({ searchTerm, handleSearch, placeholder }) => {
         placeholder={placeholder}
         value={searchTerm}
         onChange={handleSearch}
-        className="border border-gray-300 rounded-lg px-2 py-1 w-64" // Thay đổi ở đây
+        className="border border-gray-300 rounded-lg px-2 py-1 w-64" 
       />
     </div>
   );

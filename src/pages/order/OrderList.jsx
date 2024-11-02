@@ -64,7 +64,7 @@ const OrderList = () => {
   return (
     <>
       <div>
-        <h1 className='text-lg mb-4'>Quản lý Order</h1>
+        <h1 className='text-lg mb-4'>Quản lý đơn hàng</h1>
         <hr className="my-4" />
       </div>
 
@@ -78,8 +78,8 @@ const OrderList = () => {
       )}
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               {orderColumns.map((column) => (
                 <th key={column.field} className="px-6 py-3">
@@ -96,8 +96,8 @@ const OrderList = () => {
                   </div>
                 </th>
               ))}
-              <th className="px-6 py-3">Address</th>
-              <th className="px-6 py-3">Actions</th>
+              <th className="px-6 py-3">Địa chỉ</th>
+              <th className="px-6 py-3">Thao tác</th>
             </tr>
           </thead>
           <tbody>
@@ -115,7 +115,7 @@ const OrderList = () => {
               </tr>
             ) : (
               paginatedData.map((row) => (
-                <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr key={row.id} className="bg-white border-b hover:bg-gray-50 ">
                   {orderColumns.map((column) => (
                     <td key={column.field} className="px-6 py-4">
                       {column.renderCell ? column.renderCell({ row }) : row[column.field]}

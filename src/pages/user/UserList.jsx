@@ -112,12 +112,12 @@ const UserList = () => {
 
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Full Name', dataIndex: 'fullName', key: 'fullName' },
+    { title: 'Họ và tên', dataIndex: 'fullName', key: 'fullName' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'Phone', dataIndex: 'phone', key: 'phone' },
-    { title: 'Role', dataIndex: 'role', key: 'role' },
+    { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
+    { title: 'Quyền hạn', dataIndex: 'role', key: 'role' },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'state',
       key: 'state',
       width: 100,
@@ -128,7 +128,7 @@ const UserList = () => {
       )
     },
     {
-      title: 'Actions',
+      title: 'Thao tác',
       key: 'actions',
       render: (user) => (
         <div>
@@ -154,7 +154,7 @@ const UserList = () => {
         <SearchBar
           searchTerm={searchTerm}
           handleSearch={handleSearch}
-          placeholder="Search users by email..."
+          placeholder="Tìm kiếm người dùng theo email..."
         />
       </div>
 
