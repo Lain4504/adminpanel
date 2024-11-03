@@ -110,7 +110,7 @@ const Dashboard = () => {
     <div style={{ padding: '24px' }}>
       <Row gutter={16}>
         <Col span={24} md={6}>
-          <Card title={<><ShoppingCartOutlined style={iconStyle} /> Doanh Số</>}>
+          <Card title={<><ShoppingCartOutlined style={iconStyle} /> Đã bán</>}>
             <h1>{sales.totalProductsSold}</h1>
             <p style={{ color: sales.percentageChange < 0 ? 'red' : 'green' }}>
               {sales.percentageChange.toFixed(2)}% so với tuần trước
