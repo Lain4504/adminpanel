@@ -345,7 +345,7 @@ const ProductSingle = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={8}>
-              <Form.Item label="Weight (kg)" required>
+              <Form.Item label="Weight" required>
                 <Input type="number" name="weight" value={data.weight} onChange={handleInputChange} placeholder="Enter weight" />
               </Form.Item>
             </Col>

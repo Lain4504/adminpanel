@@ -115,14 +115,14 @@ const Login = () => {
     const handleCancel = () => setIsModalVisible(false);
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
+        <section className="bg-gray-50 ">
             <div className="flex flex-col items-center justify-center px-6 py-48 mx-auto md:h-screen lg:py-0">
-                <a className="flex items-center mb-6 text-lg font-light text-gray-900 dark:text-white">
+                <a className="flex items-center mb-6 text-lg font-light text-gray-900 ">
                     <Title text1={'FOREVER'} text2={'Book Store Management'} />
                 </a>
-                <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
+                <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg md:mt-0 sm:max-w-md xl:p-0">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                             ĐĂNG NHẬP
                         </h1>
                         <Form
@@ -141,7 +141,7 @@ const Login = () => {
                             >
                                 <Input type="email"
                                     placeholder="Nhập địa chỉ email"
-                                    className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200" />
+                                    className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" />
                             </Form.Item>
 
                             <Form.Item
@@ -153,14 +153,14 @@ const Login = () => {
                                 ]}
                             >
                                 <Input.Password
-                                    className="w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
+                                    className="w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
                                     placeholder="Nhập mật khẩu"
                                     iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                 />
                             </Form.Item>
 
                             <div className="flex items-center justify-between">
-                                <a onClick={showModal} className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                                <a onClick={showModal} className="text-sm font-medium text-primary-600 hover:underline">
                                     Quên mật khẩu?
                                 </a>
                                 <ForgotPasswordModal visible={isModalVisible} onCancel={handleCancel} />

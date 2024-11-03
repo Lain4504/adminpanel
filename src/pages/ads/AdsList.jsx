@@ -8,7 +8,7 @@ const AdsList = () => {
     columns={adsColumns}
     dataService={getAllAds}
     deleteService={deleteAds}
-    entityName="Ads"
+    entityName="quảng cáo"
     createPath="/marketing-management/ads/new"
     updatePath="/marketing-management/ads"
     />

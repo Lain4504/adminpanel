@@ -9,7 +9,7 @@ const PublisherList = () => {
       columns={publisherColumns}
       dataService={getAllPublishers}
       deleteService={deletePublisher}
-      entityName="Publisher"
+      entityName="nhà xuất bản"
       createPath="/product-management/publishers/new"
       updatePath="/product-management/publishers"
     />

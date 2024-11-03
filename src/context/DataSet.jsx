@@ -1,81 +1,85 @@
-
-
 export const collectionColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 400 },
-  { field: "type", headerName: "Type", width: 150 },
+  { field: "name", headerName: "Tên", width: 400 },
+  { field: "type", headerName: "Loại", width: 150 },
   { 
     field: "isDisplay", 
-    headerName: "Display", 
+    headerName: "Hiển thị", 
     width: 150,
     renderCell: (params) => (
       <div>
-        {params.row.isDisplay ? "Yes" : "No"}
+        {params.row.isDisplay ? "Có" : "Không"}
       </div>
     )
   }
 ];
 
-  export const productColumns = [
-    { field: "id", headerName: "ID", width: 70 },
-    {
-      field: "product",
-      headerName: "Product",
-      width: 450,
-      renderCell: (params) => (
-        <div className="flex items-center space-x-2">
-          <img
-            className="w-12 h-12 object-cover rounded"
-            src={params.row?.images?.[0]?.link || ""}
-            alt="product"
-          />
-          <span>{params.row.title}</span>
-        </div>
-      ),
-    },
-    { field: "stock", headerName: "Stock", width: 120 },
-    {
-      field: "state",
-      headerName: "State",
-      width: 120,
-      renderCell: (params) => (
-        <div className={`${params.row?.state?.toLowerCase()}`}>
-          {params.row.state}
-        </div>
-      ),
-    },
-    {
-      field: "price",
-      headerName: "Price",
-      width: 120,
-      renderCell: (params) => <div>{params.row.price?.toLocaleString()}</div>,
-    },
-  ];
-  export const userColumns = [
-    { field: "id", headerName: "ID", width: 10 },            
-    { field: "email", headerName: "Email", width: 100 }, 
-    { field: "fullName", headerName: "Name", width: 250 },
-    { field: "phone", headerName: "Phone", width: 100 },   
-    { field: "gender", headerName: "Gender", width: 50 },                 
-    { field: "role", headerName: "Role", width: 50 },              
-    { 
-      field: "isActive",                                     
-      headerName: "Active", 
-      width: 100,
-      renderCell: (params) => (
-        <div>
-          {params.row.state ? "Yes" : "No"}               
-        </div>
-      )
-    }
-  ];
-  
-  
+export const productColumns = [
+  { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "product",
+    headerName: "Sản phẩm",
+    width: 450,
+    renderCell: (params) => (
+      <div className="flex items-center space-x-2">
+        <img
+          className="w-12 h-12 object-cover rounded"
+          src={params.row?.images?.[0]?.link || ""}
+          alt="product"
+        />
+        <span>{params.row.title}</span>
+      </div>
+    ),
+  },
+  { field: "stock", headerName: "Kho", width: 120 },
+  {
+    field: "state",
+    headerName: "Trạng thái",
+    width: 120,
+    renderCell: (params) => (
+      <div className={`${params.row?.state?.toLowerCase()}`}>
+        {params.row.state}
+      </div>
+    ),
+  },
+  {
+    field: "price",
+    headerName: "Giá",
+    width: 120,
+    renderCell: (params) => <div>{params.row.price?.toLocaleString()}</div>,
+  },
+  {
+    field: "title", 
+    headerName: "Tên",
+    hide: true,
+  }
+];
+
+
+export const userColumns = [
+  { field: "id", headerName: "ID", width: 10 },            
+  { field: "email", headerName: "Email", width: 100 }, 
+  { field: "fullName", headerName: "Tên", width: 250 },
+  { field: "phone", headerName: "Điện thoại", width: 100 },   
+  { field: "gender", headerName: "Giới tính", width: 50 },                 
+  { field: "role", headerName: "Vai trò", width: 50 },              
+  { 
+    field: "isActive",                                     
+    headerName: "Hoạt động", 
+    width: 100,
+    renderCell: (params) => (
+      <div>
+        {params.row.state ? "Có" : "Không"}               
+      </div>
+    )
+  }
+];
+
 export const postColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "title", headerName: "Title", width: 200 },
+  { field: "title", headerName: "Tiêu đề", width: 200 },
   {
-    field: 'category', headerName: 'Category', width: 200,
+    field: 'category', headerName: 'Danh mục', width: 200,
     renderCell: (params) => {
       return (
         <div>
@@ -84,9 +88,9 @@ export const postColumns = [
       );
     },
   },
-  { field: 'createdAt', headerName: 'Created Time', width: 200 },
+  { field: 'createdAt', headerName: 'Thời gian tạo', width: 200 },
   {
-    field: 'author', headerName: 'Author', width: 150,
+    field: 'author', headerName: 'Tác giả', width: 150,
     renderCell: (params) => {
       return (
         <div>
@@ -97,14 +101,13 @@ export const postColumns = [
   }
 ];
 
-
 export const orderColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "fullName", headerName: "Full Name", width: 150 },
-  { field: "phone", headerName: "Phone", width: 150 },
-  { field: "paymentState", headerName: "Payment Method", width: 150, },
+  { field: "fullName", headerName: "Họ và tên", width: 150 },
+  { field: "phone", headerName: "Điện thoại", width: 150 },
+  { field: "paymentState", headerName: "Phương thức thanh toán", width: 150 },
   {
-    field: "shippingState", headerName: "Shipping State", width: 130,
+    field: "shippingState", headerName: "Trạng thái giao hàng", width: 130,
     renderCell: (params) => {
       return (
         <div className={`cellWithStatus ${params.row.shippingState.toLowerCase()}`}>
@@ -113,39 +116,37 @@ export const orderColumns = [
       );
     },
   },
-  { field: 'state', headerName: 'Order State', width: 150, },
+  { field: 'state', headerName: 'Trạng thái đơn hàng', width: 150 },
   {
     field: "totalPrice", 
-    headerName: "Total Price", 
+    headerName: "Tổng giá", 
     width: 120,
     renderCell: (params) => {
-      // Check if totalPrice is defined and is a number
       const price = params.row.totalPrice;
       return (
         <div>{price !== undefined && !isNaN(price) ? price.toLocaleString() + '₫' : 'N/A'}</div>
       );
     }
   }
-]
+];
+
 export const publisherColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 200 },
-  { field: "website", headerName: "Website", width: 250 },
-
-]
+  { field: "name", headerName: "Tên", width: 200 },
+  { field: "website", headerName: "Trang web", width: 250 },
+];
 
 export const postCategoryColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 400 },
-]
-
+  { field: "name", headerName: "Tên", width: 400 },
+];
 
 export const bannerColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "title", headerName: "Title", width: 150 },
+  { field: "title", headerName: "Tiêu đề", width: 150 },
   {
     field: "imageBackLink",
-    headerName: "Image & Back Link",
+    headerName: "Hình ảnh & Liên kết",
     width: 300,
     renderCell: (params) => {
       return (
@@ -157,19 +158,19 @@ export const bannerColumns = [
       );
     },
   },
-  { field: "description", headerName: "Description", width: 150 },
+  { field: "description", headerName: "Mô tả", width: 150 },
 ];
 
 export const adsColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "title", headerName: "Title", width: 200 },
-  { field: "description", headerName: "Description", width: 300 },
-  { field: "image", headerName: "Image", width: 200 },
+  { field: "title", headerName: "Tiêu đề", width: 200 },
+  { field: "description", headerName: "Mô tả", width: 300 },
+  { field: "image", headerName: "Hình ảnh", width: 200 },
 ];
 
 export const authorColumns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "author",headerName: "Author", width: 230,
+  { field: "author", headerName: "Tác giả", width: 230,
     renderCell: (params) => {
       return (
         <div>
@@ -178,4 +179,9 @@ export const authorColumns = [
       );
     },
   },
+  {
+    field: "name", 
+    headerName: "Tên",
+    hide: true,
+  }
 ];
