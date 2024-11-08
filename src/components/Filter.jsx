@@ -3,7 +3,7 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 
-const Filter = ({ filterField, filterValue, setFilterValue, data }) => {
+const Filter = ({ filterField, filterValue, setFilterValue, data, headerName }) => {
   const uniqueValues = Array.from(new Set(data.map(item => item[filterField])));
 
   return (
@@ -12,9 +12,9 @@ const Filter = ({ filterField, filterValue, setFilterValue, data }) => {
         value={filterValue}
         onChange={setFilterValue}
         className="w-32 border border-gray-300 rounded"
-        placeholder={`Select ${filterField}`}
+        placeholder={`Select ${headerName}`} // Sử dụng headerName
       >
-        <Option value="">All {filterField}</Option>
+        <Option value="">Tất cả</Option>
         {uniqueValues.map((value) => (
           <Option key={value} value={value}>{value}</Option>
         ))}

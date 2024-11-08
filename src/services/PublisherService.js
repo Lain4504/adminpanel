@@ -1,26 +1,26 @@
-import axios from "axios";
+import axiosInstance from "../context/AxiosConfig"; // Adjust the path as necessary
 
 const PUBLISHER_API = import.meta.env.VITE_API_URL + "/publisher";
 
 const getAllPublishers = () => {
-    return axios.get(PUBLISHER_API);
+    return axiosInstance.get(PUBLISHER_API);
 };
 
 const deletePublisher = (publisherId) => {
-    return axios.delete(`${PUBLISHER_API}/${publisherId}`);
+    return axiosInstance.delete(`${PUBLISHER_API}/${publisherId}`);
 };
 
 const addPublisher = (publisher) => {
-    return axios.post(PUBLISHER_API, publisher);
+    return axiosInstance.post(PUBLISHER_API, publisher);
 };
 
 const getPublisherById = (id) => {
-    return axios.get(`${PUBLISHER_API}/${id}`);
+    return axiosInstance.get(`${PUBLISHER_API}/${id}`);
 };
 
 const updatePublisher = async (id, data) => {
     try {
-        return await axios.put(`${PUBLISHER_API}/${id}`, data);
+        return await axiosInstance.put(`${PUBLISHER_API}/${id}`, data);
     } catch (err) {
         console.log(err);
         throw err;

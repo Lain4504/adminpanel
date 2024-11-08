@@ -8,7 +8,7 @@ const ProductList = () => {
       columns={productColumns}
       dataService={getAllBooks}
       deleteService={deleteBook}
-      entityName="Product"
+      entityName="sản phẩm"
       createPath="/product-management/products/new"
       updatePath="/product-management/products"
       searchField="title"  

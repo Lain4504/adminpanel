@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../context/AxiosConfig';
 
 const COLLECTION_API = import.meta.env.VITE_API_URL + "/collection";
 
@@ -11,7 +11,7 @@ const getToken = () => {
 
 const getAllCollections = () => {
     const token = getToken();
-    return axios.get(`${COLLECTION_API}`, {
+    return axiosInstance.get(`${COLLECTION_API}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
         }
@@ -28,7 +28,7 @@ const getAllCollections = () => {
 
 const deleteCollection = (collectionId) => {
     const token = getToken();
-    return axios.delete(`${COLLECTION_API}/delete/${collectionId}`, {
+    return axiosInstance.delete(`${COLLECTION_API}/delete/${collectionId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -39,7 +39,7 @@ const addCollection = (collection) => {
     const token = getToken();
     try {
         collection.isDisplay = Boolean(collection.isDisplay === 'true');
-        return axios.post(`${COLLECTION_API}/create`, collection, {
+        return axiosInstance.post(`${COLLECTION_API}/create`, collection, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -52,7 +52,7 @@ const addCollection = (collection) => {
 
 const getCollectionsById = (id) => {
     const token = getToken();
-    return axios.get(`${COLLECTION_API}/${id}`, {
+    return axiosInstance.get(`${COLLECTION_API}/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -63,7 +63,7 @@ const updateCollection = async (id, data) => {
     const token = getToken();
     try {
         data.isDisplay = Boolean(data.isDisplay);
-        return await axios.put(`${COLLECTION_API}/update/${id}`, data, {
+        return await axiosInstance.put(`${COLLECTION_API}/update/${id}`, data, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -76,7 +76,7 @@ const updateCollection = async (id, data) => {
 
 const removeCollectionFromBook = async (bookId, collectionId) => {
     try {
-        const response = await axios.delete(`${COLLECTION_API}/${bookId}/collection/${collectionId}`);
+        const response = await axiosInstance.delete(`${COLLECTION_API}/${bookId}/collection/${collectionId}`);
         console.log('Response:', response.data);
     } catch (error) {
         if (error.response && error.response.status === 404) {

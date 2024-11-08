@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axiosInstance from '../context/AxiosConfig';
 
 const BOOK_API = import.meta.env.VITE_API_URL + "/book";
 
 const getAllBooks = () => {
-    return axios.get(`${BOOK_API}`)
+    return axiosInstance.get(`${BOOK_API}`)
         .then(response => {
             console.log('Get All Books Response:', response);
             return response;
@@ -15,25 +15,25 @@ const getAllBooks = () => {
 };
 
 const getBookById = (bookId) => {
-    return axios.get(`${BOOK_API}/${bookId}`);
+    return axiosInstance.get(`${BOOK_API}/${bookId}`);
 };
 
 const updateBook = (id, data) => {
-    return axios.put(`${BOOK_API}/${id}`, data);
+    return axiosInstance.put(`${BOOK_API}/${id}`, data);
 };
 
 const addBook = (data) => {
-    return axios.post(`${BOOK_API}`, data);
+    return axiosInstance.post(`${BOOK_API}`, data);
 };
 
 const deleteBook = (bookId) => {
-    return axios.delete(`${BOOK_API}/${bookId}`);
+    return axiosInstance.delete(`${BOOK_API}/${bookId}`);
 };
 
 const addBookToCollection = async (bookId, collectionId) => {
     console.log('Adding book to collection:', { bookId, collectionId });
     try {
-        const response = await axios.post(`${BOOK_API}/add-to-collection`, {
+        const response = await axiosInstance.post(`${BOOK_API}/add-to-collection`, {
             bookId,
             collectionId,
         });
@@ -46,11 +46,11 @@ const addBookToCollection = async (bookId, collectionId) => {
 };
 
 const getBookCollectionsByBookId = async (bookId) => {
-    return axios.get(`${BOOK_API}/get-collections/${bookId}`);
+    return axiosInstance.get(`${BOOK_API}/get-collections/${bookId}`);
 };
 
 const getAuthorByBookId = (bookId) => {
-    return axios.get(`${BOOK_API}/get-authors/${bookId}`);
+    return axiosInstance.get(`${BOOK_API}/get-authors/${bookId}`);
 };
 
 export {

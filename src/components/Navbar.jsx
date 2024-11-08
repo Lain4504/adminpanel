@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { Menu, Dropdown, Avatar } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import ChangePassword from './ChangePassword'; // Import ChangePassword component
 import { logout } from '../services/UserService';
