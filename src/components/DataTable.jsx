@@ -27,14 +27,14 @@ const DataTable = ({
     deleteService(id)
       .then(() => {
         notification.success({
-          message: `${entityName} deleted successfully!`,
+          message: `Item deleted successfully!`,
           placement: "topRight",
         });
         fetchData();
       })
       .catch(() => {
         notification.error({
-          message: `Failed to delete the ${entityName}!`,
+          message: `Failed to delete item!`,
           placement: "topRight",
         });
       });
@@ -173,7 +173,7 @@ const DataTable = ({
                         <Button type="primary">Update</Button>
                       </Link>
                       <Popconfirm
-                        title={`Are you sure you want to delete this ${entityName}?`}
+                        title={`Are you sure you want to delete this item?`}
                         onConfirm={() => handleDelete(row.id)}
                       >
                         <Button type="danger" className='bg-red-500'>

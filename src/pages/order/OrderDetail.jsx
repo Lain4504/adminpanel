@@ -129,7 +129,7 @@ const OrderDetail = () => {
       </div>
 
       <div ref={componentRef}>
-        <Title level={3}>Order Details</Title>
+        <Title level={3}>Chi tiết đơn hàng #{id}</Title>
         {orderInfo && (
           <>
             <Row>
@@ -153,7 +153,7 @@ const OrderDetail = () => {
                   name="note"
                   id="CartSpecialInstructions"
                   className="input-full form-control w-full border rounded p-2"
-                  value={orderInfo.customerNote || ''} // Display customer note here
+                  value={orderInfo.shopNote || ''} // Display customer note here
                   readOnly // Set as read-only to prevent editing
                 />
               </Col>
