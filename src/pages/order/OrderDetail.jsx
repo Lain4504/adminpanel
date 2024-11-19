@@ -12,7 +12,7 @@ const { Title, Text } = Typography;
 const OrderDetail = () => {
   const { id } = useParams();
   const [orderDetails, setOrderDetails] = useState([]);
-  const [orderInfo, setOrderInfo] = useState(null); 
+  const [orderInfo, setOrderInfo] = useState(null);
   const navigate = useNavigate();
   const componentRef = useRef();
   const [fullAddress, setFullAddress] = useState('');
@@ -139,20 +139,20 @@ const OrderDetail = () => {
               </Col>
             </Row>
             <Row style={{ margin: '10px 0' }}>
-              <Col span={12}>
+              <Col xs={24} sm={12}> {/* Full width on small screens (xs) and 12 columns on larger screens (sm) */}
                 <Text strong>Address: </Text>
-                {fullAddress} 
+                {fullAddress}
               </Col>
             </Row>
             <Row style={{ margin: '10px 0' }}>
-              <Col span={12}>
-                <label htmlFor="CartSpecialInstructions" className="font-medium">
-                  Note
+            <label htmlFor="CartSpecialInstructions" className="font-medium">
+                  Note:
                 </label>
+              <Col xs={24} sm={12}> {/* Full width on small screens (xs) and 12 columns on larger screens (sm) */}
                 <textarea
                   name="note"
                   id="CartSpecialInstructions"
-                  className="input-full form-control w-full border rounded p-2"
+                  className="input-full form-control w-full md:w-2/3 border rounded p-2"
                   value={orderInfo.shopNote || ''} // Display customer note here
                   readOnly // Set as read-only to prevent editing
                 />
@@ -162,38 +162,41 @@ const OrderDetail = () => {
           </>
         )}
 
-        <Table
-          columns={columns}
-          dataSource={orderDetails}
-          pagination={false}
-          summary={(pageData) => {
-            let total = 0;
-            pageData.forEach(({ amount, salePrice }) => {
-              total += amount * salePrice;
-            });
+        {/* Table container with horizontal scroll */}
+        <div style={{ overflowX: 'auto' }}>
+          <Table
+            columns={columns}
+            dataSource={orderDetails}
+            pagination={false}
+            summary={(pageData) => {
+              let total = 0;
+              pageData.forEach(({ amount, salePrice }) => {
+                total += amount * salePrice;
+              });
 
-            return (
-              <>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell colSpan={3}>Total Amount</Table.Summary.Cell>
-                  <Table.Summary.Cell align="right">{total.toLocaleString()}</Table.Summary.Cell>
-                </Table.Summary.Row>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell colSpan={3}>Shipping</Table.Summary.Cell>
-                  <Table.Summary.Cell align="right">{orderInfo?.shippingPrice?.toLocaleString()}</Table.Summary.Cell> {/* Use shipping price from orderInfo */}
-                </Table.Summary.Row>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell colSpan={3}>
-                    <Text strong>Grand Total</Text>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell align="right">
-                    <Text strong>{(total + (orderInfo?.shippingPrice)).toLocaleString()}</Text>
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              </>
-            );
-          }}
-        />
+              return (
+                <>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell colSpan={3}>Total Amount</Table.Summary.Cell>
+                    <Table.Summary.Cell align="right">{total.toLocaleString()}</Table.Summary.Cell>
+                  </Table.Summary.Row>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell colSpan={3}>Shipping</Table.Summary.Cell>
+                    <Table.Summary.Cell align="right">{orderInfo?.shippingPrice?.toLocaleString()}</Table.Summary.Cell> {/* Use shipping price from orderInfo */}
+                  </Table.Summary.Row>
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell colSpan={3}>
+                      <Text strong>Grand Total</Text>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell align="right">
+                      <Text strong>{(total + (orderInfo?.shippingPrice)).toLocaleString()}</Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </>
+              );
+            }}
+          />
+        </div>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '20px' }}>

@@ -92,34 +92,39 @@ const DataTable = ({
 
   return (
     <>
-      <div>
-        <h1 className='text-lg mb-4'>Quản lý {entityName}</h1>
-        <hr className="my-4" />
-        <div className="flex justify-between items-center mb-4">
-          <Link to={createPath}>
-            <Button type="primary">Create</Button>
-          </Link>
-          {searchField && (
-            <SearchBar
-              searchTerm={searchTerm}
-              handleSearch={(e) => setSearchTerm(e.target.value)}
-              placeholder={`Tìm kiếm ${entityName} theo ${columns.find(col => col.field === searchField)?.headerName.toLowerCase() || searchField.toLowerCase()}...`}
-            />
-          )}
-        </div>
-      </div>
-
-      
-      {filterField && (
-        <Filter
-          filterField={filterField}
-          filterValue={filterValue}
-          setFilterValue={setFilterValue}
-          data={data}
-          headerName={columns.find(col => col.field === filterField)?.headerName || filterField}
+  <div>
+  <h1 className="text-lg mb-4">Quản lý {entityName}</h1>
+  <hr className="my-4" />
+  <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+    <Link to={createPath}>
+      <Button type="primary">Create</Button>
+    </Link>
+    {searchField && (
+      <div className="w-full md:w-auto"> {/* Ensure SearchBar takes full width on small screens */}
+        <SearchBar
+          searchTerm={searchTerm}
+          handleSearch={(e) => setSearchTerm(e.target.value)}
+          placeholder={`Tìm kiếm ${entityName} theo ${
+            columns.find((col) => col.field === searchField)?.headerName.toLowerCase() ||
+            searchField.toLowerCase()
+          }...`}
         />
-      )}
+      </div>
+    )}
+  </div>
+</div>
 
+{filterField && (
+  <Filter
+    filterField={filterField}
+    filterValue={filterValue}
+    setFilterValue={setFilterValue}
+    data={data}
+    headerName={
+      columns.find((col) => col.field === filterField)?.headerName || filterField
+    }
+  />
+)}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">

@@ -6,8 +6,6 @@ import Sidebar from "./components/Sidebar";
 import Login from "./pages/user/Login";
 import Navbar from "./components/Navbar";
 import { AuthContext } from "./context/AuthContext";
-import { jwtDecode } from 'jwt-decode';
-import AuthReducer from "./context/AuthReducer";
 import AppRouter from "./context/AppRouter";
 import ScrollToTop from "./components/ScrollToTop";
 

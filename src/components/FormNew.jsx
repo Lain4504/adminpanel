@@ -33,10 +33,10 @@ const New = ({ inputs, title, handleAdd, location }) => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
-        <Form onFinish={handleAddItem} layout="vertical" className="mt-6">
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">{title}</h1>
+        <Form onFinish={handleAddItem} layout="vertical" className="space-y-6">
           {inputs.map((input) => (
             <Form.Item 
               key={input.id}
@@ -65,7 +65,7 @@ const New = ({ inputs, title, handleAdd, location }) => {
               )}
             </Form.Item>
           ))}
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between items-center">
             <Button type="primary" htmlType="submit" className="bg-indigo-600 text-white transition">
               Save
             </Button>
@@ -79,4 +79,4 @@ const New = ({ inputs, title, handleAdd, location }) => {
   );
 };
 
-export default New; 
+export default New;

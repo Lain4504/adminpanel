@@ -45,27 +45,27 @@ const UserList = () => {
 
   const handleUpdateStatus = async () => {
     if (selectedUser.role === 'ADMIN' && selectedUser.state === 'INACTIVE') {
-        notification.error({
-            message: 'Admin cannot deactivate their own account!',
-        });
-        return;
+      notification.error({
+        message: 'Admin cannot deactivate their own account!',
+      });
+      return;
     }
 
     try {
-        await updateUser(selectedUser.id, selectedUser.role, selectedUser.state);
-        notification.success({
-            message: 'User status and role updated successfully!',
-        });
+      await updateUser(selectedUser.id, selectedUser.role, selectedUser.state);
+      notification.success({
+        message: 'User status and role updated successfully!',
+      });
 
-        setIsModalVisible(false);
-        fetchUsers(); // Refresh the user list to reflect the updates
+      setIsModalVisible(false);
+      fetchUsers(); // Refresh the user list to reflect the updates
     } catch (error) {
-        console.error('Error updating user:', error);
-        notification.error({
-            message: 'Failed to update user status!',
-        });
+      console.error('Error updating user:', error);
+      notification.error({
+        message: 'Failed to update user status!',
+      });
     }
-};
+  };
 
   const handleRoleChange = (value) => {
     if (value === 'ADMIN' && selectedUser.role === 'USER') {
@@ -142,20 +142,25 @@ const UserList = () => {
     <div>
       <h1 className='text-xl my-5'>Quản lý người dùng</h1>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+      <div className="flex flex-wrap justify-between items-center mb-4">
+        {/* Filter */}
+        <div className="w-full md:w-auto mb-4 md:mb-0">
+          <Filter
+            filterField="role"
+            filterValue={filterValue}
+            setFilterValue={handleFilterChange}
+            data={users}
+          />
+        </div>
+
         {/* Search Bar */}
-        <Filter
-          filterField="role"
-          filterValue={filterValue}
-          setFilterValue={handleFilterChange}
-          data={users}
-        />
-        {/* Search Bar */}
-        <SearchBar
-          searchTerm={searchTerm}
-          handleSearch={handleSearch}
-          placeholder="Tìm kiếm người dùng theo email..."
-        />
+        <div className="w-full md:w-auto">
+          <SearchBar
+            searchTerm={searchTerm}
+            handleSearch={handleSearch}
+            placeholder="Tìm kiếm người dùng theo email..."
+          />
+        </div>
       </div>
 
       <Table
@@ -164,6 +169,7 @@ const UserList = () => {
         loading={loading}
         rowKey="id"
         pagination={false} // Disable AntD's built-in pagination
+        scroll={{ x: 'max-content' }} // Allow horizontal scroll
       />
 
       {/* Pagination */}
